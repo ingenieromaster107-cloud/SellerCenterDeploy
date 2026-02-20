@@ -1,20 +1,54 @@
-# Introduction 
-TODO: Give a short introduction of your project. Let this section explain the objectives or the motivation behind this project. 
+## Prerequisites
 
-# Getting Started
-TODO: Guide users through getting your code up and running on their own system. In this section you can talk about:
-1.	Installation process
-2.	Software dependencies
-3.	Latest releases
-4.	API references
+- Node.js >=22 (Recommended)
 
-# Build and Test
-TODO: Describe and show how to build your code and run the tests. 
+## Installation
 
-# Contribute
-TODO: Explain how other users and developers can contribute to make your code better. 
+**Using Yarn (Recommended)**
 
-If you want to learn more about creating good readme files then refer the following [guidelines](https://docs.microsoft.com/en-us/azure/devops/repos/git/create-a-readme?view=azure-devops). You can also seek inspiration from the below readme files:
-- [ASP.NET Core](https://github.com/aspnet/Home)
-- [Visual Studio Code](https://github.com/Microsoft/vscode)
-- [Chakra Core](https://github.com/Microsoft/ChakraCore)
+```sh
+yarn install
+yarn dev
+```
+
+**Using Npm**
+
+```sh
+npm i
+npm run dev
+```
+
+## Build
+
+```sh
+yarn build
+# or
+npm run build
+```
+
+## Mock server
+
+By default we provide demo data from : `https://api-dev-minimal-[version].vercel.app`
+
+To set up your local server:
+
+- **Guide:** [https://docs.minimals.cc/mock-server](https://docs.minimals.cc/mock-server).
+
+- **Resource:** [Download](https://www.dropbox.com/scl/fo/bopqsyaatc8fbquswxwww/AKgu6V6ZGmxtu22MuzsL5L4?rlkey=8s55vnilwz2d8nsrcmdo2a6ci&dl=0).
+
+## Full version
+
+- Create React App ([migrate to CRA](https://docs.minimals.cc/migrate-to-cra/)).
+- Next.js
+- Vite.js
+
+## Starter version
+
+- To remove unnecessary components. This is a simplified version ([https://starter.minimals.cc/](https://starter.minimals.cc/))
+- Good to start a new project. You can copy components from the full version.
+- Make sure to install the dependencies exactly as compared to the full version.
+
+---
+
+**NOTE:**
+_When copying folders remember to also copy hidden files like .env. This is important because .env files often contain environment variables that are crucial for the application to run correctly._
