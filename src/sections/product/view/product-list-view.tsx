@@ -20,7 +20,7 @@ import { RouterLink } from 'src/routes/components';
 
 import { PRODUCT_STOCK_OPTIONS } from 'src/_mock';
 import { DashboardContent } from 'src/layouts/dashboard';
-import { useGetProducts } from 'src/app/actions/products/useGetProducts';
+import { useGetProducts } from 'src/actions/products/useGetProducts';
 //import { useGetProducts } from 'src/actions/product';
 
 import { toast } from 'src/components/snackbar';

@@ -1,14 +1,14 @@
 'use client';
 
-import { 
+import {
   Grid,
   Card,
-  Typography, 
+  Typography,
   CardContent,
   CircularProgress
 } from '@mui/material';
 
-import { useGetProducts } from 'src/hooks/products/useGetProducts';
+import { useGetProducts } from 'src/actions/products/useGetProducts';
 
 export function ProductShopView() {
   const { data, isLoading, error } = useGetProducts();
