@@ -1,7 +1,6 @@
 'use client';
 
 import axios, { endpoints } from 'src/lib/axios';
-import { loginService } from 'src/api/auth/login';
 
 import { setSession } from './utils';
 import { ACCESS_TOKEN_STORAGE_KEY } from './constant';
@@ -20,22 +19,6 @@ export type SignUpParams = {
   lastName: string;
 };
 
-/** **************************************
- * Sign in with graphql
- *************************************** */
-export const signInWithPassword = async ({ email, password }: SignInParams): Promise<void> => {
-  try {
-    const { accessToken } = await loginService(email, password);
-    if (!accessToken) {
-      throw new Error('Access token not found in response');
-    }
-
-    setSession(accessToken);
-  } catch (error) {
-    console.error('Error during sign in:', error);
-    throw error;
-  }
-};
 
 /** **************************************
  * Sign up

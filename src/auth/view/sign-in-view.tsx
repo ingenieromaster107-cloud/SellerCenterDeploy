@@ -3,6 +3,7 @@
 import * as z from 'zod';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
+import { ClientError } from 'graphql-request';
 import { useBoolean } from 'minimal-shared/hooks';
 import { zodResolver } from '@hookform/resolvers/zod';
 
@@ -17,12 +18,14 @@ import { paths } from 'src/routes/paths';
 import { useRouter } from 'src/routes/hooks';
 import { RouterLink } from 'src/routes/components';
 
+import { ErrorCode, ERROR_MESSAGES } from 'src/lib';
+import { useLogin } from 'src/actions/auth/useLogin';
+
 import { Iconify } from 'src/components/iconify';
 import { Form, Field, schemaUtils } from 'src/components/hook-form';
 
 import { useAuthContext } from '../hooks';
 import { getErrorMessage } from '../utils';
-import { signInWithPassword } from '../context';
 import { FormHead } from '../components/form-head';
 
 // ----------------------------------------------------------------------
@@ -48,6 +51,9 @@ export function JwtSignInView() {
 
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
+  const { mutateAsync } = useLogin();
+
+
   const defaultValues: SignInSchemaType = {
     email: 'demo@minimals.cc',
     password: '@2Minimal',
@@ -65,13 +71,28 @@ export function JwtSignInView() {
 
   const onSubmit = handleSubmit(async (data) => {
     try {
-      await signInWithPassword({ email: data.email, password: data.password });
+      await mutateAsync({ email: data.email, password: data.password });
       await checkUserSession?.();
 
       router.refresh();
     } catch (error) {
-      console.error(error);
-      const feedbackMessage = getErrorMessage(error);
+      let msgErr: string = ErrorCode.UNEXPECTED_ERROR;
+
+      if (error instanceof ClientError) {
+        const message =
+          error.response.errors?.[0]?.message ||
+          ERROR_MESSAGES[ErrorCode.UNEXPECTED_ERROR];
+
+        msgErr = message;
+      }
+
+      if (error instanceof Error) {
+        if (error.message === 'No se recibió un token de acceso en la respuesta.') {
+          msgErr = ErrorCode.UNEXPECTED_ERROR;
+        }
+      }
+
+      const feedbackMessage = getErrorMessage(msgErr);
       setErrorMessage(feedbackMessage);
     }
   });
@@ -113,6 +134,12 @@ export function JwtSignInView() {
         />
       </Box>
 
+      {!!errorMessage && (
+        <Alert severity="error" sx={{ mb: 1 }}>
+          {errorMessage}
+        </Alert>
+      )}
+
       <Button
         fullWidth
         color="inherit"
@@ -147,12 +174,6 @@ export function JwtSignInView() {
         {' with password '}
         <strong>{defaultValues.password}</strong>
       </Alert>
-
-      {!!errorMessage && (
-        <Alert severity="error" sx={{ mb: 3 }}>
-          {errorMessage}
-        </Alert>
-      )}
 
       <Form methods={methods} onSubmit={onSubmit}>
         {renderForm()}
