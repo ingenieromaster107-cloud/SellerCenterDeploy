@@ -1,14 +1,9 @@
 'use client';
 
-import type { BoxProps } from '@mui/material/Box';
-import type { Breakpoint } from '@mui/material/styles';
-import type { NavSectionProps } from 'src/components/nav-section';
-
 import parse from 'autosuggest-highlight/parse';
 import match from 'autosuggest-highlight/match';
-import { varAlpha } from 'minimal-shared/utils';
 import { useBoolean } from 'minimal-shared/hooks';
-import { useMemo, useState, useEffect, useCallback } from 'react';
+import React, { useMemo, useState, useEffect, useCallback } from 'react';
 
 import Box from '@mui/material/Box';
 import MenuList from '@mui/material/MenuList';
@@ -22,6 +17,7 @@ import InputBase, { inputBaseClasses } from '@mui/material/InputBase';
 
 import { Label } from 'src/components/label';
 import { Iconify } from 'src/components/iconify';
+import { SearchIcon } from 'src/components/icons';
 import { Scrollbar } from 'src/components/scrollbar';
 import { SearchNotFound } from 'src/components/search-not-found';
 
@@ -30,14 +26,16 @@ import { applyFilter, flattenNavSections } from './utils';
 
 // ----------------------------------------------------------------------
 
-export type SearchbarProps = BoxProps & {
-  data?: NavSectionProps['data'];
-};
+const breakpoint = 'sm';
 
-const breakpoint: Breakpoint = 'sm';
+interface Props {
+    data?: Array<any>;
+    sx?: object | object[];
+}
 
-export function Searchbar({ data: navItems = [], sx, ...other }: SearchbarProps) {
+export function Searchbar({ data: navItems = [], sx, ...other }: Props) {
   const theme = useTheme();
+
   const smUp = useMediaQuery(theme.breakpoints.up(breakpoint));
 
   const { value: open, onFalse: onClose, onTrue: onOpen, onToggle } = useBoolean();
@@ -56,7 +54,7 @@ export function Searchbar({ data: navItems = [], sx, ...other }: SearchbarProps)
         setSearchQuery('');
       }
     },
-    [onToggle]
+    [onToggle],
   );
 
   useEffect(() => {
@@ -67,7 +65,7 @@ export function Searchbar({ data: navItems = [], sx, ...other }: SearchbarProps)
     };
   }, [handleKeyDown]);
 
-  const handleSearch = useCallback((event: React.ChangeEvent<HTMLTextAreaElement>) => {
+  const handleSearch = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchQuery(event.target.value);
   }, []);
 
@@ -79,7 +77,7 @@ export function Searchbar({ data: navItems = [], sx, ...other }: SearchbarProps)
         inputData: formattedNavItems,
         query: searchQuery,
       }),
-    [formattedNavItems, searchQuery]
+    [formattedNavItems, searchQuery],
   );
 
   const notFound = searchQuery && !dataFiltered.length;
@@ -91,18 +89,17 @@ export function Searchbar({ data: navItems = [], sx, ...other }: SearchbarProps)
         {
           display: 'flex',
           alignItems: 'center',
+          borderRadius: 5,
+          border: 1,
+          borderColor: 'divider',
           [theme.breakpoints.up(breakpoint)]: {
             pr: 1,
-            borderRadius: 1.5,
             cursor: 'pointer',
-            bgcolor: varAlpha(theme.vars.palette.grey['500Channel'], 0.08),
+            bgcolor: 'background.paper',
             transition: theme.transitions.create('background-color', {
               easing: theme.transitions.easing.easeInOut,
               duration: theme.transitions.duration.shortest,
             }),
-            '&:hover': {
-              bgcolor: varAlpha(theme.vars.palette.grey['500Channel'], 0.16),
-            },
           },
         },
         ...(Array.isArray(sx) ? sx : [sx]),
@@ -113,26 +110,35 @@ export function Searchbar({ data: navItems = [], sx, ...other }: SearchbarProps)
         component={smUp ? 'span' : IconButton}
         sx={{
           [theme.breakpoints.up(breakpoint)]: {
-            p: 1,
+            p: 0.5,
+            m: 0.4,
             display: 'inline-flex',
             color: 'action.active',
+            bgcolor: 'divider',
+            borderRadius: 'inherit',
+            borderColor: 'divider',
           },
         }}
       >
-        <Iconify icon="eva:search-fill" />
+        {/* <Iconify icon="eva:search-fill" /> */}
+        <SearchIcon />
       </Box>
 
       <Label
         sx={{
-          color: 'grey.800',
+          color: 'grey.500',
           cursor: 'inherit',
-          bgcolor: 'common.white',
+          bgcolor: 'inherit',
           fontSize: theme.typography.pxToRem(12),
-          boxShadow: theme.vars.customShadows.z1,
+          fontWeight: 'fontWeightMedium',
           display: { xs: 'none', [breakpoint]: 'inline-flex' },
+          '&:hover': {
+            color: 'text.primary',
+            bgcolor: 'background.paper',
+          },
         }}
       >
-        ⌘K
+        Search
       </Label>
     </Box>
   );
@@ -148,7 +154,7 @@ export function Searchbar({ data: navItems = [], sx, ...other }: SearchbarProps)
         },
       }}
     >
-      {dataFiltered.map((item) => {
+      {dataFiltered.map((item: any) => {
         const matchesTitle = match(item.title, searchQuery, { insideWords: true });
         const partsTitle = parse(item.title, matchesTitle);
 
@@ -202,7 +208,7 @@ export function Searchbar({ data: navItems = [], sx, ...other }: SearchbarProps)
           inputProps={{ id: 'search-input' }}
           sx={{
             p: 3,
-            borderBottom: `solid 1px ${theme.vars.palette.divider}`,
+            borderBottom: `solid 1px ${theme!.vars!.palette.divider}`,
             [`& .${inputBaseClasses.input}`]: { typography: 'h6' },
           }}
         />

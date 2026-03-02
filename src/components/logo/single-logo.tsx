@@ -1,9 +1,8 @@
-import { useTheme } from '@mui/material/styles';
+import { useColorScheme } from '@mui/material/styles';
 
 export const SingleLogo = () => {
-  const theme = useTheme();
-  const theTheme = `${theme.palette.mode}`;
-  const color =  theTheme === 'dark' ? '#FFFFFF' : '#424242';
+  const { mode } = useColorScheme();
+  const color =  mode === 'dark' ? '#F9F9F9' : '#424242';
 
   return (
     <svg width="80" height="40" viewBox="0 0 80 40" fill="none" xmlns="http://www.w3.org/2000/svg">
