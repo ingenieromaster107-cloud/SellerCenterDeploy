@@ -3,7 +3,7 @@ import { useTheme } from '@mui/material/styles';
 export const FullLogo = () => {
   const theme = useTheme();
   const theTheme = `${theme.palette.mode}`;
-  const color =  theTheme === 'dark' ? '##F9F9F9' : '#424242';
+  const color =  theTheme === 'dark' ? '#F9F9F9' : '#424242';
 
   return (
     <svg width="152" height="40" viewBox="0 0 152 40" fill="none" xmlns="http://www.w3.org/2000/svg">
