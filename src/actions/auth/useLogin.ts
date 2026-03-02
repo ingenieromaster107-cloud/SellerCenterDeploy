@@ -1,6 +1,6 @@
 import { useMutation } from '@tanstack/react-query';
 
-import { graphqlRequest } from 'src/lib/graphql-client';
+import { client, graphqlRequest } from 'src/lib/graphql-client';
 
 import { setSession } from 'src/auth/context/utils';
 
@@ -19,6 +19,7 @@ export function useLogin() {
     onSuccess: (data) => {
       const token = data.generateCustomerToken.token;
       setSession(token);
+      client.setHeader('Authorization', `Bearer ${token}`);
     },
   });
 }

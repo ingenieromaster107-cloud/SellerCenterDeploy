@@ -6,8 +6,9 @@ import Button from '@mui/material/Button';
 
 import { useRouter } from 'src/routes/hooks';
 
+import { useLogout } from 'src/actions/auth/useLogout';
+
 import { useAuthContext } from 'src/auth/hooks';
-import { signOut } from 'src/auth/context/action';
 
 // ----------------------------------------------------------------------
 
@@ -19,18 +20,19 @@ export function SignOutButton({ onClose, sx, ...other }: Props) {
   const router = useRouter();
 
   const { checkUserSession } = useAuthContext();
+  const { mutateAsync } = useLogout();
 
   const handleLogout = useCallback(async () => {
     try {
-      await signOut();
+      await mutateAsync(null);
       await checkUserSession?.();
 
       onClose?.();
       router.refresh();
     } catch (error) {
-      console.error(error);
+      console.error("Error during logout ", error);
     }
-  }, [checkUserSession, onClose, router]);
+  }, [checkUserSession, onClose, router, mutateAsync]);
 
   return (
     <Button
