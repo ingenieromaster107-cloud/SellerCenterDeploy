@@ -6,13 +6,17 @@ import { varAlpha, mergeClasses } from 'minimal-shared/utils';
 import Box from '@mui/material/Box';
 import { styled } from '@mui/material/styles';
 
+import { ProfileCompletionCard } from 'src/components';
+
 import { Logo } from 'src/components/logo';
 import { Scrollbar } from 'src/components/scrollbar';
+import { StoreIdentity } from 'src/components/store-identity';
 import { NavSectionMini, NavSectionVertical } from 'src/components/nav-section';
 
+import { useMockedUser } from 'src/auth/hooks';
+
 import { layoutClasses } from '../core';
-import { NavUpgrade } from '../components/nav-upgrade';
-import { NavToggleButton } from '../components/nav-toggle-button';
+import { SignOutButton, NavToggleButton } from '../components';
 
 // ----------------------------------------------------------------------
 
@@ -39,13 +43,23 @@ export function NavVertical({
   layoutQuery = 'md',
   ...other
 }: NavVerticalProps) {
+  const { user } = useMockedUser();
+
   const renderNavVertical = () => (
     <>
       {slots?.topArea ?? (
-        <Box sx={{ pl: 3.5, pt: 2.5, pb: 1 }}>
-          <Logo />
+        <Box sx={{ pl: 3.5, pt: 2.5, pb: 1, display: 'flex', justifyContent: 'center' }}>
+          <Logo isNavMini={isNavMini ?? false} />
         </Box>
       )}
+
+      <Box sx={{ pt: 2.5, pb: 2, display: 'flex', justifyContent: 'center' }}>
+        <StoreIdentity user={user} />
+      </Box>
+
+      <Box sx={{ pt: 1, pb: 2, display: 'flex', justifyContent: 'center' }}>
+        <ProfileCompletionCard progress={89} />
+      </Box>
 
       <Scrollbar fillContent>
         <NavSectionVertical
@@ -55,7 +69,8 @@ export function NavVertical({
           sx={{ px: 2, flex: '1 1 auto' }}
         />
 
-        {slots?.bottomArea ?? <NavUpgrade />}
+        {slots?.bottomArea ?? <SignOutButton />}
+
       </Scrollbar>
     </>
   );

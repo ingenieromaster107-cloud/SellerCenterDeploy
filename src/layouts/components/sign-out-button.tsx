@@ -1,15 +1,17 @@
-import type { ButtonProps } from '@mui/material/Button';
-
 import { useCallback } from 'react';
+import { varAlpha } from 'minimal-shared/utils';
 
-import Button from '@mui/material/Button';
+import Box from '@mui/material/Box';
+import Divider from '@mui/material/Divider';
+import Button, { type ButtonProps } from '@mui/material/Button';
 
 import { useRouter } from 'src/routes/hooks';
 
 import { useLogout } from 'src/actions/auth/useLogout';
 
-import { useAuthContext } from 'src/auth/hooks';
+import { Iconify } from 'src/components/iconify';
 
+import { useAuthContext } from 'src/auth/hooks';
 // ----------------------------------------------------------------------
 
 type Props = ButtonProps & {
@@ -25,26 +27,43 @@ export function SignOutButton({ onClose, sx, ...other }: Props) {
   const handleLogout = useCallback(async () => {
     try {
       await mutateAsync(null);
-      await checkUserSession?.();
 
-      onClose?.();
-      router.refresh();
     } catch (error) {
-      console.error("Error during logout ", error);
+      // console.error(error);
     }
-  }, [checkUserSession, onClose, router, mutateAsync]);
+
+    // await checkUserSession?.();
+    // onClose?.();
+    router.refresh();
+  }, [router, mutateAsync]);
 
   return (
-    <Button
-      fullWidth
-      variant="soft"
-      size="large"
-      color="error"
-      onClick={handleLogout}
-      sx={sx}
-      {...other}
+    <Box
+      sx={[{
+        px: 2,
+        py: 5,
+        textAlign: 'center' },
+      ...(Array.isArray(sx) ? sx : [sx]),
+      ]}
     >
-      Logout
-    </Button>
+      <Divider sx={{ my: 2, borderColor: varAlpha('divider', 0.12) }} />
+      <Button
+        fullWidth
+        size="medium"
+        onClick={handleLogout}
+        sx={{
+          ...sx,
+          color: 'error.main',
+          '&:hover': {
+            backgroundColor: 'var(--nav-item-hover-bg)',
+          },
+          ':hover': { backgroundColor: 'var(--nav-item-hover-bg)' },
+        }}
+        startIcon={<Iconify icon="mdi:logout" sx={{ color: 'error.main' }} />}
+        {...other}
+      >
+        Logout
+      </Button>
+    </Box>
   );
 }

@@ -16,8 +16,8 @@ interface LoginResponse {
 export function useLogin() {
   return useMutation({
     mutationFn: (variables: any) => graphqlRequest<LoginResponse>(LOGIN_MUTATION, variables),
-    onSuccess: (data) => {
-      const token = data.generateCustomerToken.token;
+    onSuccess: async (data) => {
+      const token = await data.generateCustomerToken.token;
       setSession(token);
       client.setHeader('Authorization', `Bearer ${token}`);
     },

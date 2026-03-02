@@ -16,12 +16,10 @@ interface LogoutResponse {
 export function useLogout() {
   return useMutation({
     mutationFn: (variables: any) => graphqlRequest<LogoutResponse>(LOGOUT_MUTATION, variables),
-    onSuccess: (data) => {
-      const result = data.revokeCustomerToken.result;
-      if (result) {
-        setSession(null);
-        client.setHeader('Authorization', '');
-      }
+    onSuccess: async (data) => {
+      await data.revokeCustomerToken.result;
+      setSession(null);
+      client.setHeader('Authorization', '');
     },
   });
 }
