@@ -55,7 +55,7 @@ export function ProductListView() {
       <CustomBreadcrumbs
         heading="Product List"
         links={[
-          { name: 'Home', href: paths.dashboard.root },
+          { name: 'Home', href: paths.home.root },
           { name: 'Product', href: paths.product.root },
           { name: 'List' },
         ]}
