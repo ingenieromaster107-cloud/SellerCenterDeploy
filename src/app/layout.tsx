@@ -13,7 +13,7 @@ import { MotionLazy } from 'src/components/animate/motion-lazy';
 import { detectSettings } from 'src/components/settings/server';
 import { SettingsDrawer, defaultSettings, SettingsProvider } from 'src/components/settings';
 
-import { AuthProvider } from 'src/auth/context/jwt';
+import { AuthProvider } from 'src/auth/context';
 
 import { Providers } from './providers';
 
@@ -29,7 +29,7 @@ export const metadata: Metadata = {
   icons: [
     {
       rel: 'icon',
-      url: `${CONFIG.assetsDir}/favicon.ico`,
+      url: `${CONFIG.assetsDir}/assets/images/logo/favicon.png`,
     },
   ],
 };
