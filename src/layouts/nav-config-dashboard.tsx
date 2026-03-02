@@ -53,29 +53,24 @@ export const navData: NavSectionProps['data'] = [
     subheader: 'Overview',
     items: [
       {
-        title: 'One',
-        path: paths.dashboard.root,
+        title: 'Home',
+        path: paths.home.root,
         icon: ICONS.dashboard,
-        info: <Label>v{CONFIG.appVersion}</Label>,
       },
-      { title: 'Two', path: paths.dashboard.two, icon: ICONS.ecommerce },
-      { title: 'Three', path: paths.dashboard.three, icon: ICONS.analytics },
     ],
   },
   /**
    * Management
    */
   {
-    subheader: 'Management',
+    // subheader: 'Management',
     items: [
       {
-        title: 'Group',
-        path: paths.dashboard.group.root,
-        icon: ICONS.user,
+        title: 'My products',
+        path: paths.home.product.root,
+        icon: ICONS.product,
         children: [
-          { title: 'Four', path: paths.dashboard.group.root },
-          { title: 'Five', path: paths.dashboard.group.five },
-          { title: 'Six', path: paths.dashboard.group.six },
+          { title: 'List', path: paths.home.product.root },
         ],
       },
     ],

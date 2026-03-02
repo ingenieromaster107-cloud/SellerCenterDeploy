@@ -28,7 +28,6 @@ import { AnimateBorder } from 'src/components/animate';
 
 import { useMockedUser } from 'src/auth/hooks';
 
-import { UpgradeBlock } from './nav-upgrade';
 import { AccountButton } from './account-button';
 import { SignOutButton } from './sign-out-button';
 
@@ -78,7 +77,7 @@ export function AccountDrawer({ data = [], sx, ...other }: AccountDrawerProps) {
     >
       {data.map((option) => {
         const rootLabel = pathname.includes('/dashboard') ? 'Home' : 'Dashboard';
-        const rootHref = pathname.includes('/dashboard') ? '/' : paths.dashboard.root;
+        const rootHref = pathname.includes('/dashboard') ? '/' : paths.home.root;
 
         return (
           <MenuItem key={option.label}>
@@ -207,7 +206,7 @@ export function AccountDrawer({ data = [], sx, ...other }: AccountDrawerProps) {
           {renderList()}
 
           <Box sx={{ px: 2.5, py: 3 }}>
-            <UpgradeBlock />
+            {/* <UpgradeBlock /> */}
           </Box>
         </Scrollbar>
 

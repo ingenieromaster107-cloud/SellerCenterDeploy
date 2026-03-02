@@ -24,17 +24,11 @@ export function AuthProvider({ children }: PropsWithChildren) {
 
       if (accessToken) {
         setSession(accessToken);
-        console.log('pasando por authProvider');
-
-
-
-
         setState({ user: { ...user }, loading: false });
       } else {
         setState({ user: null, loading: false });
       }
     } catch (error) {
-      console.error(error);
       setState({ user: null, loading: false });
     }
   }, [setState, user]);

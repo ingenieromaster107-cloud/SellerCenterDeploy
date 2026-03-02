@@ -2,7 +2,6 @@
 
 import axios, { endpoints } from 'src/lib/axios';
 
-import { setSession } from './utils';
 import { ACCESS_TOKEN_STORAGE_KEY } from './constant';
 
 // ----------------------------------------------------------------------
@@ -48,18 +47,6 @@ export const signUp = async ({
     sessionStorage.setItem(ACCESS_TOKEN_STORAGE_KEY, accessToken);
   } catch (error) {
     console.error('Error during sign up:', error);
-    throw error;
-  }
-};
-
-/** **************************************
- * Sign out
- *************************************** */
-export const signOut = async (): Promise<void> => {
-  try {
-    await setSession(null);
-  } catch (error) {
-    console.error('Error during sign out:', error);
     throw error;
   }
 };

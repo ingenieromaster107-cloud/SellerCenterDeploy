@@ -2,7 +2,7 @@
 
 const ROOTS = {
   AUTH: '/auth',
-  DASHBOARD: '/dashboard',
+  HOME: '/home',
 };
 
 // ----------------------------------------------------------------------
@@ -37,15 +37,11 @@ export const paths = {
       resetPassword: `${ROOTS.AUTH}/supabase/reset-password`,
     },
   },
-  // DASHBOARD
-  dashboard: {
-    root: ROOTS.DASHBOARD,
-    two: `${ROOTS.DASHBOARD}/two`,
-    three: `${ROOTS.DASHBOARD}/three`,
-    group: {
-      root: `${ROOTS.DASHBOARD}/group`,
-      five: `${ROOTS.DASHBOARD}/group/five`,
-      six: `${ROOTS.DASHBOARD}/group/six`,
+  // HOME
+  home: {
+    root: ROOTS.HOME,
+    product: {
+      root: `${ROOTS.HOME}/product`,
     },
   },
   product: {
