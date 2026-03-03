@@ -16,8 +16,11 @@ interface LogoutResponse {
 export function useLogout() {
   return useMutation({
     mutationFn: (variables: any) => graphqlRequest<LogoutResponse>(LOGOUT_MUTATION, variables),
-    onSuccess: async (data) => {
-      await data.revokeCustomerToken.result;
+    onSuccess: (data) => {
+      const response = data?.revokeCustomerToken?.result;
+      if (!response)
+        console.warn('Logout failed');
+
       setSession(null);
       client.setHeader('Authorization', '');
     },

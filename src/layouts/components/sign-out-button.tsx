@@ -1,4 +1,3 @@
-import { useCallback } from 'react';
 import { varAlpha } from 'minimal-shared/utils';
 
 import Box from '@mui/material/Box';
@@ -11,7 +10,6 @@ import { useLogout } from 'src/actions/auth/useLogout';
 
 import { Iconify } from 'src/components/iconify';
 
-import { useAuthContext } from 'src/auth/hooks';
 // ----------------------------------------------------------------------
 
 type Props = ButtonProps & {
@@ -21,21 +19,14 @@ type Props = ButtonProps & {
 export function SignOutButton({ onClose, sx, ...other }: Props) {
   const router = useRouter();
 
-  const { checkUserSession } = useAuthContext();
   const { mutateAsync } = useLogout();
 
-  const handleLogout = useCallback(async () => {
-    try {
+  const handleLogout = async() => {
       await mutateAsync(null);
 
-    } catch (error) {
-      // console.error(error);
-    }
-
-    // await checkUserSession?.();
     // onClose?.();
     router.refresh();
-  }, [router, mutateAsync]);
+  };
 
   return (
     <Box
