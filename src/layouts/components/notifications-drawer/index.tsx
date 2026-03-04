@@ -23,6 +23,7 @@ import { Scrollbar } from 'src/components/scrollbar';
 import { varTap, varHover, transitionTap } from 'src/components/animate';
 
 import { NotificationItem } from './notification-item';
+import { NotificationBellIcon } from 'src/components/icons';
 
 // ----------------------------------------------------------------------
 
@@ -137,9 +138,10 @@ export function NotificationsDrawer({ data = [], sx, ...other }: NotificationsDr
         sx={sx}
         {...other}
       >
-        <Badge badgeContent={totalUnRead} color="error">
+        {/* <Badge badgeContent={totalUnRead} color="error">
           <Iconify width={24} icon="solar:bell-bing-bold-duotone" />
-        </Badge>
+        </Badge> */}
+        <NotificationBellIcon />
       </IconButton>
 
       <Drawer

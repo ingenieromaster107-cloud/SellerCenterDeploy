@@ -50,7 +50,6 @@ export const navData: NavSectionProps['data'] = [
    * Overview
    */
   {
-    subheader: 'Overview',
     items: [
       {
         title: 'Home',

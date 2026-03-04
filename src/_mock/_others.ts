@@ -33,25 +33,6 @@ export const _addressBooks = Array.from({ length: 24 }, (_, index) => ({
 
 // ----------------------------------------------------------------------
 
-export const _contacts = Array.from({ length: 20 }, (_, index) => {
-  const status =
-    (index % 2 && 'online') || (index % 3 && 'offline') || (index % 4 && 'always') || 'busy';
-
-  return {
-    id: _mock.id(index),
-    status,
-    role: _mock.role(index),
-    email: _mock.email(index),
-    name: _mock.fullName(index),
-    phoneNumber: _mock.phoneNumber(index),
-    lastActivity: _mock.time(index),
-    avatarUrl: _mock.image.avatar(index),
-    address: _mock.fullAddress(index),
-  };
-});
-
-// ----------------------------------------------------------------------
-
 export const _notifications = Array.from({ length: 9 }, (_, index) => ({
   id: _mock.id(index),
   avatarUrl: [
