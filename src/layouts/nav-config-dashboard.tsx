@@ -67,10 +67,10 @@ export const navData: NavSectionProps['data'] = [
     items: [
       {
         title: 'My products',
-        path: paths.home.product.root,
+        path: paths.product.root,
         icon: ICONS.product,
         children: [
-          { title: 'List', path: paths.home.product.root },
+          { title: 'List', path: paths.product.root },
         ],
       },
     ],
