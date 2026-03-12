@@ -175,7 +175,9 @@ export const useProductUploadDialog = ({ onClose }: { onClose: () => void }) => 
           ? 'csv'
           : csvFile.type.includes('xml')
             ? 'xml'
-            : csvFile.type,
+            : csvFile.type.includes('excel')
+              ? 'xls'
+              : 'unknown',
       };
       const resp = await mutateAsync(request);
       if (resp.validateMassUpload.success) {
