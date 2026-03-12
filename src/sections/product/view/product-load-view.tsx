@@ -61,13 +61,13 @@ export function ProductLoadView() {
       >
         <Card sx={cardSx}>
           <Stack spacing={2} sx={{ flexGrow: 1 }}>
-            <Typography variant="h6">Carga Masiva</Typography>
+            <Typography variant="h6">Bulk loading</Typography>
             <Divider />
             {renderBullets([
-              'Ahorra tiempo cargando múltiples productos a la vez.',
-              'Sincroniza tu cuenta con archivos e integraciones externas.',
-              'Sincroniza tu cuenta con archivos e integraciones externas',
-              'Gestiona grandes volúmenes de productos.',
+              'Save time by loading multiple products at once.',
+              'Sync your account with external files and integrations.',
+              'Sync your account with external files and integrations',
+              'Manage large volumes of products.',
             ])}
             <Box sx={{ flexGrow: 1 }} />
             <Button
@@ -76,7 +76,7 @@ export function ProductLoadView() {
               startIcon={<Iconify icon="solar:copy-bold" />}
               variant="contained"
             >
-              Carga de archivos
+              Upload files
             </Button>
           </Stack>
         </Card>

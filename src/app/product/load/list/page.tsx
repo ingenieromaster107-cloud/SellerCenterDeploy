@@ -8,18 +8,17 @@ import { Iconify } from 'src/components/iconify';
 import { DashboardContent } from 'src/layouts/dashboard';
 import { ProductUploadDialog } from 'src/sections/product/components/product-upload-dialog/product-upload-dialog';
 import { paths } from 'src/routes/paths';
+import { CONFIG } from 'src/global-config';
+
+// export const metadata = { title: `Bulk upload - ${CONFIG.appName}` };
 
 export default function ProductLoadListPage() {
-  const [openBulk, setOpenBulk] = useState(false); // <-- modal state here
-//   const handleRefresh = async () => {
-//     await fetchJobs();
-//     toast.success('Cargas actualizadas');
-//   };
+  const [openBulk, setOpenBulk] = useState(false);
   return (
     <DashboardContent>
       {' '}
       <CustomBreadcrumbs
-        heading="Load products"
+        heading="Bulk loading"
         links={[
           { name: 'Home', href: paths.home.root },
           { name: 'Product', href: paths.product.root },
@@ -34,7 +33,7 @@ export default function ProductLoadListPage() {
               startIcon={<Iconify icon="mingcute:add-line" />}
               onClick={() => setOpenBulk(true)}
             >
-              Carga de archivos
+              Upload files
             </Button>
 
             {/* Existing refresh button */}
@@ -43,7 +42,7 @@ export default function ProductLoadListPage() {
               startIcon={<Iconify icon="solar:eye-bold" />}
             //   onClick={handleRefresh}
             >
-              Refrescar
+              Refresh
             </Button>
           </Box>
         }

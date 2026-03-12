@@ -73,20 +73,22 @@ export const ProductUploadDialog = ({ open, onClose }: { open: boolean; onClose:
 
   return (
     <Dialog fullWidth maxWidth="md" onClose={onClose} open={open}>
-      <DialogTitle sx={{ pb: 1 }}>Subir productos</DialogTitle>
+      <DialogTitle sx={{ pb: 1 }}>Upload products</DialogTitle>
       <DialogContent dividers sx={{ pt: 1.5 }}>
         <Stack spacing={3}>
           <Stack spacing={1}>
             <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-              Incluye las medidas correctas (peso, longitud, ancho, alto, etc.), así nos aseguramos
-              que el costo de envío sea exacto.
+              Include the correct measurements (weight, length, width, height, etc.) to ensure
+              accurate shipping costs.
             </Typography>
             <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-              Formatos permitidos: CSV para datos y JPG/JPEG/PNG para imágenes, o un ZIP con
-              imágenes.
+              We recommend not exceeding 3600 rows in the format.
             </Typography>
             <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-              Tamaño máximo por archivo: 1 MB.
+              Allowed formats: CSV, XLS, XML.
+            </Typography>
+            <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+              Maximum file size: 1 MB.
             </Typography>
           </Stack>
 
@@ -99,7 +101,7 @@ export const ProductUploadDialog = ({ open, onClose }: { open: boolean; onClose:
             }}
           >
             <Stack spacing={1}>
-              <Typography variant="subtitle2">Archivo CSV</Typography>
+              <Typography variant="subtitle2">File</Typography>
               <Box
                 onDragOver={(e) => {
                   e.preventDefault();
@@ -113,10 +115,8 @@ export const ProductUploadDialog = ({ open, onClose }: { open: boolean; onClose:
                 })}
               >
                 <Stack spacing={1.5} alignItems="center">
-                  <Iconify icon="solar:file-text-bold" width={40} color="primary.main" />
-                  <Typography variant="subtitle2">
-                    Haz clic o arrastra aquí tu archivo
-                  </Typography>
+                  <Iconify icon="solar:file-text-bold" color="primary.main" width={35}/>
+                  <Typography variant="subtitle2">Drag and drop your file here</Typography>
                   <Typography variant="caption" sx={{ color: 'text.secondary' }}>
                     {CSV_ACCEPT_ATTR.toUpperCase()} — máx. 1 MB
                   </Typography>
@@ -165,8 +165,8 @@ export const ProductUploadDialog = ({ open, onClose }: { open: boolean; onClose:
                   width={20}
                 />
               }
-            >S
-              {result.ok ? 'Carga exitosa' : 'Carga fallida'}
+            >
+              S{result.ok ? 'Carga exitosa' : 'Carga fallida'}
               {result.message ? ` — ${result.message}` : ''}
             </Alert>
           )}
@@ -181,7 +181,7 @@ export const ProductUploadDialog = ({ open, onClose }: { open: boolean; onClose:
         ) : null}
         <Box sx={{ flexGrow: 1 }} />
         <Button onClick={handleCancelBulkUpload} disabled={uploading} variant="text">
-          Cancelar
+          Cancel
         </Button>
         <Button
           variant="contained"
@@ -192,10 +192,10 @@ export const ProductUploadDialog = ({ open, onClose }: { open: boolean; onClose:
           {uploading ? (
             <>
               <CircularProgress size={18} color="inherit" sx={{ mr: 1 }} />
-              Cargando…
+              Uploading…
             </>
           ) : (
-            'Cargar plantilla'
+            'Upload file'
           )}
         </Button>
       </DialogActions>
@@ -204,11 +204,11 @@ export const ProductUploadDialog = ({ open, onClose }: { open: boolean; onClose:
         <ConfirmDialog
           open={showCancelDialog}
           onClose={() => setShowCancelDialog(false)}
-          title="Cancelar Carga"
-          content="¿Estás seguro que deseas cancelar la carga de productos? Se perderán los archivos seleccionados."
+          title="Cancel product upload"
+          content="Are you sure you want to cancel the product upload? Selected files will be lost."
           action={
             <Button variant="contained" onClick={handleCancelUpload}>
-              Continuar
+              Continue
             </Button>
           }
         />
