@@ -23,8 +23,9 @@ export class GraphQLService {
       ? `${window.location.origin}/api/magento/graphql`
       : '/api/magento/graphql';
 
-    const endpoint =
-      ENV.environment === 'local' ? localUrl : urlBackend;
+    // Temporalmente se usa la URL local para evitar problemas de CORS.
+    //const endpoint = ENV.environment === 'local' ? localUrl : urlBackend;
+    const endpoint = localUrl;
 
     this.client = new GraphQLClient(endpoint, {
       headers: {
