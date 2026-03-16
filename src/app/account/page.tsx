@@ -1,6 +1,6 @@
 import { CONFIG } from 'src/global-config';
 
-import { UserProfileView } from 'src/sections/user/view';
+import { UserProfileView } from 'src/sections/account/view';
 
 // ----------------------------------------------------------------------
 
