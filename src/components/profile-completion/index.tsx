@@ -4,6 +4,7 @@ import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import Typography from '@mui/material/Typography';
 import LinearProgress from '@mui/material/LinearProgress';
+import { useTranslate } from 'src/locales/langs/i18n';
 
 interface ProfileCompletionCardProps {
   progress: number; // 0 - 100
@@ -12,6 +13,7 @@ interface ProfileCompletionCardProps {
 export const ProfileCompletionCard = ({
   progress,
 }: ProfileCompletionCardProps) => {
+  const { translate } = useTranslate();
   const [animatedProgress, setAnimatedProgress] = useState(0);
 
   const getColor = () => {
@@ -42,7 +44,7 @@ export const ProfileCompletionCard = ({
         fontWeight={600}
         mb={1}
       >
-        Complete your profile
+        { translate('completeProfile') }
       </Typography>
 
       <Box display="flex" alignItems="center" gap={1}>

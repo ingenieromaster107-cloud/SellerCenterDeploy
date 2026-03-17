@@ -39,6 +39,7 @@ import {
 import { OrderTableRow } from '../order-table-row';
 import { OrderTableToolbar } from '../order-table-toolbar';
 import { RETURN_STATUS } from '../constants/return/status';
+import { useTranslate } from 'src/locales/langs/i18n';
 
 // ----------------------------------------------------------------------
 
@@ -56,6 +57,7 @@ const TABLE_HEAD: TableHeadCellProps[] = [
 // ----------------------------------------------------------------------
 
 export function ReturnListView() {
+  const { translate } = useTranslate();
   const table = useTable({ defaultOrderBy: 'orderNumber' });
 
   const confirmDialog = useBoolean();
@@ -97,11 +99,11 @@ export function ReturnListView() {
   return (
     <DashboardContent>
       <CustomBreadcrumbs
-        heading="Return List"
+        heading={translate('returnList')}
         links={[
-          { name: 'Home', href: paths.home.root },
-          { name: 'Return', href: paths.return.root },
-          { name: 'List' },
+          { name: translate('sidebarMenu.home.title'), href: paths.home.root },
+          { name: translate('sidebarMenu.returns.title'), href: paths.return.root },
+          { name: translate('sidebarMenu.returns.subtitles.list') },
         ]}
         sx={{ mb: { xs: 3, md: 5 } }}
       />
@@ -160,7 +162,7 @@ export function ReturnListView() {
               )
             }
             action={
-              <Tooltip title="Delete">
+              <Tooltip title={translate('delete')}  >
                 <IconButton color="primary" onClick={confirmDialog.onTrue}>
                   <Iconify icon="solar:trash-bin-trash-bold" />
                 </IconButton>

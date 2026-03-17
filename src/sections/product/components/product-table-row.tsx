@@ -9,6 +9,7 @@ import LinearProgress, { type LinearProgressProps } from '@mui/material/LinearPr
 import { RouterLink } from 'src/routes/components';
 
 import { fCurrency } from 'src/utils/format-number';
+import { useTranslate } from 'src/locales/langs/i18n';
 
 // ----------------------------------------------------------------------
 
@@ -25,18 +26,19 @@ export function RenderCellSku({ params }: ParamsProps) {
 }
 
 export function RenderCellStock({ params }: ParamsProps) {
+  const { translate } = useTranslate();
   let color: LinearProgressProps['color'];
   let stockLabel: string;
 
   if (!params.row.inStock) {
     color = 'error';
-    stockLabel = 'Out of Stock';
+    stockLabel = translate('outOfStock');
   } else if (params.row.stock > 10) {
     color = 'success';
-    stockLabel = 'In Stock';
+    stockLabel = translate('inStock');
   } else {
     color = 'warning';
-    stockLabel = 'Low Stock';
+    stockLabel = translate('lowStock');
   }
 
   return (

@@ -13,6 +13,7 @@ import InputAdornment from '@mui/material/InputAdornment';
 
 import { Iconify } from 'src/components/iconify';
 import { CustomPopover } from 'src/components/custom-popover';
+import { useTranslate } from 'src/locales/langs/i18n';
 
 // ----------------------------------------------------------------------
 
@@ -22,6 +23,7 @@ type Props = {
 };
 
 export function OrderTableToolbar({ filters, onResetPage }: Props) {
+  const { translate } = useTranslate();
   const menuActions = usePopover();
 
   const { state: currentFilters, setState: updateFilters } = filters;
@@ -44,17 +46,17 @@ export function OrderTableToolbar({ filters, onResetPage }: Props) {
       <MenuList>
         <MenuItem onClick={() => menuActions.onClose()}>
           <Iconify icon="solar:printer-minimalistic-bold" />
-          Print
+          {translate('print')}
         </MenuItem>
 
         <MenuItem onClick={() => menuActions.onClose()}>
           <Iconify icon="solar:import-bold" />
-          Import
+          {translate('import')}
         </MenuItem>
 
         <MenuItem onClick={() => menuActions.onClose()}>
           <Iconify icon="solar:export-bold" />
-          Export
+          {translate('export')}
         </MenuItem>
       </MenuList>
     </CustomPopover>
@@ -85,7 +87,7 @@ export function OrderTableToolbar({ filters, onResetPage }: Props) {
             fullWidth
             value={currentFilters.name}
             onChange={handleFilterName}
-            placeholder="Search customer or Id..."
+            placeholder={translate('searchCustomerOrId')}
             slotProps={{
               input: {
                 startAdornment: (

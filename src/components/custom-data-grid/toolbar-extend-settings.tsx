@@ -3,7 +3,7 @@
 import type { DataGridProps } from '@mui/x-data-grid';
 import type { ToolbarButtonBaseProps } from './toolbar-core';
 
-import { useState, useCallback } from 'react';
+import { useState, useMemo, useCallback } from 'react';
 import { usePopover } from 'minimal-shared/hooks';
 
 import Menu from '@mui/material/Menu';
@@ -19,6 +19,7 @@ import {
   DensityStandardIcon,
   DensityComfortableIcon,
 } from 'src/theme/core/components/mui-x-data-grid';
+import { useTranslate } from 'src/locales/langs/i18n';
 
 import { Iconify } from '../iconify';
 import { ToolbarButtonBase } from './toolbar-core';
@@ -35,14 +36,18 @@ export type GridSettingsState = Pick<
   'density' | 'showCellVerticalBorder' | 'showColumnVerticalBorder'
 >;
 
+type GridSettingsOutput = GridSettingsState & Pick<DataGridProps, 'localeText'>;
+
 export type CustomToolbarSettingsButtonProps = {
-  settings: GridSettingsState;
+  settings: GridSettingsOutput;
   onChangeSettings: React.Dispatch<React.SetStateAction<GridSettingsState>>;
 };
 
 export function useToolbarSettings(
   initialSettings?: Partial<GridSettingsState>
 ): CustomToolbarSettingsButtonProps {
+  const { translate } = useTranslate();
+
   const defaultSettings: GridSettingsState = {
     density: 'standard',
     showCellVerticalBorder: false,
@@ -52,23 +57,44 @@ export function useToolbarSettings(
 
   const [settings, setSettings] = useState<GridSettingsState>(defaultSettings);
 
+  const localeText = useMemo<NonNullable<DataGridProps['localeText']>>(
+    () => ({
+      noRowsLabel: translate('mui.dataGrid.noRowsLabel'),
+      noResultsOverlayLabel: translate('mui.dataGrid.noResultsOverlayLabel'),
+      toolbarColumns: translate('mui.dataGrid.toolbarColumns'),
+      toolbarFilters: translate('mui.dataGrid.toolbarFilters'),
+      toolbarExport: translate('mui.dataGrid.toolbarExport'),
+      toolbarExportCSV: translate('mui.dataGrid.toolbarExportCSV'),
+      toolbarExportPrint: translate('mui.dataGrid.toolbarExportPrint'),
+      toolbarQuickFilterLabel: translate('mui.dataGrid.toolbarQuickFilterLabel'),
+      toolbarQuickFilterPlaceholder: translate('mui.dataGrid.toolbarQuickFilterPlaceholder'),
+      toolbarQuickFilterDeleteIconLabel: translate('mui.dataGrid.toolbarQuickFilterDeleteIconLabel'),
+    }),
+    [translate]
+  );
+
   return {
-    settings,
+    settings: {
+      ...settings,
+      localeText,
+    },
     onChangeSettings: setSettings,
   };
 }
 
 // ----------------------------------------------------------------------
 
-const GRID_DENSITY_OPTIONS: {
-  label: string;
+type GridDensityOption = {
+  labelKey: string;
   value: GridSettingsState['density'];
   icon: React.ReactNode;
-}[] = [
-  { label: 'Compact density', value: 'compact', icon: <DensityCompactIcon /> },
-  { label: 'Standard density', value: 'standard', icon: <DensityStandardIcon /> },
+};
+
+const GRID_DENSITY_OPTIONS: GridDensityOption[] = [
+  { labelKey: 'mui.dataGrid.densityCompact', value: 'compact', icon: <DensityCompactIcon /> },
+  { labelKey: 'mui.dataGrid.densityStandard', value: 'standard', icon: <DensityStandardIcon /> },
   {
-    label: 'Comfortable density',
+    labelKey: 'mui.dataGrid.densityComfortable',
     value: 'comfortable',
     icon: <DensityComfortableIcon />,
   },
@@ -78,8 +104,12 @@ export function CustomToolbarSettingsButton({
   settings,
   onChangeSettings,
   showLabel,
-  label = 'Settings',
+  label,
 }: Pick<ToolbarButtonBaseProps, 'label' | 'showLabel'> & CustomToolbarSettingsButtonProps) {
+  const { translate } = useTranslate();
+
+  const settingsLabel = label ?? translate('mui.dataGrid.toolbarSettings');
+
   const { open, anchorEl, onClose, onOpen } = usePopover();
 
   const handleChangeDensity = useCallback(
@@ -112,14 +142,14 @@ export function CustomToolbarSettingsButton({
 
   return (
     <>
-      <Tooltip title={label}>
+      <Tooltip title={settingsLabel}>
         <ToolbarButtonBase
           id="settings-menu-trigger"
           aria-controls="settings-menu"
           aria-haspopup="true"
           aria-expanded={open ? 'true' : undefined}
           onClick={onOpen}
-          label={label}
+          label={settingsLabel}
           icon={<Iconify icon="solar:settings-bold" />}
           showLabel={showLabel}
         />
@@ -151,14 +181,14 @@ export function CustomToolbarSettingsButton({
             onClick={() => handleChangeDensity(option.value)}
           >
             {option.icon}
-            {option.label}
+            {translate(option.labelKey)}
           </MenuItem>
         ))}
 
         <Divider />
 
-        {renderToggleOption('Show column borders', 'showColumnVerticalBorder')}
-        {renderToggleOption('Show cell borders', 'showCellVerticalBorder')}
+        {renderToggleOption(translate('mui.dataGrid.showColumnBorders'), 'showColumnVerticalBorder')}
+        {renderToggleOption(translate('mui.dataGrid.showCellBorders'), 'showCellVerticalBorder')}
       </Menu>
     </>
   );
