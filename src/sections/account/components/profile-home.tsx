@@ -42,7 +42,7 @@ export function ProfileHome({sx}: ProfileHomeProps) {
                 mb: 1.5,
             }}
             >
-            <Iconify width={24} icon="mingcute:contacts-2-line" />
+            <Iconify width={24} icon="solar:user-rounded-bold" />
             <Link variant="subtitle2" color="inherit">
                 {displayName}
             </Link>

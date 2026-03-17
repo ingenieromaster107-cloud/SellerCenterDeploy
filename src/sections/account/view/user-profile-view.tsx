@@ -13,6 +13,8 @@ import { usePathname, useSearchParams } from 'src/routes/hooks';
 import { useAuthContext } from "src/auth/hooks";
 import { paths } from "src/routes/paths";
 import { ProfileHome } from "../components/profile-home";
+import { ProfileDocuments } from "../components/profile-documents";
+import { ProfileConfiguration } from "../components/profile-configuration";
 
 const TAB_PARAM = 'tab';
 //---- Define the navigation items for the user profile tabs
@@ -102,6 +104,10 @@ export function UserProfileView() {
             </Card>
 
             {selectedTab === '' && <ProfileHome sx={{ mt: 3 }} />}
+            
+            {selectedTab === 'documents' && <ProfileDocuments />}
+
+            {selectedTab === 'configuration' && <ProfileConfiguration />}
 
         </HomeContent>
     );
