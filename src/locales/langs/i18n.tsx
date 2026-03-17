@@ -14,6 +14,7 @@ export interface LanguageOption {
   value: LangCode;
   label: string;
   countryCode: string;
+  icon: string;
 }
 
 // Language Configuration
@@ -24,8 +25,8 @@ export const LANGUAGE_RESOURCE: Record<LangCode, Record<string, any>> = {
 
 // Language Options
 export const LANGUAGE_OPTIONS: LanguageOption[] = [
-  { value: 'es', label: LANGUAGE_RESOURCE.es?.languages?.es || 'Español', countryCode: 'es' },
-  { value: 'en', label: LANGUAGE_RESOURCE.en?.languages?.en || 'English', countryCode: 'en' },
+  { value: 'es', label: LANGUAGE_RESOURCE.es?.languages?.es || 'Español', countryCode: 'es', icon: 'co'},
+  { value: 'en', label: LANGUAGE_RESOURCE.en?.languages?.en || 'English', countryCode: 'en', icon: 'us' },
 ];
 
 // Default language

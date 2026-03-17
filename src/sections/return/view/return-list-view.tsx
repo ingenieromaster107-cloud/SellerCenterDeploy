@@ -45,19 +45,21 @@ import { useTranslate } from 'src/locales/langs/i18n';
 
 const STATUS_OPTIONS = [{ value: 'all', label: 'All', color: 'default' }, ...RETURN_STATUS];
 
-const TABLE_HEAD: TableHeadCellProps[] = [
-  { id: 'id', label: 'Id', width: 150 },
-  { id: 'orderReference', label: 'Order Reference', width: 150   },
-  { id: 'customerName', label: 'Customer' },
-  { id: 'status', label: 'Status' },
-  { id: 'createdAt', label: 'Created date', width: 150 },
-  { id: 'action', label: '' },
-];
+
 
 // ----------------------------------------------------------------------
 
 export function ReturnListView() {
   const { translate } = useTranslate();
+
+  const TABLE_HEAD: TableHeadCellProps[] = [
+  { id: 'id', label: translate('id'), width: 150 },
+  { id: 'orderReference', label: translate('orderReference'), width: 150   },
+  { id: 'customerName', label: translate('customerName') },
+  { id: 'status', label: translate('status') },
+  { id: 'createdAt', label: translate('createdAt'), width: 150 },
+  { id: 'action', label: '' },
+];
   const table = useTable({ defaultOrderBy: 'orderNumber' });
 
   const confirmDialog = useBoolean();

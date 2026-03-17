@@ -41,7 +41,7 @@ export function LanguagePopover({ sx, ...other }: LanguagePopoverProps) {
             selected={option.value === currentLang}
             onClick={() => handleChangeLang(option.value)}
           >
-            <FlagIcon code={option.countryCode} />
+            <FlagIcon code={option.icon} />
             {option.label}
           </MenuItem>
         ))}
@@ -69,7 +69,7 @@ export function LanguagePopover({ sx, ...other }: LanguagePopoverProps) {
         ]}
         {...other}
       >
-        <FlagIcon code={currentLangOption?.countryCode} />
+        <FlagIcon code={currentLangOption?.icon} />
       </IconButton>
 
       {renderMenuList()}

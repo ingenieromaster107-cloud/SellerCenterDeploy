@@ -98,5 +98,11 @@
     "import": "Import",
     "export": "Export",
     "searchCustomerOrId": "Search customer or Id...",
-    "completeProfile": "Complete your profile"
+    "completeProfile": "Complete your profile",
+    "orderReference": "Order Reference",
+    "customerName": "Customer",
+    "status": "Status",
+    "createdAt": "Created date",
+    "id": "Id",
+    "noDataFound": "No data found"
 }
