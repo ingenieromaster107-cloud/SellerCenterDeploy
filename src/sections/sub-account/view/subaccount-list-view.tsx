@@ -19,7 +19,7 @@ import IconButton from '@mui/material/IconButton';
 
 import { paths } from 'src/routes/paths';
 
-import { DashboardContent } from 'src/layouts/dashboard';
+import { HomeContent } from 'src/layouts/home';
 import { useGetSubAccounts } from 'src/actions/account/useGetSubAccounts';
 
 import { Label } from 'src/components/label';
@@ -69,7 +69,7 @@ export function SubAccountListView() {
   } = useSubAccountTable();
 
   return (
-    <DashboardContent>
+    <HomeContent>
       <CustomBreadcrumbs
         heading="Manage Subaccounts"
         links={[
@@ -160,7 +160,7 @@ export function SubAccountListView() {
           onRowsPerPageChange={table.onChangeRowsPerPage}
         />
       </Card>
-    </DashboardContent>
+    </HomeContent>
   );
 }
 

@@ -19,7 +19,7 @@ import IconButton from '@mui/material/IconButton';
 
 import { paths } from 'src/routes/paths';
 
-import { DashboardContent } from 'src/layouts/dashboard';
+import { HomeContent } from 'src/layouts/home';
 import { useGetReturns } from 'src/actions/return/useGetReturns';
 
 import { Label } from 'src/components/label';
@@ -95,7 +95,7 @@ export function ReturnListView() {
   );
 
   return (
-    <DashboardContent>
+    <HomeContent>
       <CustomBreadcrumbs
         heading="Return List"
         links={[
@@ -220,7 +220,7 @@ export function ReturnListView() {
           onRowsPerPageChange={table.onChangeRowsPerPage}
         />
       </Card>
-    </DashboardContent>
+    </HomeContent>
   );
 }
 

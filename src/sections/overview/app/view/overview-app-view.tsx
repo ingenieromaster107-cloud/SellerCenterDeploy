@@ -3,7 +3,7 @@
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
 
-import { DashboardContent } from 'src/layouts/dashboard';
+import { HomeContent } from 'src/layouts/home';
 import { _appInvoices, _appProducts, _appCustomers } from 'src/_mock';
 
 import { AppKpiCard } from './app-kpi-card';
@@ -16,7 +16,7 @@ import { AppTopCustomers } from '../app-top-customers';
 export function OverviewAppView() {
 
   return (
-    <DashboardContent maxWidth="xl">
+    <HomeContent maxWidth="xl">
 
       <Grid container spacing={3}
         sx={{
@@ -91,6 +91,6 @@ export function OverviewAppView() {
         </Box>
       </Box>
 
-    </DashboardContent>
+    </HomeContent>
   );
 }
