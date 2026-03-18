@@ -10,11 +10,12 @@ import { RouterLink } from 'src/routes/components';
 
 import { fCurrency } from 'src/utils/format-number';
 import { useTranslate } from 'src/locales/langs/i18n';
+import { ProductListInterface } from 'src/interfaces/seller-product.interface';
 
 // ----------------------------------------------------------------------
 
 type ParamsProps = {
-  params: GridCellParams;
+  params: GridCellParams<ProductListInterface>;
 };
 
 export function RenderCellPrice({ params }: ParamsProps) {
@@ -55,6 +56,7 @@ export function RenderCellStock({ params }: ParamsProps) {
 }
 
 export function RenderCellProduct({ params, href }: ParamsProps & { href: string }) {
+  console.log("RenderCellProduct", params.row); // Debug: Verificar los datos que llegan a este componente
   return (
     <Box
       sx={{
@@ -67,7 +69,7 @@ export function RenderCellProduct({ params, href }: ParamsProps & { href: string
     >
       <Avatar
         alt={params.row.productName}
-        src={params.row.thumbnail}
+        src={params.row.thumbnailUrl}
         variant="rounded"
         sx={{ width: 64, height: 64 }}
       />
