@@ -13,7 +13,7 @@ import { DataGrid, gridClasses } from '@mui/x-data-grid';
 import { paths } from 'src/routes/paths';
 import { RouterLink } from 'src/routes/components';
 
-import { DashboardContent } from 'src/layouts/dashboard';
+import { HomeContent } from 'src/layouts/home';
 import { useGetProducts } from 'src/actions/product/useGetProducts';
 
 import { toast } from 'src/components/snackbar';
@@ -51,7 +51,7 @@ export function ProductListView() {
   const columns = useGetColumns({ onDeleteRow: handleDeleteRow });
 
   return (
-    <DashboardContent sx={{ flexGrow: 1, display: 'flex', flexDirection: 'column' }}>
+    <HomeContent sx={{ flexGrow: 1, display: 'flex', flexDirection: 'column' }}>
       <CustomBreadcrumbs
         heading="Product List"
         links={[
@@ -109,7 +109,7 @@ export function ProductListView() {
           )
         }
       </Card>
-    </DashboardContent>
+    </HomeContent>
   );
 }
 
