@@ -1,11 +1,12 @@
 'use client';
 
-import { ReactNode } from 'react';
+import type { Breakpoint } from '@mui/material/styles';
+import type { ContainerProps } from '@mui/material/Container';
 
 import { mergeClasses } from 'minimal-shared/utils';
 
-import { Breakpoint, styled, SxProps, Theme } from '@mui/material/styles';
-import Container, { ContainerProps } from '@mui/material/Container';
+import { styled } from '@mui/material/styles';
+import Container from '@mui/material/Container';
 
 import { useSettingsContext } from 'src/components/settings';
 
@@ -13,24 +14,20 @@ import { layoutClasses } from '../core';
 
 // ----------------------------------------------------------------------
 
-type HomeContentProps = ContainerProps & {
-  children?: ReactNode;
-  sx?: SxProps<Theme>;
-  className?: string;
-  disablePadding?: boolean;
-  maxWidth?: ContainerProps['maxWidth'];
+export type DashboardContentProps = ContainerProps & {
   layoutQuery?: Breakpoint;
+  disablePadding?: boolean;
 };
 
 export function HomeContent({
   sx,
   children,
   className,
-  disablePadding = false,
+  disablePadding,
   maxWidth = 'lg',
   layoutQuery = 'lg',
   ...other
-}: HomeContentProps) {
+}: DashboardContentProps) {
   const settings = useSettingsContext();
 
   const isNavHorizontal = settings.state.navLayout === 'horizontal';
@@ -40,15 +37,15 @@ export function HomeContent({
       className={mergeClasses([layoutClasses.content, className])}
       maxWidth={settings.state.compactLayout ? maxWidth : false}
       sx={[
-        (theme: Theme) => ({
+        (theme) => ({
           display: 'flex',
           flex: '1 1 auto',
           flexDirection: 'column',
-          pt: 'var(--layout-home-content-pt)',
-          pb: 'var(--layout-home-content-pb)',
+          pt: 'var(--layout-dashboard-content-pt)',
+          pb: 'var(--layout-dashboard-content-pb)',
           [theme.breakpoints.up(layoutQuery)]: {
-            px: 'var(--layout-home-content-px)',
-            ...(isNavHorizontal && { '--layout-home-content-pt': '40px' }),
+            px: 'var(--layout-dashboard-content-px)',
+            ...(isNavHorizontal && { '--layout-dashboard-content-pt': '40px' }),
           },
           ...(disablePadding && {
             p: {
