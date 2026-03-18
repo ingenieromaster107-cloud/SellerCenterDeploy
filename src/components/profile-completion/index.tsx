@@ -4,6 +4,7 @@ import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import Typography from '@mui/material/Typography';
 import LinearProgress from '@mui/material/LinearProgress';
+
 import { useTranslate } from 'src/locales/langs/i18n';
 
 interface ProfileCompletionCardProps {

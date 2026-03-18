@@ -1,4 +1,5 @@
 import type { GridCellParams } from '@mui/x-data-grid';
+import type { ProductListInterface } from 'src/interfaces/seller-product.interface';
 
 import Box from '@mui/material/Box';
 import Link from '@mui/material/Link';
@@ -9,8 +10,8 @@ import LinearProgress, { type LinearProgressProps } from '@mui/material/LinearPr
 import { RouterLink } from 'src/routes/components';
 
 import { fCurrency } from 'src/utils/format-number';
+
 import { useTranslate } from 'src/locales/langs/i18n';
-import { ProductListInterface } from 'src/interfaces/seller-product.interface';
 
 // ----------------------------------------------------------------------
 

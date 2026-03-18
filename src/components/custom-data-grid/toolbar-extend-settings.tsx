@@ -3,8 +3,8 @@
 import type { DataGridProps } from '@mui/x-data-grid';
 import type { ToolbarButtonBaseProps } from './toolbar-core';
 
-import { useState, useMemo, useCallback } from 'react';
 import { usePopover } from 'minimal-shared/hooks';
+import { useMemo, useState, useCallback } from 'react';
 
 import Menu from '@mui/material/Menu';
 import Tooltip from '@mui/material/Tooltip';
@@ -12,6 +12,7 @@ import Divider from '@mui/material/Divider';
 import MenuItem from '@mui/material/MenuItem';
 import { svgIconClasses } from '@mui/material/SvgIcon';
 
+import { useTranslate } from 'src/locales/langs/i18n';
 import {
   EyeIcon,
   EyeCloseIcon,
@@ -19,7 +20,6 @@ import {
   DensityStandardIcon,
   DensityComfortableIcon,
 } from 'src/theme/core/components/mui-x-data-grid';
-import { useTranslate } from 'src/locales/langs/i18n';
 
 import { Iconify } from '../iconify';
 import { ToolbarButtonBase } from './toolbar-core';

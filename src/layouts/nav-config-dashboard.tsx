@@ -5,10 +5,9 @@ import { useMemo } from 'react';
 import { paths } from 'src/routes/paths';
 
 import { CONFIG } from 'src/global-config';
+import { useTranslate } from 'src/locales/langs/i18n';
 
 import { SvgColor } from 'src/components/svg-color';
-
-import { useTranslate } from 'src/locales/langs/i18n';
 
 // ----------------------------------------------------------------------
 const icon = (name: string) => (

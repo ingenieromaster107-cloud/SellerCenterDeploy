@@ -18,12 +18,13 @@ import IconButton from '@mui/material/IconButton';
 
 import { fCurrency } from 'src/utils/format-number';
 
+import { useTranslate } from 'src/locales/langs/i18n';
+
 import { Label } from 'src/components/label';
 import { Iconify } from 'src/components/iconify';
 import { Scrollbar } from 'src/components/scrollbar';
 import { TableHeadCustom } from 'src/components/table';
 import { CustomPopover } from 'src/components/custom-popover';
-import { useTranslate } from 'src/locales/langs/i18n';
 
 // ----------------------------------------------------------------------
 

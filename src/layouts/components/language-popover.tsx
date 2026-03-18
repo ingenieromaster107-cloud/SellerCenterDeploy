@@ -2,8 +2,8 @@
 
 import type { IconButtonProps } from '@mui/material/IconButton';
 
-import { m } from 'framer-motion';
 import { useMemo } from 'react';
+import { m } from 'framer-motion';
 import { usePopover } from 'minimal-shared/hooks';
 
 import MenuList from '@mui/material/MenuList';
@@ -11,6 +11,7 @@ import MenuItem from '@mui/material/MenuItem';
 import IconButton from '@mui/material/IconButton';
 
 import { useTranslate } from 'src/locales';
+
 import { FlagIcon } from 'src/components/flag-icon';
 import { CustomPopover } from 'src/components/custom-popover';
 import { varTap, varHover, transitionTap } from 'src/components/animate';

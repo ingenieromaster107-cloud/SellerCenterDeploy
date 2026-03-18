@@ -29,8 +29,8 @@ import {
   ColumnsPanelTrigger,
 } from '@mui/x-data-grid';
 
-import { ExportIcon, FilterIcon, ViewColumnsIcon } from 'src/theme/core/components/mui-x-data-grid';
 import { useTranslate } from 'src/locales/langs/i18n';
+import { ExportIcon, FilterIcon, ViewColumnsIcon } from 'src/theme/core/components/mui-x-data-grid';
 
 import { Iconify } from '../iconify';
 

@@ -11,9 +11,10 @@ import TextField from '@mui/material/TextField';
 import IconButton from '@mui/material/IconButton';
 import InputAdornment from '@mui/material/InputAdornment';
 
+import { useTranslate } from 'src/locales/langs/i18n';
+
 import { Iconify } from 'src/components/iconify';
 import { CustomPopover } from 'src/components/custom-popover';
-import { useTranslate } from 'src/locales/langs/i18n';
 
 // ----------------------------------------------------------------------
 

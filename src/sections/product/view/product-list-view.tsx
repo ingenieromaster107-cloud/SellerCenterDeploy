@@ -14,6 +14,7 @@ import { paths } from 'src/routes/paths';
 import { RouterLink } from 'src/routes/components';
 
 import { HomeContent } from 'src/layouts/home';
+import { useTranslate } from 'src/locales/langs/i18n';
 import { useGetProducts } from 'src/actions/product/useGetProducts';
 
 import { toast } from 'src/components/snackbar';
@@ -31,7 +32,6 @@ import {
   RenderCellPrice,
   RenderCellProduct,
 } from '../components/product-table-row';
-import { useTranslate } from 'src/locales/langs/i18n';
 
 // ----------------------------------------------------------------------
 

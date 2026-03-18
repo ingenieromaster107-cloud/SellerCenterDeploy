@@ -16,6 +16,8 @@ import Tooltip from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
 
+import { useTranslate } from 'src/locales/langs/i18n';
+
 import { Label } from 'src/components/label';
 import { Iconify } from 'src/components/iconify';
 import { Scrollbar } from 'src/components/scrollbar';
@@ -23,7 +25,6 @@ import { NotificationBellIcon } from 'src/components/icons';
 import { varTap, varHover, transitionTap } from 'src/components/animate';
 
 import { NotificationItem } from './notification-item';
-import { useTranslate } from 'src/locales/langs/i18n';
 
 // ----------------------------------------------------------------------
 

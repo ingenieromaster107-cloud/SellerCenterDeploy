@@ -26,7 +26,7 @@ import { NavHorizontal } from './nav-horizontal';
 import { useNavData } from '../nav-config-dashboard';
 import { dashboardLayoutVars, dashboardNavColorVars } from './css-vars';
 import { MainSection, layoutClasses, HeaderSection, LayoutSection } from '../core';
-import { Searchbar, MenuButton, StoreButton, ThemeToggleButton, NotificationsDrawer, LanguagePopover} from '../components';
+import { Searchbar, MenuButton, StoreButton, LanguagePopover, ThemeToggleButton, NotificationsDrawer} from '../components';
 
 // ----------------------------------------------------------------------
 
