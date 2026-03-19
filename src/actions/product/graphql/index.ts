@@ -1,1 +1,3 @@
-export * from './queries'
+export * from './queries';
+export * from './mutations/create-simple-product';
+export * from './mutations/validate-mass-upload';

@@ -23,16 +23,16 @@ import { NavMobile } from './nav-mobile';
 import { VerticalDivider } from './content';
 import { NavVertical } from './nav-vertical';
 import { NavHorizontal } from './nav-horizontal';
-import { navData as dashboardNavData } from '../nav-config-dashboard';
+import { useNavData } from '../nav-config-dashboard';
 import { dashboardLayoutVars, dashboardNavColorVars } from './css-vars';
 import { MainSection, layoutClasses, HeaderSection, LayoutSection } from '../core';
-import { Searchbar, MenuButton, StoreButton, ThemeToggleButton, NotificationsDrawer, LanguagePopover} from '../components';
+import { Searchbar, MenuButton, StoreButton, LanguagePopover, ThemeToggleButton, NotificationsDrawer} from '../components';
 
 // ----------------------------------------------------------------------
 
 type LayoutBaseProps = Pick<LayoutSectionProps, 'sx' | 'children' | 'cssVars'>;
 
-export type DashboardLayoutProps = LayoutBaseProps & {
+export type HomeLayoutProps = LayoutBaseProps & {
   layoutQuery?: Breakpoint;
   slotProps?: {
     header?: HeaderSectionProps;
@@ -43,13 +43,13 @@ export type DashboardLayoutProps = LayoutBaseProps & {
   };
 };
 
-export function DashboardLayout({
+export function HomeLayout({
   sx,
   cssVars,
   children,
   slotProps,
   layoutQuery = 'lg',
-}: DashboardLayoutProps) {
+}: HomeLayoutProps) {
   const theme = useTheme();
 
   const { user } = useMockedUser();
@@ -60,6 +60,7 @@ export function DashboardLayout({
 
   const { value: open, onFalse: onClose, onTrue: onOpen } = useBoolean();
 
+  const dashboardNavData = useNavData();
   const navData = slotProps?.nav?.data ?? dashboardNavData;
 
   const isNavMini = settings.state.navLayout === 'mini';

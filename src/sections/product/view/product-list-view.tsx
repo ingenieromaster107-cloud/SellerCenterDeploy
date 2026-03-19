@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import type { GridColDef } from '@mui/x-data-grid';
 import type { ProductListInterface } from 'src/interfaces';
@@ -11,9 +11,10 @@ import { useTheme } from '@mui/material/styles';
 import { DataGrid, gridClasses } from '@mui/x-data-grid';
 
 import { paths } from 'src/routes/paths';
-import { RouterLink } from 'src/routes/components';
+import { useRouter } from 'src/routes/hooks';
 
-import { DashboardContent } from 'src/layouts/dashboard';
+import { HomeContent } from 'src/layouts/home';
+import { useTranslate } from 'src/locales/langs/i18n';
 import { useGetProducts } from 'src/actions/product/useGetProducts';
 
 import { toast } from 'src/components/snackbar';
@@ -31,13 +32,17 @@ import {
   RenderCellPrice,
   RenderCellProduct,
 } from '../components/product-table-row';
+import { ProductTypeSelectorDialog } from '../components/product-type-selector-dialog';
 
 // ----------------------------------------------------------------------
 
 export function ProductListView() {
+  const router = useRouter();
+  const { translate } = useTranslate();
   const toolbarOptions = useToolbarSettings();
   const { products, isLoading, isError } = useGetProducts();
   const [tableData, setTableData] = useState<ProductListInterface[]>(products);
+  const [openTypeSelector, setOpenTypeSelector] = useState(false);
 
   useEffect(() => {
     setTableData(products);
@@ -48,25 +53,34 @@ export function ProductListView() {
     toast.success('Delete success!');
   }, []);
 
-  const columns = useGetColumns({ onDeleteRow: handleDeleteRow });
+  const handleSelectProductType = useCallback(
+    (type: 'simple' | 'configurable') => {
+      setOpenTypeSelector(false);
+      if (type === 'simple') {
+        router.push(paths.product.create);
+      }
+    },
+    [router]
+  );
+
+  const columns = useGetColumns({ onDeleteRow: handleDeleteRow, translate });
 
   return (
-    <DashboardContent sx={{ flexGrow: 1, display: 'flex', flexDirection: 'column' }}>
+    <HomeContent sx={{ flexGrow: 1, display: 'flex', flexDirection: 'column' }}>
       <CustomBreadcrumbs
-        heading="Product List"
+        heading={translate('sidebarMenu.myProducts.title')}
         links={[
-          { name: 'Home', href: paths.home.root },
-          { name: 'Product', href: paths.product.root },
-          { name: 'List' },
+          { name: translate('sidebarMenu.home.title'), href: paths.home.root },
+          { name: translate('sidebarMenu.myProducts.title'), href: paths.product.root },
+          { name: translate('sidebarMenu.myProducts.subtitles.list') },
         ]}
         action={
           <Button
-            component={RouterLink}
-            href={paths.product.root}
             variant="contained"
             startIcon={<Iconify icon="mingcute:add-line" />}
+            onClick={() => setOpenTypeSelector(true)}
           >
-            Add product
+            {translate('addProduct')}
           </Button>
         }
         sx={{ mb: { xs: 3, md: 5 } }}
@@ -83,8 +97,8 @@ export function ProductListView() {
       >
         {isError ? (
           <ErrorContent
-            title="Products not available"
-            description="We're sorry, we were unable to load the products at this time. Please try again later."
+            title={translate('productsNotAvailable')}
+            description={translate('productsLoadError')}
           />
           ) : (
             <DataGrid
@@ -93,11 +107,11 @@ export function ProductListView() {
               columns={columns}
               loading={isLoading}
               getRowHeight={() => 'auto'}
-              pageSizeOptions={[5, 10, 20, { value: -1, label: 'All' }]}
+              pageSizeOptions={[5, 10, 20, { value: -1, label: translate('mui.common.all') }]}
               initialState={{ pagination: { paginationModel: { pageSize: 10 } } }}
               slots={{
                 noRowsOverlay: () => <EmptyContent />,
-                noResultsOverlay: () => <EmptyContent title="No results found" />,
+                noResultsOverlay: () => <EmptyContent title={translate('noResultsFound')} />,
               }}
               sx={{
                 [`& .${gridClasses.cell}`]: {
@@ -109,7 +123,13 @@ export function ProductListView() {
           )
         }
       </Card>
-    </DashboardContent>
+
+      <ProductTypeSelectorDialog
+        open={openTypeSelector}
+        onClose={() => setOpenTypeSelector(false)}
+        onSelect={handleSelectProductType}
+      />
+    </HomeContent>
   );
 }
 
@@ -117,16 +137,17 @@ export function ProductListView() {
 
 type UseGetColumnsProps = {
   onDeleteRow: (id: number) => void;
+  translate: ReturnType<typeof useTranslate>['translate'];
 };
 
-const useGetColumns = ({ onDeleteRow }: UseGetColumnsProps) => {
+const useGetColumns = ({ onDeleteRow, translate }: UseGetColumnsProps) => {
   const theme = useTheme();
 
   const columns: GridColDef[] = useMemo(
     () => [
       {
         field: 'name',
-        headerName: 'Product',
+        headerName: translate('product'),
         flex: 1,
         minWidth: 300,
         hideable: false,
@@ -139,13 +160,13 @@ const useGetColumns = ({ onDeleteRow }: UseGetColumnsProps) => {
       },
       {
         field: 'sku',
-        headerName: 'SKU',
+        headerName: translate('sku'),
         width: 200,
         renderCell: (params) => <RenderCellSku params={params} />,
       },
       {
         field: 'inventoryType',
-        headerName: 'Stock',
+        headerName: translate('stock'),
         width: 160,
         type: 'singleSelect',
         filterable: false,
@@ -154,7 +175,7 @@ const useGetColumns = ({ onDeleteRow }: UseGetColumnsProps) => {
       },
       {
         field: 'price',
-        headerName: 'Price',
+        headerName: translate('price'),
         width: 120,
         editable: true,
         renderCell: (params) => <RenderCellPrice params={params} />,
@@ -173,21 +194,21 @@ const useGetColumns = ({ onDeleteRow }: UseGetColumnsProps) => {
           <CustomGridActionsCellItem
             key={`view-${params.row.id}`}
             showInMenu
-            label="View"
+            label={translate('view')}
             icon={<Iconify icon="solar:eye-bold" />}
             href={paths.product.root}
           />,
           <CustomGridActionsCellItem
             key={`edit-${params.row.id}`}
             showInMenu
-            label="Edit"
+            label={translate('edit')}
             icon={<Iconify icon="solar:pen-bold" />}
             href={paths.product.root}
           />,
           <CustomGridActionsCellItem
             key={`delete-${params.row.id}`}
             showInMenu
-            label="Delete"
+            label={translate('delete')}
             icon={<Iconify icon="solar:trash-bin-trash-bold" />}
             onClick={() => onDeleteRow(params.row.id)}
             style={{ color: theme.vars.palette.error.main }}
@@ -195,7 +216,7 @@ const useGetColumns = ({ onDeleteRow }: UseGetColumnsProps) => {
         ],
       },
     ],
-    [onDeleteRow, theme.vars.palette.error.main]
+    [onDeleteRow, theme.vars.palette.error.main, translate]
   );
 
   return columns;

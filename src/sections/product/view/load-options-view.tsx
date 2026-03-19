@@ -1,21 +1,25 @@
 'use client';
 
+import { useState } from 'react';
+
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
-import { useState } from 'react';
-import { CustomBreadcrumbs } from 'src/components/custom-breadcrumbs';
-import { Iconify } from 'src/components/iconify';
-import { DashboardContent } from 'src/layouts/dashboard';
-import { ProductUploadDialog } from 'src/sections/product/components/product-upload-dialog/product-upload-dialog';
+
 import { paths } from 'src/routes/paths';
-import { CONFIG } from 'src/global-config';
+
+import { HomeContent } from 'src/layouts/home';
+
+import { Iconify } from 'src/components/iconify';
+import { CustomBreadcrumbs } from 'src/components/custom-breadcrumbs';
+
+import { ProductUploadDialog } from 'src/sections/product/components/product-upload-dialog/product-upload-dialog';
 
 // export const metadata = { title: `Bulk upload - ${CONFIG.appName}` };
 
 export default function LoadOptionsView() {
   const [openBulk, setOpenBulk] = useState(false);
   return (
-    <DashboardContent>
+    <HomeContent>
       {' '}
       <CustomBreadcrumbs
         heading="Bulk loading"
@@ -50,6 +54,6 @@ export default function LoadOptionsView() {
       />
       <ProductUploadDialog open={openBulk} onClose={() => setOpenBulk(false)} />
 
-    </DashboardContent>
+    </HomeContent>
   );
 }

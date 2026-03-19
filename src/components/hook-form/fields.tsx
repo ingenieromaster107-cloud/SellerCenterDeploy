@@ -1,5 +1,6 @@
 import { RHFRating } from './rhf-rating';
 import { RHFSlider } from './rhf-slider';
+import { RHFEditor } from './rhf-editor';
 import { RHFTextField } from './rhf-text-field';
 import { RHFRadioGroup } from './rhf-radio-group';
 import { RHFAutocomplete } from './rhf-autocomplete';
@@ -16,6 +17,7 @@ export const Field = {
   Slider: RHFSlider,
   Rating: RHFRating,
   Text: RHFTextField,
+  Editor: RHFEditor,
   Checkbox: RHFCheckbox,
   RadioGroup: RHFRadioGroup,
   MultiSelect: RHFMultiSelect,
