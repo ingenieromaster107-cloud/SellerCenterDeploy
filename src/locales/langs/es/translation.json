@@ -1,0 +1,115 @@
+{
+    "languages": {
+        "es": "Español",
+        "en": "Inglés"
+    },
+    "loginPage": {
+        "title": "Inicia sesión en tu cuenta",
+        "emailForm": "Correo electrónico",
+        "passwordForm": "Contraseña",
+        "passwordPh": "6+ Caracteres",
+        "signIn": "Iniciar sesión",
+        "forgotPassword": "¿Olvidaste tu contraseña?",
+        "keepMe": "Mantener la sesión abierta",
+        "noAccount": "¿No tienes una cuenta?",
+        "getStarted": "Comenzar"
+    },
+    "sidebarMenu": {
+        "home": {
+            "title": "Inicio"
+        },
+        "myProducts": {
+            "title": "Mis Productos",
+            "subtitles": {
+                "list": "Lista",
+                "loadProducts": "Cargar Productos"
+            }
+        },
+        "returns": {
+            "title": "Devoluciones",
+            "subtitles": {
+                "list": "Lista"
+            }
+        },
+        "feedback": {
+            "title": "Opiniones"
+        }
+
+    },
+    "tableLatestOrders": {
+        "title": "Últimos Pedidos",
+        "columns": {
+            "id": "Pedido",
+            "customer": "Cliente",
+            "date": "Fecha",
+            "total": "Total",
+            "status": "Estado"
+        }
+    },
+    "TopProducts": {
+        "title": "Productos Principales"
+    },
+    "TopClients": {
+        "title": "Clientes Principales"
+    },
+    "mui": {
+        "common": {
+            "all": "Todos",
+            "search": "Buscar"
+        },
+        "dataGrid": {
+            "noRowsLabel": "Sin filas",
+            "noResultsOverlayLabel": "Sin resultados",
+            "toolbarColumns": "Columnas",
+            "toolbarFilters": "Filtros",
+            "toolbarExport": "Exportar",
+            "toolbarExportCSV": "Descargar CSV",
+            "toolbarExportPrint": "Imprimir",
+            "toolbarQuickFilterLabel": "Buscar",
+            "toolbarQuickFilterPlaceholder": "Buscar…",
+            "toolbarQuickFilterDeleteIconLabel": "Limpiar búsqueda",
+            "toolbarSettings": "Configuración",
+            "densityCompact": "Densidad compacta",
+            "densityStandard": "Densidad estándar",
+            "densityComfortable": "Densidad cómoda",
+            "showColumnBorders": "Mostrar bordes de columna",
+            "showCellBorders": "Mostrar bordes de celda"
+        },
+        "tablePagination": {
+            "rowsPerPage": "Filas por página:",
+            "of": "de",
+            "dense": "Denso"
+        }
+    },
+    "search": "Buscar...",
+    "logout": "Cerrar sesión",
+    "productsNotAvailable": "Productos no disponibles",
+    "productsLoadError": "Lo sentimos, no pudimos cargar los productos en este momento. Por favor, inténtalo de nuevo más tarde.",
+    "addProduct": "Agregar Producto",
+    "noResultsFound": "No se encontraron resultados",
+    "product": "Producto",
+    "sku": "SKU",
+    "price": "Precio",
+    "stock": "Inventario",
+    "view": "Ver",
+    "edit": "Editar",
+    "delete": "Eliminar",
+    "viewAll": "Ver todos",
+    "outOfStock": "Agotado",
+    "inStock": "Disponible",
+    "lowStock": "Bajo inventario",
+    "print": "Imprimir",
+    "import": "Importar",
+    "export": "Exportar",
+    "searchCustomerOrId": "Buscar cliente o Id...",
+    "completeProfile": "Completa tu perfil",
+    "orderReference": "Referencia de pedido",
+    "customerName": "Cliente",
+    "status": "Estado",
+    "createdAt": "Fecha de creación",
+    "id": "Id",
+    "noDataFound": "No se encontraron datos",
+    "feedbackModule":{
+        "title":"Opiniones"
+    }
+}

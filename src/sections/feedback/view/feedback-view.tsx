@@ -17,11 +17,12 @@ import {
 } from '@mui/material';
 import { CustomBreadcrumbs } from 'src/components/custom-breadcrumbs';
 import { Iconify } from 'src/components/iconify';
-import { DashboardContent } from 'src/layouts/dashboard/content';
+// import { DashboardContent } from 'src/layouts/dashboard/content';
 import { paths } from 'src/routes/paths';
 import { useFeedbackList } from 'src/hooks/feedback/use-feedback-list';
 import { CommonTable } from '../components/common-table';
 import { FeedbackTableFormated } from 'src/interfaces/feedback/feedback-list';
+import { HomeContent } from 'src/layouts/home';
 
 export default function FeedbackView() {
   const { reviewsList, tableHead, handleFilterClick } = useFeedbackList();
@@ -103,7 +104,7 @@ export default function FeedbackView() {
     );
   };
   return (
-    <DashboardContent>
+    <HomeContent>
       <CustomBreadcrumbs
         heading="Feedback"
         links={[{ name: 'Home', href: paths.home.root }, { name: 'Feedback' }]}
@@ -172,6 +173,6 @@ export default function FeedbackView() {
           </Box>
         </Box>
       </Popover>
-    </DashboardContent>
+    </HomeContent>
   );
 }

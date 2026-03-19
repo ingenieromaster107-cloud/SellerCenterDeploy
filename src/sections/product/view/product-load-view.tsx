@@ -1,20 +1,24 @@
 'use client';
 
-import Card from '@mui/material/Card';
-import { paths } from 'src/routes/paths';
-import Button from '@mui/material/Button';
-import { RouterLink } from 'src/routes/components';
-import { DashboardContent } from 'src/layouts/dashboard';
-import { CustomBreadcrumbs } from 'src/components/custom-breadcrumbs';
-import List from '@mui/material/List';
 import { Fragment } from 'react/jsx-runtime';
-import ListItem from '@mui/material/ListItem';
-import ListItemText from '@mui/material/ListItemText';
-import Divider from '@mui/material/Divider';
-import Stack from '@mui/material/Stack';
-import Typography from '@mui/material/Typography';
+
 import Box from '@mui/material/Box';
+import Card from '@mui/material/Card';
+import List from '@mui/material/List';
+import Stack from '@mui/material/Stack';
+import Button from '@mui/material/Button';
+import Divider from '@mui/material/Divider';
+import ListItem from '@mui/material/ListItem';
+import Typography from '@mui/material/Typography';
+import ListItemText from '@mui/material/ListItemText';
+
+import { paths } from 'src/routes/paths';
+import { RouterLink } from 'src/routes/components';
+
+import { HomeContent } from 'src/layouts/home';
+
 import { Iconify } from 'src/components/iconify';
+import { CustomBreadcrumbs } from 'src/components/custom-breadcrumbs';
 
 export function ProductLoadView() {
   const cardSx = (theme: any) => ({
@@ -42,7 +46,7 @@ export function ProductLoadView() {
     </List>
   );
   return (
-    <DashboardContent sx={{ flexGrow: 1, display: 'flex', flexDirection: 'column' }}>
+    <HomeContent sx={{ flexGrow: 1, display: 'flex', flexDirection: 'column' }}>
       <CustomBreadcrumbs
         heading="Load products"
         links={[
@@ -81,6 +85,6 @@ export function ProductLoadView() {
           </Stack>
         </Card>
       </Box>
-    </DashboardContent>
+    </HomeContent>
   );
 }
