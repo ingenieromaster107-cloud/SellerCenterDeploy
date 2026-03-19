@@ -18,6 +18,7 @@ const ICONS = {
   product: icon('ic-product'),
   dashboard: icon('ic-dashboard'),
   return: icon('ic-refresh'),
+  feedback: icon('ic-feedback'),
 };
 
 // ----------------------------------------------------------------------
@@ -58,6 +59,11 @@ export const navData: NavSectionProps['data'] = [
           { title: 'List', path: paths.return.root },
         ],
       },
+      {
+        title: 'Feedback',
+        path: paths.feedback.root,
+        icon: ICONS.feedback,
+      }
     ],
   },
 ];
