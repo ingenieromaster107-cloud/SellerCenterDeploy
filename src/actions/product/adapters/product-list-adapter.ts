@@ -21,7 +21,8 @@ export function productListAdapter(
   return data.sellerProducts.items.map((product) => ({
       id: product.id,
       sku: product.sku,
-      productName: product.name,
+      productNameEs: product.name,
+      productNameEn: product.custom_attributes_info.items[0]?.value,
       thumbnailUrl: product.thumbnail?.url ?? CONFIG.assetsDir + '/assets/images/img-not-found.jpg',
       category: product.categories?.[0]?.name ?? "-",
       finalPrice: product.price_range?.minimum_price?.regular_price?.value ?? 0,

@@ -104,5 +104,21 @@
     "status": "Status",
     "createdAt": "Created date",
     "id": "Id",
-    "noDataFound": "No data found"
+    "noDataFound": "No data found",
+    "returnStatus": {
+        "all": "All",
+        "PENDING": "Pending",
+        "UNCONFIRMED": "Unconfirmed",
+        "AUTHORIZED": "Authorized",
+        "PARTIALLY_AUTHORIZED": "Partially Authorized",
+        "RECEIVED": "Received",
+        "PARTIALLY_RECEIVED": "Partially Received",
+        "APPROVED": "Approved",
+        "PARTIALLY_APPROVED": "Partially Approved",
+        "REJECTED": "Rejected",
+        "PARTIALLY_REJECTED": "Partially Rejected",
+        "DENIED": "Denied",
+        "PROCESSED_AND_CLOSED": "Processed and Closed",
+        "CLOSED": "Closed"
+    }
 }
