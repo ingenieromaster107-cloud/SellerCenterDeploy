@@ -83,23 +83,7 @@ export function ProfileConfiguration() {
       isPublic: false,
     };
   }, [user]);
-
-  const defaultValues = {
-    displayName: '',
-    email: '',
-    photoURL: null,
-    identificationType: '',
-    identificationNumber: '',
-    phoneNumber: '',
-    country: null,
-    address: '',
-    state: '',
-    city: '',
-    zipCode: '',
-    about: '',
-    isPublic: false,
-  };
-
+  
   const methods = useForm({
     mode: 'all',
     resolver: zodResolver(UpdateUserSchema),

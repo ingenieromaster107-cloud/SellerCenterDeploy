@@ -1,6 +1,7 @@
 import { paths } from 'src/routes/paths';
 
-import { EXPIRATION_TIME, ACCESS_TOKEN_STORAGE_KEY } from './constant';
+import { EXPIRATION_TIME, ACCESS_TOKEN_STORAGE_KEY, CUSTOMER_KEY } from './constant';
+import { ICustomer } from 'src/interfaces/customer/customer.interface';
 
 // ----------------------------------------------------------------------
 
@@ -43,6 +44,19 @@ export async function setSession(accessToken: string | null) {
     }
   } catch (error) {
     console.error('Error during set session:', error);
+    throw error;
+  }
+}
+
+export async function setCustomerSession(customer: ICustomer['customer'] | null) {
+  try {
+    if (customer) {
+      sessionStorage.setItem(CUSTOMER_KEY, JSON.stringify(customer));
+    } else {
+      sessionStorage.removeItem(CUSTOMER_KEY);;
+    }
+  } catch (error) {
+      console.error('Error during set customer session:', error);
     throw error;
   }
 }

@@ -5,6 +5,7 @@ import { GraphQLService } from 'src/lib/graphql-client';
 import { getSession, setSession } from 'src/auth/context/utils';
 
 import { LOGIN_MUTATION } from "./graphql";
+import { useGetCustomer } from '../customer/useGetCustomer';
 
 
 interface LoginResponse {
@@ -19,9 +20,9 @@ export function useLogin() {
     mutationFn: (variables: any) => graphql.request<LoginResponse>(LOGIN_MUTATION, variables),
     onSuccess: async (data) => {
       const token = await data.generateCustomerToken.token;
-      setSession(token);
-
       graphql.setHeader('Authorization', `Bearer ${getSession()}`);
+      setSession(token);
+      const { customer, isLoading } = useGetCustomer();
     },
   });
 }

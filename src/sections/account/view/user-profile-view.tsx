@@ -12,9 +12,12 @@ import { RouterLink } from 'src/routes/components';
 import { usePathname, useSearchParams } from 'src/routes/hooks';
 import { useAuthContext } from "src/auth/hooks";
 import { paths } from "src/routes/paths";
-import { ProfileHome } from "../components/profile-home";
-import { ProfileDocuments } from "../components/profile-documents";
-import { ProfileConfiguration } from "../components/profile-configuration";
+import {
+  ProfileHome,
+  ProfileDocuments,
+  ProfileConfiguration,
+  ProfileChangePassword
+} from "../components";
 
 const TAB_PARAM = 'tab';
 //---- Define the navigation items for the user profile tabs
@@ -24,6 +27,11 @@ const NAV_ITEMS = [
         value: 'configuration',
         label: 'Configuración',
         icon: <Iconify width={24} icon="solar:settings-bold" />,
+    },
+    {
+        value: 'security',
+        label: 'Seguridad',
+        icon: <Iconify width={24} icon="ic:round-vpn-key" />,
     },
     {
         value: 'documents',
@@ -103,11 +111,10 @@ export function UserProfileView() {
                 </Box>
             </Card>
 
-            {selectedTab === '' && <ProfileHome sx={{ mt: 3 }} />}
-            
-            {selectedTab === 'documents' && <ProfileDocuments />}
-
+            {selectedTab === '' && <ProfileHome sx={{ mt: 3 }} />}           
             {selectedTab === 'configuration' && <ProfileConfiguration />}
+            {selectedTab === 'security' && <ProfileChangePassword />}
+            {selectedTab === 'documents' && <ProfileDocuments />}
 
         </HomeContent>
     );
