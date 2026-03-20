@@ -1,6 +1,5 @@
 // ----------------------------------------------------------------------
 
-import { Children } from 'react';
 
 const ROOTS = {
   AUTH: '/auth',
@@ -57,6 +56,9 @@ export const paths = {
   return: {
     root: '/return',
     details: (id: number) => `/return/${id}`,
+  },
+  feedback: {
+    root: '/feedback',
   },
   account: {
     root: '/account',
