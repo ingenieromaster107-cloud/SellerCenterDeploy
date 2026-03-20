@@ -18,10 +18,10 @@ import { ErrorContent } from 'src/components/error-content';
 import { LoadingScreen } from 'src/components/loading-screen';
 import { CustomBreadcrumbs } from 'src/components/custom-breadcrumbs';
 
-import { ProductDetailsToolbar } from '../product-details-toolbar';
-import { ProductDetailsSummary } from '../product-details-summary';
-import { ProductDetailsCarousel } from '../product-details-carousel';
-import { ProductDetailsDescription } from '../product-details-description';
+import { ProductDetailsToolbar } from '../components/product-detail-view/product-details-toolbar';
+import { ProductDetailsSummary } from '../components/product-detail-view/product-details-summary';
+import { ProductDetailsCarousel } from '../components/product-detail-view/product-details-carousel';
+import { ProductDetailsDescription } from '../components/product-detail-view/product-details-description';
 
 // ----------------------------------------------------------------------
 
