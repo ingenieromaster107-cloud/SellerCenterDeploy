@@ -55,16 +55,11 @@ export function UserProfileView() {
     const { customer } = useGetCustomer();
 
     console.log("customer2:", customer);
-    // console.log("aki:", customer!.addresses);
-    
-
-    //const { user } = useAuthContext();
 
     const firstName = customer?.firstname?.trim() || '';
     const lastName = customer?.lastname?.trim() || '';
 
-    const displayName = 
-        [firstName, lastName].filter(Boolean).join(' ') ||
+    const displayName =  [firstName, lastName].filter(Boolean).join(' ') ||
         customer?.email ||
         'Usuario';
 
@@ -121,7 +116,7 @@ export function UserProfileView() {
                 </Box>
             </Card>
 
-            {selectedTab === '' && <ProfileHome sx={{ mt: 3 }} />}           
+            {selectedTab === '' && <ProfileHome sx={{ mt: 3 }}  customer={customer} />}           
             {selectedTab === 'configuration' && <ProfileConfiguration />}
             {selectedTab === 'security' && <ProfileChangePassword />}
             {selectedTab === 'documents' && <ProfileDocuments />}
