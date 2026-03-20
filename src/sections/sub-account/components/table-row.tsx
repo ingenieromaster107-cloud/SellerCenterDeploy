@@ -22,7 +22,7 @@ import { Label } from 'src/components/label';
 import { Iconify } from 'src/components/iconify';
 import { CustomPopover } from 'src/components/custom-popover';
 
-import { UserQuickEditForm } from './user-quick-edit-form';
+import { UserQuickEditForm } from './quick-edit-form';
 import { PERMISSIONS, ACCOUNT_STATUS } from '../constants/status';
 
 // ----------------------------------------------------------------------
@@ -118,7 +118,7 @@ export function SubAccountTableRow({ row, selected, onSelectRow, detailsHref }: 
                 <Label
                   key={idx}
                   variant="soft"
-                  color="default"
+                  color="info"
                   sx={{
                     marginX: '0.2em',
                     marginY: '0.1em',
@@ -174,9 +174,6 @@ export function SubAccountTableRow({ row, selected, onSelectRow, detailsHref }: 
         </TableCell>
 
         <TableCell>
-          <IconButton onClick={quickEditForm.onTrue}>
-            <Iconify icon="solar:pen-bold" />
-          </IconButton>
           <IconButton onClick={menuActions.onOpen}>
             <Iconify icon="eva:more-vertical-fill" />
           </IconButton>

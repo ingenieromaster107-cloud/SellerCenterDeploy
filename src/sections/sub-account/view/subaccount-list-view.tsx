@@ -34,7 +34,7 @@ import {
 } from 'src/components/table';
 
 import { PERMISSIONS } from '../constants/status';
-import { useSubAccountTable } from './useSubAccountTable';
+import { useSubAccountTable } from './use-subaccount-table';
 import { SubAccountTableRow, SubAccountTableToolbar } from '../components';
 
 // ----------------------------------------------------------------------
@@ -47,7 +47,7 @@ const TABLE_HEAD: TableHeadCellProps[] = [
   { id: 'status', label: 'Status' },
   { id: 'createdAt', label: 'Created date' },
   { id: 'lastAccess', label: 'Last Access' },
-  { id: 'action', label: '' },
+  { id: 'action', label: 'Actions' },
 ];
 
 // ----------------------------------------------------------------------
@@ -82,8 +82,8 @@ export function SubAccountListView() {
             startIcon={<Iconify icon="mingcute:add-line" />}
           >
             Add Subaccount
-            </Button>
-          }
+          </Button>
+        }
         sx={{ mb: { xs: 3, md: 5 } }}
       />
 
