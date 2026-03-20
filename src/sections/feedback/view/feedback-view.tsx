@@ -23,9 +23,11 @@ import { useFeedbackList } from 'src/hooks/feedback/use-feedback-list';
 import { CommonTable } from '../components/common-table';
 import { FeedbackTableFormated } from 'src/interfaces/feedback/feedback-list';
 import { HomeContent } from 'src/layouts/home';
+import { useTranslate } from 'src/locales';
 
 export default function FeedbackView() {
   const { reviewsList, tableHead, handleFilterClick } = useFeedbackList();
+  const { translate } = useTranslate();
 
   const [filterAnchorEl, setFilterAnchorEl] = useState<HTMLButtonElement | null>(null);
   const [selectedRating, setSelectedRating] = useState('4');
@@ -106,8 +108,8 @@ export default function FeedbackView() {
   return (
     <HomeContent>
       <CustomBreadcrumbs
-        heading="Feedback"
-        links={[{ name: 'Home', href: paths.home.root }, { name: 'Feedback' }]}
+        heading={translate('feedbackModule.title')}
+        links={[{ name: 'Home', href: paths.home.root }, { name: translate('feedbackModule.title') }]}
         sx={{ mb: { xs: 3, md: 5 } }}
       />
       {/* <CustomTable /> */}
@@ -131,7 +133,7 @@ export default function FeedbackView() {
             <Iconify icon="ic:round-filter-list" width={20} />
           </Button>
         }
-        searchPlaceholder="Search by customer..."
+        searchPlaceholder={`${translate('feedbackModule.table.searchFilter')}`}
       />
 
       <Popover
@@ -143,24 +145,24 @@ export default function FeedbackView() {
       >
         <Box sx={{ p: 2, minWidth: 240 }}>
           <Typography variant="subtitle2" sx={{ mb: 0.5 }}>
-            Filter options
+            {translate('feedbackModule.table.popup.title')}
           </Typography>
           <Typography variant="body2" sx={{ color: 'text.secondary', mb: 1.5 }}>
-            Select rating to filter.
+            {translate('feedbackModule.table.popup.filterByRating.title')}
           </Typography>
           <FormControl fullWidth size="small" sx={{ mb: 2 }}>
             <InputLabel id="rating-filter-label">Rating</InputLabel>
             <Select
               labelId="rating-filter-label"
               value={selectedRating}
-              label="Rating"
+              label={translate('feedbackModule.table.popup.filterByRating.label')}
               onChange={(event) => setSelectedRating(event.target.value)}
             >
-              <MenuItem value="1">1 star</MenuItem>
-              <MenuItem value="2">2 stars</MenuItem>
-              <MenuItem value="3">3 stars</MenuItem>
-              <MenuItem value="4">4 stars</MenuItem>
-              <MenuItem value="5">5 stars</MenuItem>
+              <MenuItem value="1">{translate('feedbackModule.table.popup.filterByRating.options.1')}</MenuItem>
+              <MenuItem value="2">{translate('feedbackModule.table.popup.filterByRating.options.2')}</MenuItem>
+              <MenuItem value="3">{translate('feedbackModule.table.popup.filterByRating.options.3')}</MenuItem>
+              <MenuItem value="4">{translate('feedbackModule.table.popup.filterByRating.options.4')}</MenuItem>
+              <MenuItem value="5">{translate('feedbackModule.table.popup.filterByRating.options.5')}</MenuItem>
             </Select>
           </FormControl>
           <Box sx={{ display: 'flex', justifyContent: 'flex-end', gap: 1 }}>

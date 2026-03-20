@@ -34,7 +34,6 @@
         "feedback": {
             "title": "Opiniones"
         }
-
     },
     "tableLatestOrders": {
         "title": "Últimos Pedidos",
@@ -109,7 +108,37 @@
     "createdAt": "Fecha de creación",
     "id": "Id",
     "noDataFound": "No se encontraron datos",
-    "feedbackModule":{
-        "title":"Opiniones"
+    "feedbackModule": {
+        "title": "Opiniones",
+        "table": {
+            "columns": {
+                "sku": "SKU",
+                "image": "Imagen",
+                "name": "Nombre",
+                "price": "Precio",
+                "date": "Fecha",
+                "value": "Valor",
+                "quality": "Calidad",
+                "comment": "Comentario",
+                "review": "Cliente",
+                "status": "Estado",
+                "created": "Creado el"
+            },
+            "searchFilter": "Buscar por cliente...",
+            "popup": {
+                "title": "Filtros",
+                "filterByRating": {
+                    "title": "Filtrar por calificación",
+                    "label": "Calificación",
+                    "options": {
+                        "5": "5 estrellas",
+                        "4": "4 estrellas",
+                        "3": "3 estrellas",
+                        "2": "2 estrellas",
+                        "1": "1 estrella"
+                    }
+                }
+            }
+        }
     }
 }

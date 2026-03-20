@@ -2,11 +2,13 @@ import { useState } from 'react';
 import { useGetFeedback } from 'src/actions/feedback/useGetFeedback';
 import { TableHeadCellProps } from 'src/components';
 import { FeedbackRequest, FeedbackTableFormated } from 'src/interfaces/feedback/feedback-list';
+import { useTranslate } from 'src/locales';
 
 export function useFeedbackList() {
   const [sendFilter, setSendFilter] = useState<FeedbackRequest>({});
   const { reviews, isError, isLoading } = useGetFeedback(sendFilter);
   const dataTableFormated: FeedbackTableFormated[] = [];
+  const { translate } = useTranslate();
 
   reviews?.feedbackListAdapter.forEach((item) => {
     dataTableFormated.push({
@@ -28,17 +30,17 @@ export function useFeedbackList() {
     setSendFilter({ filter: { rating: { eq: rating } } });
   };
   const tableHead: TableHeadCellProps[] = [
-    { id: 'sku', label: 'Sku', width: 150 },
-    { id: 'image', label: 'Image', width: 150 },
-    { id: 'name', label: 'name', width: 500 },
-    { id: 'price', label: 'Price', width: 150 },
-    { id: 'value', label: 'Value', width: 150 },
-    { id: 'quality', label: 'Quality', width: 150 },
-    { id: 'comment', label: 'Comment', width: 500 },
-    { id: 'review', label: 'Review', width: 150 },
-    { id: 'nickName', label: 'Customer', width: 250 },
-    { id: 'status', label: 'Status', width: 150 },
-    { id: 'created', label: 'Created', width: 150 },
+    { id: 'sku', label: `${translate('feedbackModule.table.columns.sku')}`, width: 150 },
+    { id: 'image', label: `${translate('feedbackModule.table.columns.image')}`, width: 150 },
+    { id: 'name', label: `${translate('feedbackModule.table.columns.name')}`, width: 500 },
+    { id: 'price', label: `${translate('feedbackModule.table.columns.price')}`, width: 150 },
+    { id: 'value', label: `${translate('feedbackModule.table.columns.value')}`, width: 150 },
+    { id: 'quality', label: `${translate('feedbackModule.table.columns.quality')}`, width: 150 },
+    { id: 'comment', label: `${translate('feedbackModule.table.columns.comment')}`, width: 500 },
+    { id: 'review', label: `${translate('feedbackModule.table.columns.review')}`, width: 150 },
+    { id: 'nickName', label: `${translate('feedbackModule.table.columns.nickName')}`, width: 250 },
+    { id: 'status', label: `${translate('feedbackModule.table.columns.status')}`, width: 150 },
+    { id: 'created', label: `${translate('feedbackModule.table.columns.created')}`, width: 150 },
   ];
   return {
     reviewsList: dataTableFormated,

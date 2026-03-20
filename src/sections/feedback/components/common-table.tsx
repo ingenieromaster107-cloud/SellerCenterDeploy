@@ -50,7 +50,6 @@ export function CommonTable({
   const data = contentTable || [];
   const [searchValue, setSearchValue] = useState('');
   const isLoading = false;
-
   const searchableKeys = useMemo(
     () =>
       filterKeys && filterKeys.length ? filterKeys : tableHeadCell.map((col) => String(col.id)),
