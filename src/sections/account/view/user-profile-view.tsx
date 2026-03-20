@@ -1,17 +1,22 @@
 'use client';
 
-import Card from "@mui/material/Card";
-import { CustomBreadcrumbs } from "src/components/custom-breadcrumbs/custom-breadcrumbs";
-import { HomeContent } from "src/layouts/home";
-import { ProfileCover } from "../components/profile-cover";
 import Box from '@mui/material/Box';
-import { Iconify } from "src/components/iconify";
-import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
+import Card from "@mui/material/Card";
+import Tabs from "@mui/material/Tabs";
+
+import { paths } from "src/routes/paths";
 import { RouterLink } from 'src/routes/components';
 import { usePathname, useSearchParams } from 'src/routes/hooks';
-import { useAuthContext } from "src/auth/hooks";
-import { paths } from "src/routes/paths";
+
+import { HomeContent } from "src/layouts/home";
+import { useGetCustomer } from 'src/actions/customer/useGetCustomer';
+
+import { Iconify } from "src/components/iconify";
+import { CustomBreadcrumbs } from "src/components/custom-breadcrumbs/custom-breadcrumbs";
+
+//import { useAuthContext } from "src/auth/hooks";
+import { ProfileCover } from "../components/profile-cover";
 import {
   ProfileHome,
   ProfileDocuments,
@@ -47,15 +52,20 @@ export function UserProfileView() {
     const searchParams = useSearchParams();
     const selectedTab: string = searchParams.get(TAB_PARAM) ?? '';
 
-    const { user } = useAuthContext();
+    const { customer } = useGetCustomer();
 
-    const firstName = (user?.firstName ?? user?.firstname ?? '').trim();
-    const lastName = (user?.lastName ?? user?.lastname ?? '').trim();
+    console.log("customer2:", customer);
+    // console.log("aki:", customer!.addresses);
+    
 
-    const displayName =
-        user?.displayName ||
+    //const { user } = useAuthContext();
+
+    const firstName = customer?.firstname?.trim() || '';
+    const lastName = customer?.lastname?.trim() || '';
+
+    const displayName = 
         [firstName, lastName].filter(Boolean).join(' ') ||
-        user?.email ||
+        customer?.email ||
         'Usuario';
 
 

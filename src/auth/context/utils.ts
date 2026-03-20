@@ -1,7 +1,9 @@
+import type { ICustomer } from 'src/interfaces/customer/customer.interface';
+
 import { paths } from 'src/routes/paths';
 
-import { EXPIRATION_TIME, ACCESS_TOKEN_STORAGE_KEY, CUSTOMER_KEY } from './constant';
-import { ICustomer } from 'src/interfaces/customer/customer.interface';
+import { CUSTOMER_KEY, EXPIRATION_TIME, ACCESS_TOKEN_STORAGE_KEY } from './constant';
+
 
 // ----------------------------------------------------------------------
 
@@ -48,15 +50,15 @@ export async function setSession(accessToken: string | null) {
   }
 }
 
-export async function setCustomerSession(customer: ICustomer['customer'] | null) {
+export async function setCustomerStorage(customer: ICustomer | null) {
   try {
     if (customer) {
-      sessionStorage.setItem(CUSTOMER_KEY, JSON.stringify(customer));
+      localStorage.setItem(CUSTOMER_KEY, JSON.stringify(customer));
     } else {
-      sessionStorage.removeItem(CUSTOMER_KEY);;
+      localStorage.removeItem(CUSTOMER_KEY);
     }
   } catch (error) {
-      console.error('Error during set customer session:', error);
+      console.error('Error during set customer storage:', error);
     throw error;
   }
 }
