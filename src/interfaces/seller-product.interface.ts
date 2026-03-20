@@ -60,8 +60,7 @@ export interface CustomAttributesInfo {
 export interface ProductListInterface {
   id: number;
   sku: string;
-  productNameEs: string;
-  productNameEn: string;
+  productName: string;
   thumbnailUrl: string;
   category: string;
   finalPrice: number;

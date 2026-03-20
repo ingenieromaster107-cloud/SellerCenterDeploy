@@ -57,9 +57,7 @@ export function RenderCellStock({ params }: ParamsProps) {
 }
 
 export function RenderCellProduct({ params, href }: ParamsProps & { href: string }) {
-  const { currentLang } = useTranslate();
-  const productName =
-    currentLang === 'en' ? params.row.productNameEn ?? params.row.productNameEs : params.row.productNameEs;
+  const productName = params.row.productName;
 
   return (
     <Box
