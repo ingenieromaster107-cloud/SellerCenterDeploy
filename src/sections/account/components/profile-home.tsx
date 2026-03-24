@@ -11,28 +11,22 @@ import Typography from '@mui/material/Typography';
 
 import { Iconify } from 'src/components/iconify';
 
-import { useAuthContext } from 'src/auth/hooks';
-
 type ProfileHomeProps = {
   sx?: SxProps<Theme>;
   customer: ICustomer;
 };
 
 export function ProfileHome({ sx, customer }: ProfileHomeProps) {
-  //const { user } = useAuthContext();
-
   const firstName = (customer?.firstname ?? '').trim();
   const lastName = (customer?.lastname ?? '').trim();
 
- const displayName =  [firstName, lastName].filter(Boolean).join(' ') ||
-    customer?.email ||
-    'Usuario';
+  const displayName =
+    [firstName, lastName].filter(Boolean).join(' ') || customer?.email || 'Usuario';
+  
   const email = customer?.email || '';
 
-  // Nuevos campos desde el contexto
-
-  const identificationType =  customer.identificationType[0].code ?? '-';
-  const identificationNumber = customer.identificationNumber[0].value ?? '-';
+  const identificationType = customer?.identificationType?.[0]?.code ?? '-';
+  const identificationNumber = customer?.identificationNumber?.[0]?.value ?? '-';
 
   const renderPostCard = () => (
     <Card sx={{ p: 3 }}>

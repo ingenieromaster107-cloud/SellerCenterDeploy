@@ -1,25 +1,16 @@
 
 import type { ICustomer, ICustomerGraphQLResponse } from 'src/interfaces/customer/customer.interface';
 
-import { useState } from 'react';
-
 export function CustomerAdapter(data: ICustomerGraphQLResponse): ICustomer {
   if (!data || !('customer' in data)) {
     console.warn('No found customer info');
     return {} as ICustomer;
   }
-  // console.log("dataadsas:", data);
-  // const infoCustomer: ICustomer = data;
 
-  // const addresses = infoCustomer.addresses ?? [];
+  const addresses = data.customer.addresses ?? [];
+  const defaultShipping = addresses.find((addr) => addr.default_shipping) || addresses[0] || null;
 
-  // const defaultShipping = addresses.find((addr) => addr.default_shipping) || addresses[0] || null;
-  // const finalOject: ICustomer = {
-  //   ...infoCustomer,
-  //   addresses: defaultShipping ? [defaultShipping] : [],
-  // }
-
-  // infoCustomer.addresses = defaultShipping ? [defaultShipping] : [];
+  data.customer.addresses = defaultShipping ? [defaultShipping] : addresses[0] ? [addresses[0]] : [];
 
   return data.customer;
 }

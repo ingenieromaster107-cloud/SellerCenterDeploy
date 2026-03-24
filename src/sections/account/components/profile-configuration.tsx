@@ -1,3 +1,5 @@
+import type { ICustomer } from 'src/interfaces/customer/customer.interface';
+
 import * as z from 'zod';
 import { useMemo } from 'react';
 import { useForm } from 'react-hook-form';
@@ -15,6 +17,7 @@ import { Form, Field, schemaUtils } from 'src/components/hook-form';
 
 import { useAuthContext } from 'src/auth/hooks';
 
+//---- Esquema de validación para el formulario de configuración del perfil
 export const UpdateUserSchema = z.object({
   displayName: z.string().min(1, { error: 'Name is required!' }),
   email: schemaUtils.email(),
@@ -52,10 +55,16 @@ const defaultValues: FormValues = {
 
 type FormValues = z.infer<typeof UpdateUserSchema>;
 
-export function ProfileConfiguration() {
+//---- Esquema de validación para el formulario de configuración del perfil
+
+type ProfileConfigurationProps = {
+  customer: ICustomer;
+};
+
+export function ProfileConfiguration({ customer }: ProfileConfigurationProps) {
   const { user } = useAuthContext();
 
-  const currentUser:FormValues = useMemo(() => {
+  const currentUser: FormValues = useMemo(() => {
     const firstName = (user?.firstName ?? user?.firstname ?? '').trim();
     const lastName = (user?.lastName ?? user?.lastname ?? '').trim();
 
@@ -83,7 +92,7 @@ export function ProfileConfiguration() {
       isPublic: false,
     };
   }, [user]);
-  
+
   const methods = useForm({
     mode: 'all',
     resolver: zodResolver(UpdateUserSchema),
@@ -109,39 +118,44 @@ export function ProfileConfiguration() {
 
   return (
     <Box sx={{ mt: 3 }}>
-    <Form methods={methods} onSubmit={onSubmit}>
-      <Grid container spacing={3}>
-        <Grid size={{ xs: 12 }}>
-          <Card sx={{ p: 3 }}>
-            <Box
-              sx={{
-                rowGap: 3,
-                columnGap: 2,
-                display: 'grid',
-                gridTemplateColumns: { xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)' },
-              }}
-            >
-              <Field.Text name="displayName" label="Nombre" />
-              <Field.Text name="email" label="Correo electrónico" />
-              <Field.Text name="identificationType" label="Tipo de identificación" />
-              <Field.Text name="identificationNumber" label="Número de identificación" />
-              <Field.Phone name="phoneNumber" label="Número de teléfono" />
-              <Field.Text name="address" label="Dirección" />
-              <Field.CountrySelect name="country" label="País" placeholder="Elegir un país" displayValue="code"/>
-              <Field.Text name="state" label="Estado/región" />
-              <Field.Text name="city" label="Ciudad" />
-              <Field.Text name="zipCode" label="Código postal" />
-            </Box>
+      <Form methods={methods} onSubmit={onSubmit}>
+        <Grid container spacing={3}>
+          <Grid size={{ xs: 12 }}>
+            <Card sx={{ p: 3 }}>
+              <Box
+                sx={{
+                  rowGap: 3,
+                  columnGap: 2,
+                  display: 'grid',
+                  gridTemplateColumns: { xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)' },
+                }}
+              >
+                <Field.Text name="displayName" label="Nombre" />
+                <Field.Text name="email" label="Correo electrónico" />
+                <Field.Text name="identificationType" label="Tipo de identificación" />
+                <Field.Text name="identificationNumber" label="Número de identificación" />
+                <Field.Phone name="phoneNumber" label="Número de teléfono" />
+                <Field.Text name="address" label="Dirección" />
+                <Field.CountrySelect
+                  name="country"
+                  label="País"
+                  placeholder="Elegir un país"
+                  displayValue="code"
+                />
+                <Field.Text name="state" label="Estado/región" />
+                <Field.Text name="city" label="Ciudad" />
+                <Field.Text name="zipCode" label="Código postal" />
+              </Box>
 
-            <Stack spacing={3} sx={{ mt: 3, alignItems: 'flex-end' }}>
-              <Button type="submit" variant="contained" loading={isSubmitting}>
-                Save changes
-              </Button>
-            </Stack>
-          </Card>
+              <Stack spacing={3} sx={{ mt: 3, alignItems: 'flex-end' }}>
+                <Button type="submit" variant="contained" loading={isSubmitting}>
+                  Save changes
+                </Button>
+              </Stack>
+            </Card>
+          </Grid>
         </Grid>
-      </Grid>
-    </Form>
+      </Form>
     </Box>
   );
 }

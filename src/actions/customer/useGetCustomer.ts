@@ -12,10 +12,10 @@ import { CustomerAdapter } from './adapters/customer-adapter';
 
 export function useGetCustomer() {
   const graphql = GraphQLService.getInstance();
-  const { data, isLoading, isError } = useQuery({
+  const { data, isLoading, isError, error } = useQuery({
     queryKey: ['getCustomer'],
     queryFn: () => graphql.request<ICustomerGraphQLResponse, {}>(GET_CUSTOMER),
   });
   const customer = useMemo(() => CustomerAdapter(data!), [data]);
-  return { customer, isLoading, isError };
+  return { customer, isLoading, isError, error };
 }

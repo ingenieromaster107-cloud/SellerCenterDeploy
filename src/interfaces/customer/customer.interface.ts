@@ -6,33 +6,33 @@ export interface ICustomer {
   firstname: string;
   lastname: string;
   email: string;
-  identificationNumber: NumeroIdentificacion[];
-  identificationType: TipoIdentificacion[];
-  addresses: Address[];
+  identificationNumber: INumeroIdentificacion[];
+  identificationType: ITipoIdentificacion[];
+  addresses: IAddress[];
 }
 
-export interface Address {
+export interface IAddress {
   id: number;
   firstname: string;
   lastname: string;
   street: string[];
   city: string;
-  region: Region;
+  region: IRegion;
   telephone: string;
   default_billing: boolean;
   default_shipping: boolean;
 }
 
-export interface Region {
+export interface IRegion {
   region_id: number;
   region_code: string;
 }
 
-export interface NumeroIdentificacion {
+export interface INumeroIdentificacion {
   code: string;
   value: string;
 }
 
-export interface TipoIdentificacion {
+export interface ITipoIdentificacion {
   code: string;
 }
