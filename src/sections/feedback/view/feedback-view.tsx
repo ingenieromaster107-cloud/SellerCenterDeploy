@@ -29,7 +29,7 @@ import { HomeContent } from 'src/layouts/home';
 import { Iconify } from 'src/components/iconify';
 import { CustomBreadcrumbs } from 'src/components/custom-breadcrumbs';
 
-import { CommonTable } from '../components/common-table';
+import { CommonTable } from '../../common/common-table';
 
 export default function FeedbackView() {
   const { reviewsList, tableHead, handleFilterClick } = useFeedbackList();
@@ -116,7 +116,6 @@ export default function FeedbackView() {
         links={[{ name: 'Home', href: paths.home.root }, { name: translate('feedbackModule.title') }]}
         sx={{ mb: { xs: 3, md: 5 } }}
       />
-      {/* <CustomTable /> */}
       <CommonTable
         tableHeadCell={tableHead}
         contentTable={reviewsList}
