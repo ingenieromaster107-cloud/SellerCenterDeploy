@@ -35,7 +35,6 @@ export function useCreateProduct(options: UseCreateProductOptions = {}) {
       options.onSuccess?.(data);
     },
     onError: (error: Error) => {
-      console.error('useCreateProduct error:', error);
       options.onError?.(error);
     },
   });

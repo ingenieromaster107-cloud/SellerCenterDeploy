@@ -36,7 +36,6 @@ export function useCreateConfigurableProduct(options: UseCreateConfigurableProdu
       options.onSuccess?.(data);
     },
     onError: (error: Error) => {
-      console.error('useCreateConfigurableProduct error:', error);
       options.onError?.(error);
     },
   });
