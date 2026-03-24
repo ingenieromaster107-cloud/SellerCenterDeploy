@@ -9,6 +9,8 @@ import Grid from '@mui/material/Grid';
 import Link from '@mui/material/Link';
 import Typography from '@mui/material/Typography';
 
+import { useTranslate } from 'src/locales/langs/i18n';
+
 import { Iconify } from 'src/components/iconify';
 
 type ProfileHomeProps = {
@@ -17,11 +19,12 @@ type ProfileHomeProps = {
 };
 
 export function ProfileHome({ sx, customer }: ProfileHomeProps) {
+  const { translate } = useTranslate();
   const firstName = (customer?.firstname ?? '').trim();
   const lastName = (customer?.lastname ?? '').trim();
 
   const displayName =
-    [firstName, lastName].filter(Boolean).join(' ') || customer?.email || 'Usuario';
+    [firstName, lastName].filter(Boolean).join(' ') || customer?.email || translate('customerProfileView.user');
   
   const email = customer?.email || '';
 
@@ -32,7 +35,7 @@ export function ProfileHome({ sx, customer }: ProfileHomeProps) {
     <Card sx={{ p: 3 }}>
       <Box sx={{ mb: 2 }}>
         <Typography variant="h6" sx={{ mb: 2 }}>
-          Datos personales
+          {translate('customerProfileView.personalData')}
         </Typography>
 
         <Box

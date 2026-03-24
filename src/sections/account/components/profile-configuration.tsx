@@ -12,30 +12,35 @@ import Grid from '@mui/material/Grid';
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
 
+import { useTranslate } from 'src/locales/langs/i18n';
+
 import { toast } from 'src/components/snackbar';
 import { Form, Field, schemaUtils } from 'src/components/hook-form';
 
 import { useAuthContext } from 'src/auth/hooks';
 
-//---- Esquema de validación para el formulario de configuración del perfil
-export const UpdateUserSchema = z.object({
-  displayName: z.string().min(1, { error: 'Name is required!' }),
-  email: schemaUtils.email(),
-  photoURL: schemaUtils.file({ error: 'Avatar is required!' }).optional().nullable(),
-  // Nuevos campos de identificación
-  identificationType: z.string().min(1, { error: 'Tipo de identificación es obligatorio!' }),
-  identificationNumber: z.string().min(1, { error: 'Número de identificación es obligatorio!' }),
-  phoneNumber: schemaUtils.phoneNumber({ isValid: isValidPhoneNumber }),
-  country: schemaUtils.nullableInput(z.string().min(1, { error: 'Country is required!' }), {
-    error: 'Country is required!',
-  }),
-  address: z.string().min(1, { error: 'Address is required!' }),
-  state: z.string().min(1, { error: 'State is required!' }),
-  city: z.string().min(1, { error: 'City is required!' }),
-  zipCode: z.string().min(1, { error: 'Zip code is required!' }),
-  about: z.string().optional().default(''),
-  isPublic: z.boolean().optional().default(false),
-});
+export type FormValues = z.infer<ReturnType<typeof UserSchema>>;
+
+export const UserSchema = (t: (key: string) => string) =>
+  z.object({
+    displayName: z.string().min(1, { error: t('formErrorRequired.nameRequired') }),
+    email: schemaUtils.email(),
+    photoURL: schemaUtils.file({ error: t('formErrorRequired.avatarRequired') }).optional().nullable(),
+    identificationType: z.string().min(1, { error: t('formErrorRequired.identificationTypeRequired') }),
+    identificationNumber: z.string().min(1, { error: t('formErrorRequired.identificationNumberRequired') }),
+    phoneNumber: schemaUtils.phoneNumber({ isValid: isValidPhoneNumber }),
+    country: schemaUtils.nullableInput(z.string().min(1, { error: t('formErrorRequired.countryRequired') }), {
+      error: t('formErrorRequired.countryRequired'),
+    }),
+    address: z.string().min(1, { error: t('formErrorRequired.addressRequired') }),
+    state: z.string().min(1, { error: t('formErrorRequired.stateRequired') }),
+    city: z.string().min(1, { error: t('formErrorRequired.cityRequired') }),
+    zipCode: z.string().min(1, { error: t('formErrorRequired.zipCodeRequired') }),
+    about: z.string().optional().default(''),
+    isPublic: z.boolean().optional().default(false),
+  });
+
+export const updateUserSchema = UserSchema(key => key);
 
 const defaultValues: FormValues = {
   displayName: '',
@@ -53,16 +58,15 @@ const defaultValues: FormValues = {
   isPublic: false,
 };
 
-type FormValues = z.infer<typeof UpdateUserSchema>;
-
-//---- Esquema de validación para el formulario de configuración del perfil
-
 type ProfileConfigurationProps = {
   customer: ICustomer;
 };
 
-export function ProfileConfiguration({ customer }: ProfileConfigurationProps) {
+export function ProfileConfiguration({  customer }: ProfileConfigurationProps) {
+  const { translate } = useTranslate();
   const { user } = useAuthContext();
+
+  const schemaUser = useMemo(() => UserSchema(translate), [translate]);
 
   const currentUser: FormValues = useMemo(() => {
     const firstName = (user?.firstName ?? user?.firstname ?? '').trim();
@@ -78,10 +82,8 @@ export function ProfileConfiguration({ customer }: ProfileConfigurationProps) {
       displayName: [firstName, lastName].filter(Boolean).join(' ') || user?.email || '',
       email: user?.email || '',
       photoURL: null,
-      // Identificación desde AuthProvider
       identificationType: user?.identificationType || '',
       identificationNumber: user?.identificationNumber || '',
-      // Contacto / Dirección
       phoneNumber: addr?.telephone || '',
       country: countryCode,
       address: street,
@@ -95,7 +97,7 @@ export function ProfileConfiguration({ customer }: ProfileConfigurationProps) {
 
   const methods = useForm({
     mode: 'all',
-    resolver: zodResolver(UpdateUserSchema),
+    resolver: zodResolver(schemaUser),
     defaultValues,
     values: currentUser,
   });
@@ -130,26 +132,27 @@ export function ProfileConfiguration({ customer }: ProfileConfigurationProps) {
                   gridTemplateColumns: { xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)' },
                 }}
               >
-                <Field.Text name="displayName" label="Nombre" />
-                <Field.Text name="email" label="Correo electrónico" />
-                <Field.Text name="identificationType" label="Tipo de identificación" />
-                <Field.Text name="identificationNumber" label="Número de identificación" />
-                <Field.Phone name="phoneNumber" label="Número de teléfono" />
-                <Field.Text name="address" label="Dirección" />
+                <Field.Text name="name" label={translate('formPlaceholder.name')} />
+                <Field.Text name="lastName" label={translate('formPlaceholder.lastName')} />
+                <Field.Text name="email" label={translate('formPlaceholder.email')} />
+                <Field.Text name="identificationType" label={translate('formPlaceholder.identificationType')} />
+                <Field.Text name="identificationNumber" label={translate('formPlaceholder.identificationNumber')} />
+                <Field.Phone name="phoneNumber" label={translate('formPlaceholder.phoneNumber')} />
+                <Field.Text name="address" label={translate('formPlaceholder.address')} />
                 <Field.CountrySelect
                   name="country"
-                  label="País"
-                  placeholder="Elegir un país"
+                  label={translate('formPlaceholder.country')}
+                  placeholder={translate('formPlaceholder.country')}
                   displayValue="code"
                 />
-                <Field.Text name="state" label="Estado/región" />
-                <Field.Text name="city" label="Ciudad" />
-                <Field.Text name="zipCode" label="Código postal" />
+                <Field.Text name="state" label={translate('formPlaceholder.state')} />
+                <Field.Text name="city" label={translate('formPlaceholder.city')} />
+                <Field.Text name="zipCode" label={translate('formPlaceholder.zipCode')} />
               </Box>
 
               <Stack spacing={3} sx={{ mt: 3, alignItems: 'flex-end' }}>
                 <Button type="submit" variant="contained" loading={isSubmitting}>
-                  Save changes
+                  {translate('formPlaceholder.btnSave')}
                 </Button>
               </Stack>
             </Card>

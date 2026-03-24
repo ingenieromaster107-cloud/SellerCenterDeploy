@@ -1,6 +1,9 @@
 'use client';
 
-import { useRef, useState, ChangeEvent } from 'react';
+import type { ChangeEvent } from 'react';
+import type { SxProps, Theme } from '@mui/material/styles';
+
+import { useRef, useState } from 'react';
 
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
@@ -13,7 +16,8 @@ import Typography from '@mui/material/Typography';
 import CardHeader from '@mui/material/CardHeader';
 import FormHelperText from '@mui/material/FormHelperText';
 import FormControlLabel from '@mui/material/FormControlLabel';
-import { SxProps, Theme } from '@mui/material/styles';
+
+import { useTranslate } from 'src/locales/langs/i18n';
 
 import { Iconify } from 'src/components/iconify';
 
@@ -40,6 +44,7 @@ type Props = {
 };
 
 export function ProfileDocuments({ onSubmit, sx, ...other }: Props) {
+  const { translate } = useTranslate();
   const cedulaRef = useRef<HTMLInputElement | null>(null);
   const rutRef = useRef<HTMLInputElement | null>(null);
   const certificadoRef = useRef<HTMLInputElement | null>(null);
@@ -80,10 +85,10 @@ export function ProfileDocuments({ onSubmit, sx, ...other }: Props) {
       submit: '',
     };
 
-    if (!cedulaFile) next.cedula = 'Este documento es obligatorio.';
-    if (!rutFile) next.rut = 'Este documento es obligatorio.';
-    if (!certificadoFile) next.certificado = 'Este documento es obligatorio.';
-    if (!acceptTerms) next.terms = 'Debes aceptar los términos y condiciones.';
+    if (!cedulaFile) next.cedula = translate('formErrorRequired.documentRequired');
+    if (!rutFile) next.rut = translate('formErrorRequired.documentRequired');
+    if (!certificadoFile) next.certificado = translate('formErrorRequired.documentRequired');
+    if (!acceptTerms) next.terms = translate('formErrorRequired.acceptTyC');
 
     setErrors(next);
     return !next.cedula && !next.rut && !next.certificado && !next.terms;
@@ -150,7 +155,7 @@ export function ProfileDocuments({ onSubmit, sx, ...other }: Props) {
           justifySelf: { xs: 'start', sm: 'end' },
         }}
       >
-        Cargar
+        {translate('formPlaceholder.btnLoad')}
       </Button>
     </Box>
   );
@@ -163,11 +168,11 @@ export function ProfileDocuments({ onSubmit, sx, ...other }: Props) {
       ]}
       {...other}
     >
-      <CardHeader title="Adjuntar documentos" />
+      <CardHeader title={translate('customerProfileViewDocuments.title')} />
 
       <Stack spacing={2.5} sx={{ p: 3 }}>
         {renderRow(
-          'Cédula del representante*',
+          translate('customerProfileViewDocuments.sellerIdentification'),
           cedulaFile,
           handleChoose(cedulaRef),
           errors.cedula
@@ -176,14 +181,14 @@ export function ProfileDocuments({ onSubmit, sx, ...other }: Props) {
         {renderRow('RUT*', rutFile, handleChoose(rutRef), errors.rut)}
 
         {renderRow(
-          'Certificado bancario*',
+          translate('customerProfileViewDocuments.bankCertificate'),
           certificadoFile,
           handleChoose(certificadoRef),
           errors.certificado
         )}
 
         <Typography variant="caption" sx={{ color: 'text.secondary' }}>
-          Formato permitidos: PDF
+          {translate('customerProfileViewDocuments.allowedFormats')}
         </Typography>
 
         <Divider sx={{ my: 1 }} />
@@ -202,15 +207,14 @@ export function ProfileDocuments({ onSubmit, sx, ...other }: Props) {
           }
           label={
             <Typography variant="body2">
-              Acepto términos y condiciones. Autorizo el tratamiento de mis datos personales para las
-              finalidades descritas en la{' '}
+              {translate('customerProfileViewDocuments.acceptTyC')}{' '}
               <Link
                 href="/politica-de-datos"
                 target="_blank"
                 rel="noopener"
                 underline="always"
               >
-                Política de tratamiento de datos personales de Inter Rapidísimo
+                {translate('customerProfileViewDocuments.privacyPolicy')}
               </Link>
               .
             </Typography>
@@ -235,7 +239,7 @@ export function ProfileDocuments({ onSubmit, sx, ...other }: Props) {
             onClick={handleSubmit}
             disabled={!acceptTerms || !cedulaFile || !rutFile || !certificadoFile}
           >
-            Registrarse
+            {translate('formPlaceholder.btnRegister')}
           </Button>
         </Box>
       </Stack>

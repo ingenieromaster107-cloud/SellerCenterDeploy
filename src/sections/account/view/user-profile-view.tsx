@@ -10,6 +10,7 @@ import { RouterLink } from 'src/routes/components';
 import { usePathname, useSearchParams } from 'src/routes/hooks';
 
 import { HomeContent } from 'src/layouts/home';
+import { useTranslate } from 'src/locales/langs/i18n';
 import { useGetCustomer } from 'src/actions/customer/use-get-customer';
 
 import { Iconify } from 'src/components/iconify';
@@ -26,31 +27,33 @@ import {
   ProfileChangePassword,
 } from '../components';
 
-const TAB_PARAM = 'tab';
-//---- Define the navigation items for the user profile tabs
-const NAV_ITEMS = [
-  { value: '', label: 'Perfil', icon: <Iconify width={24} icon="solar:user-id-bold" /> },
-  {
-    value: 'configuration',
-    label: 'Configuración',
-    icon: <Iconify width={24} icon="solar:settings-bold" />,
-  },
-  {
-    value: 'security',
-    label: 'Seguridad',
-    icon: <Iconify width={24} icon="ic:round-vpn-key" />,
-  },
-  {
-    value: 'documents',
-    label: 'Documentos',
-    icon: <Iconify width={24} icon="solar:document-add-bold" />,
-  },
-];
-//---- Define the navigation items for the user profile tabs
-
 export function UserProfileView() {
+  const { translate } = useTranslate();
   const pathname = usePathname();
   const searchParams = useSearchParams();
+
+  const TAB_PARAM = 'tab';
+  //---- Define the navigation items for the user profile tabs
+  const NAV_ITEMS = [
+    { value: '', label: translate('customerProfileView.profile'), icon: <Iconify width={24} icon="solar:user-id-bold" /> },
+    {
+      value: 'configuration',
+      label: translate('customerProfileView.configuration'),
+      icon: <Iconify width={24} icon="solar:settings-bold" />,
+    },
+    {
+      value: 'security',
+      label: translate('customerProfileView.security'),
+      icon: <Iconify width={24} icon="ic:round-vpn-key" />,
+    },
+    {
+      value: 'documents',
+      label: translate('customerProfileView.documents'),
+      icon: <Iconify width={24} icon="solar:document-add-bold" />,
+    },
+  ];
+  //---- Define the navigation items for the user profile tabs
+
   const selectedTab: string = searchParams.get(TAB_PARAM) ?? '';
 
   const { customer, isLoading, isError } = useGetCustomer();
@@ -59,13 +62,12 @@ export function UserProfileView() {
   const lastName = customer?.lastname?.trim() || '';
 
   const displayName =
-    [firstName, lastName].filter(Boolean).join(' ') || customer?.email || 'Usuario';
+    [firstName, lastName].filter(Boolean).join(' ') || customer?.email || translate('customerProfileView.user');
 
   const createRedirectPath = (currentPath: string, query: string): string => {
     const queryString = new URLSearchParams({ [TAB_PARAM]: query }).toString();
     return query ? `${currentPath}?${queryString}` : currentPath;
   };
-
 
   if (isLoading) {
     return <LoadingScreen />;
@@ -73,20 +75,20 @@ export function UserProfileView() {
 
   if (isError || !customer) {
     return (
-      <ErrorContent
-        title='informacion no disponible'
-        description='error al cargar la informacion'
-      />
+      <ErrorContent title={translate('noResultsFound')} description={translate('noDataFound')} />
     );
   }
 
   return (
     <HomeContent>
       <CustomBreadcrumbs
-        heading="Perfil"
+        heading={translate('customerProfileView.profile')}
         links={[
-          { name: 'Inicio', href: paths.home.root },
-          { name: 'Cuenta', href: paths.account?.root ?? paths.home.root },
+          { name: translate('sidebarMenu.home.title'), href: paths.home.root },
+          {
+            name: translate('sidebarMenu.account.title'),
+            href: paths.account?.root ?? paths.home.root,
+          },
           { name: displayName },
         ]}
         sx={{ mb: { xs: 3, md: 5 } }}
@@ -124,7 +126,7 @@ export function UserProfileView() {
 
       {selectedTab === '' && <ProfileHome sx={{ mt: 3 }} customer={customer} />}
       {selectedTab === 'configuration' && <ProfileConfiguration customer={customer} />}
-      {selectedTab === 'security' && <ProfileChangePassword />}
+      {selectedTab === 'security' && <ProfileChangePassword customer={customer} />}
       {selectedTab === 'documents' && <ProfileDocuments />}
     </HomeContent>
   );

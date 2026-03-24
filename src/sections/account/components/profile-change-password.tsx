@@ -1,40 +1,48 @@
 'use client';
 
+import type { ICustomer } from 'src/interfaces/customer/customer.interface';
+
 import * as z from 'zod';
-import { zodResolver } from "@hookform/resolvers/zod";
+import { useMemo, useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { useBoolean } from 'minimal-shared/hooks';
+import { zodResolver } from '@hookform/resolvers/zod';
 
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import Button from '@mui/material/Button';
-import InputAdornment from '@mui/material/InputAdornment';
 import IconButton from '@mui/material/IconButton';
+import InputAdornment from '@mui/material/InputAdornment';
+
+import { useTranslate } from 'src/locales/langs/i18n';
 
 import { toast } from 'src/components/snackbar';
-import { Form, Field } from 'src/components/hook-form';
 import { Iconify } from 'src/components/iconify';
-import { useState } from 'react';
+import { Form, Field } from 'src/components/hook-form';
 
+export type FormPassValue = z.infer<ReturnType<typeof UserPasswordSchema>>;
 
+export const UserPasswordSchema = (t: (key: string) => string) =>
+  z
+    .object({
+      oldPassword: z
+        .string()
+        .min(1, { error: t('formErrorRequired.oldPasswordRequired') })
+        .min(6, { error: t('formErrorRequired.oldPasswordMin') }),
+      newPassword: z.string().min(1, { error: t('formErrorRequired.newPasswordRequired') }),
+      confirmNewPassword: z
+        .string()
+        .min(1, { error: t('formErrorRequired.confirmNewPasswordRequired') }),
+    })
+    .refine((val) => val.oldPassword !== val.newPassword, {
+      error: t('formErrorRequired.newPasswordDifferent'),
+      path: ['newPassword'],
+    })
+    .refine((val) => val.newPassword === val.confirmNewPassword, {
+      error: t('formErrorRequired.passwordsDoNotMatch'),
+      path: ['confirmNewPassword'],
+    });
 
-export const UpdateUserPasswordSchema = z.object({
-    oldPassword: z
-      .string()
-      .min(1, { error: 'Password is required!' })
-      .min(6, { error: 'Password must be at least 6 characters!' }),
-    newPassword: z.string().min(1, { error: 'New password is required!' }),
-    confirmNewPassword: z.string().min(1, { error: 'Confirm password is required!' }),
-})
-.refine((val) => val.oldPassword !== val.newPassword, {
-    error: 'New password must be different than old password',
-    path: ['newPassword'],
-})
-.refine((val) => val.newPassword === val.confirmNewPassword, {
-    error: 'Passwords do not match!',
-    path: ['confirmNewPassword'],
-});
-
+export const updateUserPasswordSchema = UserPasswordSchema(key => key);
 
 const defaultValues: FormPassValue = {
   oldPassword: '',
@@ -42,13 +50,18 @@ const defaultValues: FormPassValue = {
   confirmNewPassword: '',
 };
 
-type FormPassValue = z.infer<typeof UpdateUserPasswordSchema>;
+type ProfileChangePasswordProps = {
+  customer: ICustomer;
+};
 
-export function ProfileChangePassword() {
-  
+export function ProfileChangePassword({ customer }: ProfileChangePasswordProps) {
+  const { translate } = useTranslate();
+
+  const schemaPassUser = useMemo(() => UserPasswordSchema(translate), [translate]);
+
   const methods = useForm({
     mode: 'all',
-    resolver: zodResolver(UpdateUserPasswordSchema),
+    resolver: zodResolver(schemaPassUser),
     defaultValues,
   });
 
@@ -96,7 +109,7 @@ export function ProfileChangePassword() {
           <Field.Text
             name="oldPassword"
             type={showPassword.oldPassword ? 'text' : 'password'}
-            label="Old password"
+            label={translate('formPlaceholder.oldPassword')}
             slotProps={{
               input: {
                 endAdornment: (
@@ -114,7 +127,7 @@ export function ProfileChangePassword() {
 
           <Field.Text
             name="newPassword"
-            label="New password"
+            label={translate('formPlaceholder.newPassword')}
             type={showPassword.newPassword ? 'text' : 'password'}
             slotProps={{
               input: {
@@ -131,7 +144,7 @@ export function ProfileChangePassword() {
             }}
             helperText={
               <Box component="span" sx={{ gap: 0.5, display: 'flex', alignItems: 'center' }}>
-                <Iconify icon="solar:info-circle-bold" width={16} /> Password must be minimum 6+
+                <Iconify icon="solar:info-circle-bold" width={16} /> {translate('formErrorRequired.oldPasswordMin')} 6+
               </Box>
             }
           />
@@ -139,14 +152,18 @@ export function ProfileChangePassword() {
           <Field.Text
             name="confirmNewPassword"
             type={showPassword.confirmNewPassword ? 'text' : 'password'}
-            label="Confirm new password"
+            label={translate('formPlaceholder.confirmNewPassword')}
             slotProps={{
               input: {
                 endAdornment: (
                   <InputAdornment position="end">
                     <IconButton onClick={() => togglePassword('confirmNewPassword')} edge="end">
                       <Iconify
-                        icon={showPassword.confirmNewPassword ? 'solar:eye-bold' : 'solar:eye-closed-bold'}
+                        icon={
+                          showPassword.confirmNewPassword
+                            ? 'solar:eye-bold'
+                            : 'solar:eye-closed-bold'
+                        }
                       />
                     </IconButton>
                   </InputAdornment>
@@ -156,7 +173,7 @@ export function ProfileChangePassword() {
           />
 
           <Button type="submit" variant="contained" loading={isSubmitting} sx={{ ml: 'auto' }}>
-            Save changes
+            {translate('formPlaceholder.btnSave')}
           </Button>
         </Card>
       </Form>
