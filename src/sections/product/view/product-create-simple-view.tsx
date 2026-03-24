@@ -28,11 +28,27 @@ import { useCreateProduct } from 'src/actions/product/use-create-product';
 import { toast } from 'src/components/snackbar';
 import { Form, Field } from 'src/components/hook-form';
 import { CustomBreadcrumbs } from 'src/components/custom-breadcrumbs';
+import { SectionLoadingOverlay } from 'src/components/loading-screen';
 
 import { ProductImageUpload } from '../components/product-image-upload';
 import { CategoryTreeSelect } from '../components/category-tree-select';
 
 // ----------------------------------------------------------------------
+
+/** Mensajes seguros que nuestras funciones de sanitización generan */
+const SAFE_MESSAGES = [
+  'el sku ingresado ya se encuentra registrado',
+  'ocurrió un error al crear el producto',
+];
+
+/** Última capa: solo deja pasar mensajes conocidos como seguros. */
+function sanitizeUserError(error: Error, fallback: string): string {
+  const msg = error?.message;
+  if (!msg) return fallback;
+  const lower = msg.toLowerCase();
+  if (SAFE_MESSAGES.some((safe) => lower.includes(safe))) return msg;
+  return fallback;
+}
 
 const defaultValues = {
   name: '',
@@ -95,6 +111,49 @@ function PriceField({ label }: { label: string }) {
               startAdornment: <InputAdornment position="start">$</InputAdornment>,
             },
           }}
+        />
+      )}
+    />
+  );
+}
+
+/**
+ * Campo de stock.
+ * - Limpia el "0" al hacer foco.
+ * - Solo acepta dígitos enteros.
+ * - Restaura "0" si se deja vacío al perder foco.
+ */
+function StockField({ label }: { label: string }) {
+  const { control } = useFormContext();
+  const [display, setDisplay] = useState('0');
+
+  return (
+    <Controller
+      name="stock"
+      control={control}
+      render={({ field, fieldState: { error } }) => (
+        <TextField
+          fullWidth
+          label={label}
+          value={display}
+          onFocus={() => {
+            if (display === '0') setDisplay('');
+          }}
+          onChange={(e) => {
+            const digits = e.target.value.replace(/\D/g, '');
+            setDisplay(digits);
+            field.onChange(digits === '' ? '' : Number(digits));
+          }}
+          onBlur={() => {
+            if (!display) {
+              setDisplay('0');
+              field.onChange(0);
+            }
+            field.onBlur();
+          }}
+          error={!!error}
+          helperText={error?.message}
+          slotProps={{ inputLabel: { shrink: true } }}
         />
       )}
     />
@@ -199,7 +258,7 @@ export function ProductCreateSimpleView() {
       router.push(paths.product.root);
     },
     onError: (error) => {
-      toast.error(error.message || translate('productCreate', 'errorMessage'));
+      toast.error(sanitizeUserError(error, translate('productCreate', 'errorMessage')));
     },
   });
 
@@ -274,6 +333,11 @@ export function ProductCreateSimpleView() {
       />
 
       <Form methods={methods} onSubmit={onSubmit}>
+        <Box sx={{ position: 'relative' }}>
+          <SectionLoadingOverlay
+            open={isPending}
+            message={translate('productCreate', 'loadingMessage')}
+          />
         <Stack spacing={3}>
           {/* ===== INFORMACIÓN DEL PRODUCTO ===== */}
           <Card sx={{ p: 3 }}>
@@ -348,12 +412,7 @@ export function ProductCreateSimpleView() {
               {translate('productCreate', 'stockSection')}
             </Typography>
 
-            <Field.Text
-              name="stock"
-              label={translate('productCreate', 'stock')}
-              type="number"
-              slotProps={{ inputLabel: { shrink: true } }}
-            />
+            <StockField label={translate('productCreate', 'stock')} />
           </Card>
 
           <Divider />
@@ -370,6 +429,7 @@ export function ProductCreateSimpleView() {
             </LoadingButton>
           </Stack>
         </Stack>
+        </Box>
       </Form>
     </HomeContent>
   );

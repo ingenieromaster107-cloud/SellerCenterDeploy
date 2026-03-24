@@ -226,6 +226,7 @@
     "savePublish": "Guardar y Publicar",
     "successMessage": "¡Producto creado exitosamente!",
     "errorMessage": "Error al crear el producto",
+    "loadingMessage": "Creando producto simple, espere por favor...",
     "validation": {
       "nameRequired": "El nombre del producto es obligatorio",
       "skuRequired": "El SKU es obligatorio",
@@ -274,7 +275,9 @@
     "successMessage": "¡Producto configurable creado exitosamente!",
     "errorMessage": "Error al crear el producto configurable",
     "noVariationsError": "Debes agregar al menos una variación",
-    "invalidChildError": "Hay variaciones con datos incompletos o inválidos"
+    "invalidChildError": "Hay variaciones con datos incompletos o inválidos",
+    "duplicateSkuError": "Hay variaciones con SKU duplicado. Cada variación debe tener un SKU único.",
+    "loadingMessage": "Creando producto configurable, espere por favor..."
   },
   "productImageUpload": {
     "main": "Principal",

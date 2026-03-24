@@ -226,6 +226,7 @@
     "savePublish": "Save & Publish",
     "successMessage": "Product created successfully!",
     "errorMessage": "Error creating product",
+    "loadingMessage": "Creating simple product, please wait...",
     "validation": {
       "nameRequired": "Product name is required",
       "skuRequired": "SKU is required",
@@ -274,7 +275,9 @@
     "successMessage": "Configurable product created successfully!",
     "errorMessage": "Error creating configurable product",
     "noVariationsError": "You must add at least one variation",
-    "invalidChildError": "Some variations have incomplete or invalid data"
+    "invalidChildError": "Some variations have incomplete or invalid data",
+    "duplicateSkuError": "There are variations with duplicate SKU. Each variation must have a unique SKU.",
+    "loadingMessage": "Creating configurable product, please wait..."
   },
   "productImageUpload": {
     "main": "Main",

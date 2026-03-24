@@ -48,9 +48,28 @@ import { toast } from 'src/components/snackbar';
 import { Iconify } from 'src/components/iconify';
 import { Form, Field } from 'src/components/hook-form';
 import { CustomBreadcrumbs } from 'src/components/custom-breadcrumbs';
+import { SectionLoadingOverlay } from 'src/components/loading-screen';
 
 import { ProductImageUpload } from '../components/product-image-upload';
 import { CategoryTreeSelect } from '../components/category-tree-select';
+
+// ----------------------------------------------------------------------
+
+/** Mensajes seguros que nuestras funciones de sanitización generan */
+const SAFE_MESSAGES = [
+  'el sku ingresado ya se encuentra registrado',
+  'uno o más sku ingresados ya se encuentran registrados',
+  'ocurrió un error al crear el producto configurable',
+];
+
+/** Última capa: solo deja pasar mensajes conocidos como seguros. */
+function sanitizeUserError(error: Error, fallback: string): string {
+  const msg = error?.message;
+  if (!msg) return fallback;
+  const lower = msg.toLowerCase();
+  if (SAFE_MESSAGES.some((safe) => lower.includes(safe))) return msg;
+  return fallback;
+}
 
 // ----------------------------------------------------------------------
 
@@ -187,12 +206,14 @@ function FormattedPriceInput({
   label,
   size = 'small',
   fullWidth,
+  showTooltip,
 }: {
   value: number;
   onChange: (val: number) => void;
   label?: string;
   size?: 'small' | 'medium';
   fullWidth?: boolean;
+  showTooltip?: boolean;
 }) {
   const [display, setDisplay] = useState(value ? formatThousands(String(value)) : '0');
 
@@ -224,6 +245,7 @@ function FormattedPriceInput({
         inputLabel: { shrink: true },
         input: {
           startAdornment: <InputAdornment position="start">$</InputAdornment>,
+          ...(showTooltip && { title: `$ ${display}` }),
         },
       }}
     />
@@ -335,7 +357,7 @@ export function ProductCreateConfigurableView() {
       router.push(paths.product.root);
     },
     onError: (error) => {
-      toast.error(error.message || translate('configurableCreate', 'errorMessage'));
+      toast.error(sanitizeUserError(error, translate('configurableCreate', 'errorMessage')));
     },
   });
 
@@ -369,10 +391,20 @@ export function ProductCreateConfigurableView() {
       return;
     }
 
-    // Validar que todos los hijos tengan precio y stock
-    const invalidChild = children.find((c) => !c.sku || Number(c.price) <= 0);
+    // Validar que todos los hijos tengan SKU, precio y stock
+    const invalidChild = children.find(
+      (c) => !c.sku || Number(c.price) <= 0 || Number(c.stock) <= 0
+    );
     if (invalidChild) {
       toast.error(translate('configurableCreate', 'invalidChildError'));
+      return;
+    }
+
+    // Validar que no haya SKUs duplicados entre variaciones
+    const skus = children.map((c) => c.sku);
+    const hasDuplicateSku = skus.some((s, i) => skus.indexOf(s) !== i);
+    if (hasDuplicateSku) {
+      toast.error(translate('configurableCreate', 'duplicateSkuError'));
       return;
     }
 
@@ -682,6 +714,11 @@ export function ProductCreateConfigurableView() {
       </Alert>
 
       <Form methods={methods} onSubmit={onSubmit}>
+        <Box sx={{ position: 'relative' }}>
+          <SectionLoadingOverlay
+            open={isPending}
+            message={translate('configurableCreate', 'loadingMessage')}
+          />
         <Stack spacing={3}>
           {/* ════════════════════════════════════════════════════════════
               SECCIÓN 1: CREACIÓN DEL PRODUCTO BASE
@@ -1315,6 +1352,7 @@ export function ProductCreateConfigurableView() {
                               value={child.sku}
                               onChange={(e) => handleUpdateChild(idx, 'sku', e.target.value)}
                               sx={{ minWidth: 160 }}
+                              slotProps={{ input: { title: String(child.sku ?? '') } }}
                             />
                           </td>
                           {/* Nombre */}
@@ -1324,6 +1362,7 @@ export function ProductCreateConfigurableView() {
                               value={child.name}
                               onChange={(e) => handleUpdateChild(idx, 'name', e.target.value)}
                               sx={{ minWidth: 180 }}
+                              slotProps={{ input: { title: String(child.name ?? '') } }}
                             />
                           </td>
                           {/* Atributos */}
@@ -1362,6 +1401,7 @@ export function ProductCreateConfigurableView() {
                             <FormattedPriceInput
                               value={child.price}
                               onChange={(v) => handleUpdateChild(idx, 'price', v)}
+                              showTooltip
                             />
                           </td>
                           {/* Stock */}
@@ -1372,6 +1412,7 @@ export function ProductCreateConfigurableView() {
                               value={child.stock || ''}
                               onChange={(e) => handleUpdateChild(idx, 'stock', Number(e.target.value))}
                               sx={{ minWidth: 80 }}
+                              slotProps={{ input: { title: String(child.stock ?? '') } }}
                             />
                           </td>
                           {/* Eliminar */}
@@ -1426,6 +1467,7 @@ export function ProductCreateConfigurableView() {
             </LoadingButton>
           </Stack>
         </Stack>
+        </Box>
       </Form>
     </HomeContent>
   );
