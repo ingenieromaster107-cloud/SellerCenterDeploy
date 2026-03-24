@@ -60,15 +60,7 @@ export function RenderCellProduct({ params, href }: ParamsProps & { href: string
   const productName = params.row.productName;
 
   return (
-    <Box
-      sx={{
-        py: 2,
-        gap: 2,
-        width: 1,
-        display: 'flex',
-        alignItems: 'center',
-      }}
-    >
+    <Box sx={{ py: 2, gap: 2, width: 1, display: 'flex', alignItems: 'center' }}>
       <Avatar
         alt={productName}
         src={params.row.thumbnailUrl}
