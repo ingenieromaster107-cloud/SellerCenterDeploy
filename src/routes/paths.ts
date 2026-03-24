@@ -65,4 +65,5 @@ export const paths = {
       new: '/account/subaccount/new',
     },
   },
+  settings: '/settings'
 };
