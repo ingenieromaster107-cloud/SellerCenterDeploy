@@ -4,7 +4,7 @@ import { gql } from 'graphql-request';
 
 /**
  * Query GraphQL para obtener las categorías disponibles del catálogo.
- * Anidada manualmente hasta 10 niveles (Magento no soporta fragmentos recursivos).
+ * Anidada manualmente hasta 5 niveles (Magento no soporta fragmentos recursivos).
  */
 
 const CATEGORY_FIELDS = `
@@ -34,7 +34,7 @@ export const GET_CATEGORIES_QUERY = gql`
       items {
         uid
         children {
-          ${buildChildrenQuery(10)}
+          ${buildChildrenQuery(5)}
         }
       }
     }
