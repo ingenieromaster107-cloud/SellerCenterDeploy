@@ -144,17 +144,14 @@
             }
         }
     },
-        "clientsModule": {
+    "clientsModule": {
         "title": "Clients",
         "table": {
             "columns": {
-                "id": "ID",
                 "name": "Name",
                 "email": "Email",
-                "phone": "Phone",
-                "totalOrders": "Total Orders",
-                "totalSpent": "Total Spent",
-                "createdAt": "Created At"
+                "address": "Address",
+                "clientSince": "Client Since"
             },
             "searchFilter": "Search by name or email..."
         }

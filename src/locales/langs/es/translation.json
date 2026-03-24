@@ -148,13 +148,10 @@
         "title": "Clientes",
         "table": {
             "columns": {
-                "id": "ID",
                 "name": "Nombre",
                 "email": "Correo electrónico",
-                "phone": "Teléfono",
-                "totalOrders": "Total de pedidos",
-                "totalSpent": "Total gastado",
-                "createdAt": "Fecha de registro"
+                "address": "Dirección",
+                "clientSince": "Cliente desde"
             },
             "searchFilter": "Buscar por nombre o correo..."
         }

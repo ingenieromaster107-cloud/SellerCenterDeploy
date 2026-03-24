@@ -29,6 +29,8 @@ type CommonTableProps = {
   contentTable?: any[];
   renderCell: (row: any, rowIndex: number) => React.ReactNode;
   searchable?: boolean;
+  minWidth?: number;
+
   searchPlaceholder?: string;
   filterKeys?: string[];
   filterTemplate?: React.ReactNode;
@@ -43,6 +45,7 @@ export function CommonTable({
   searchPlaceholder = 'Search...',
   filterKeys,
   filterTemplate,
+  minWidth
 }: CommonTableProps) {
   const table = useTable({ defaultOrderBy: 'orderNumber' });
   const data = useMemo(() => contentTable ?? [], [contentTable]);
@@ -118,7 +121,7 @@ export function CommonTable({
 
       <Box sx={{ position: 'relative' }}>
         <Scrollbar sx={{ minHeight: 444, overflowX: 'auto' }}>
-          <Table size={table.dense ? 'small' : 'medium'} sx={{ minWidth: 1400 }}>
+          <Table size={table.dense ? 'small' : 'medium'} sx={{ minWidth: minWidth ?? 1400 }}>
             <TableHeadCustom
               order={table.order}
               orderBy={table.orderBy}
