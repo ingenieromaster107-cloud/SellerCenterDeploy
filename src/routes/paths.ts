@@ -47,12 +47,16 @@ export const paths = {
   product: {
     root: ROOTS.PRODUCT,
     create: `${ROOTS.PRODUCT}/create`,
+    createConfigurable: `${ROOTS.PRODUCT}/create/configurable`,
     load: `${ROOTS.PRODUCT}/load`,
     uploadList: `${ROOTS.PRODUCT}/load/list`,
   },
   return: {
     root: '/return',
     details: (id: number) => `/return/${id}`,
+  },
+  feedback: {
+    root: '/feedback',
   },
   account: {
     root: '/account',

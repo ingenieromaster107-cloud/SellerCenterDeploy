@@ -4,7 +4,7 @@ import { gql } from 'graphql-request';
 
 /**
  * Query GraphQL para obtener las categorías disponibles del catálogo.
- * Retorna la jerarquía completa hasta 100 niveles de profundidad.
+ * Retorna la jerarquía completa hasta 10 niveles de profundidad.
  * Magento no soporta fragmentos recursivos, por lo que se anidan manualmente.
  */
 
@@ -35,7 +35,7 @@ export const GET_CATEGORIES_QUERY = gql`
       items {
         uid
         children {
-          ${buildChildrenQuery(100)}
+          ${buildChildrenQuery(10)}
         }
       }
     }

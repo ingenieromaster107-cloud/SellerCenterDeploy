@@ -38,7 +38,7 @@ const PRODUCT_TYPE_OPTIONS: ProductTypeOption[] = [
     titleKey: 'configurableTitle',
     descriptionKey: 'configurableDescription',
     icon: 'solar:settings-bold-duotone',
-    disabled: true,
+    disabled: false,
   },
 ];
 
@@ -70,7 +70,7 @@ export function ProductTypeSelectorDialog({
           {translate('productTypeSelector', 'subtitle')}
         </Typography>
 
-        <Stack spacing={2}>
+        <Stack spacing={2} sx={{ pb: 2 }}>
           {PRODUCT_TYPE_OPTIONS.map((option) => (
             <Card
               key={option.type}

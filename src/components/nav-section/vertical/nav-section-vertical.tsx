@@ -68,7 +68,7 @@ function Group({
     <NavUl sx={{ gap: 'var(--nav-item-gap)' }}>
       {items.map((list) => (
         <NavList
-          key={list.title}
+          key={`${list.title}-${list.path}`}
           data={list}
           render={render}
           depth={1}

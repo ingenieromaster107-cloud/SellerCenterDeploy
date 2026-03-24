@@ -4,7 +4,7 @@ import type { CreateProductPayload } from 'src/interfaces';
 
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
-import { createProduct } from './createProduct';
+import { createProduct } from './create-product';
 
 // ----------------------------------------------------------------------
 

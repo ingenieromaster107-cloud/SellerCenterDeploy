@@ -1,160 +1,219 @@
-﻿{
-    "languages": {
-        "es": "Spanish",
-        "en": "English"
+{
+  "languages": {
+    "es": "Spanish",
+    "en": "English"
+  },
+  "loginPage": {
+    "title": "Sign in to your account",
+    "emailForm": "Email address",
+    "passwordForm": "Password",
+    "passwordPh": "6+ Characters",
+    "signIn": "Sign In",
+    "forgotPassword": "Forgot password?",
+    "keepMe": "Keep the session open",
+    "noAccount": "Don\u2019t have an account?",
+    "getStarted": "Get started"
+  },
+  "sidebarMenu": {
+    "home": {
+      "title": "Home"
     },
-    "loginPage": {
-        "title": "Sign in to your account",
-        "emailForm": "Email address",
-        "passwordForm": "Password",
-        "passwordPh": "6+ Characters",
-        "signIn": "Sign In",
-        "forgotPassword": "Forgot password?",
-        "keepMe": "Keep the session open",
-        "noAccount": "Don\u2019t have an account?",
-        "getStarted": "Get started"
+    "myProducts": {
+      "title": "My Products",
+      "subtitles": {
+        "list": "List",
+        "loadProducts": "Load Products"
+      }
     },
-    "sidebarMenu": {
-        "home": {
-            "title": "Home"
-        },
-        "myProducts": {
-            "title": "My Products",
-            "subtitles": {
-                "list": "List",
-                "loadProducts": "Load Products"
-            }
-        },
-        "returns": {
-            "title": "Returns",
-            "subtitles": {
-                "list": "List"
-            }
-        }
+    "returns": {
+      "title": "Returns",
+      "subtitles": {
+        "list": "List"
+      }
     },
-    "tableLatestOrders": {
-        "title": "Latest Orders",
-        "columns": {
-            "id": "Order",
-            "customer": "Customer",
-            "date": "Date",
-            "total": "Total",
-            "status": "Status"
-        }
-    },
-    "TopProducts": {
-        "title": "Top Products"
-    },
-    "TopClients": {
-        "title": "Top Clients"
-    },
-    "mui": {
-        "common": {
-            "all": "All",
-            "search": "Search"
-        },
-        "dataGrid": {
-            "noRowsLabel": "No rows",
-            "noResultsOverlayLabel": "No results found",
-            "toolbarColumns": "Columns",
-            "toolbarFilters": "Filters",
-            "toolbarExport": "Export",
-            "toolbarExportCSV": "Download as CSV",
-            "toolbarExportPrint": "Print",
-            "toolbarQuickFilterLabel": "Search",
-            "toolbarQuickFilterPlaceholder": "Search\u2026",
-            "toolbarQuickFilterDeleteIconLabel": "Clear search",
-            "toolbarSettings": "Settings",
-            "densityCompact": "Compact density",
-            "densityStandard": "Standard density",
-            "densityComfortable": "Comfortable density",
-            "showColumnBorders": "Show column borders",
-            "showCellBorders": "Show cell borders"
-        },
-        "tablePagination": {
-            "rowsPerPage": "Rows per page:",
-            "of": "of",
-            "dense": "Dense"
-        }
-    },
-    "search": "Search...",
-    "logout": "Logout",
-    "productsNotAvailable": "Products not available",
-    "productsLoadError": "We're sorry, we were unable to load the products at this time. Please try again later.",
-    "addProduct": "Add Product",
-    "noResultsFound": "No results found",
-    "product": "Product",
-    "sku": "SKU",
-    "price": "Price",
-    "stock": "Stock",
-    "view": "View",
-    "edit": "Edit",
-    "delete": "Delete",
-    "viewAll": "View all",
-    "outOfStock": "Out of Stock",
-    "inStock": "In Stock",
-    "lowStock": "Low Stock",
-    "print": "Print",
-    "import": "Import",
-    "export": "Export",
-    "searchCustomerOrId": "Search customer or Id...",
-    "completeProfile": "Complete your profile",
-    "orderReference": "Order Reference",
-    "customerName": "Customer",
-    "status": "Status",
-    "createdAt": "Created date",
-    "id": "Id",
-    "noDataFound": "No data found",
-    "productTypeSelector": {
-        "title": "Select product type",
-        "subtitle": "Choose the type of product you want to create.",
-        "simpleTitle": "Simple Product",
-        "simpleDescription": "A single product without variations of size, color, etc.",
-        "configurableTitle": "Configurable Product",
-        "configurableDescription": "A product with variations such as size, color, etc.",
-        "comingSoon": "Coming soon"
-    },
-    "productCreate": {
-        "heading": "Create simple product",
-        "breadcrumbCreate": "Create",
-        "basicInfo": "Product information",
-        "productName": "Product name *",
-        "sku": "SKU *",
-        "category": "Category *",
-        "loadingCategories": "Loading categories...",
-        "selectCategory": "Select a category",
-        "selectedCategories": "Selected categories",
-        "price": "Price *",
-        "weight": "Weight (kg) *",
-        "shortDescription": "Short description *",
-        "descriptionSection": "Full product description",
-        "fullDescription": "Full description *",
-        "descriptionPlaceholder": "Write the product description...",
-        "imagesSection": "Images",
-        "stockSection": "Product stock",
-        "stock": "Stock *",
-        "savePublish": "Save & Publish",
-        "successMessage": "Product created successfully!",
-        "errorMessage": "Error creating product",
-        "validation": {
-            "nameRequired": "Product name is required",
-            "skuRequired": "SKU is required",
-            "categoryRequired": "Category is required",
-            "pricePositive": "Price must be greater than 0",
-            "weightPositive": "Weight must be greater than 0",
-            "stockMin": "Stock cannot be negative",
-            "shortDescRequired": "Short description is required",
-            "descRequired": "Description is required"
-        }
-    },
-    "productImageUpload": {
-        "main": "Main",
-        "addImages": "Add images",
-        "images": "images",
-        "mainImageHint": "The first image will be the main image.",
-        "formatHint": "(Allowed formats: PNG, JPG, JPEG. Maximum size per image: {maxSizeKB}KB. Maximum {maxImages} images.)",
-        "errorFormat": "Format not allowed. Only PNG, JPG or JPEG images are accepted.",
-        "errorSize": "One or more images exceed the maximum size of {maxSizeKB}KB.",
-        "errorMaxImages": "You can only upload a maximum of {maxImages} images."
+    "feedback": {
+      "title": "Feedback"
     }
+  },
+  "tableLatestOrders": {
+    "title": "Latest Orders",
+    "columns": {
+      "id": "Order",
+      "customer": "Customer",
+      "date": "Date",
+      "total": "Total",
+      "status": "Status"
+    }
+  },
+  "TopProducts": {
+    "title": "Top Products"
+  },
+  "TopClients": {
+    "title": "Top Clients"
+  },
+  "mui": {
+    "common": {
+      "all": "All",
+      "search": "Search"
+    },
+    "dataGrid": {
+      "noRowsLabel": "No rows",
+      "noResultsOverlayLabel": "No results found",
+      "toolbarColumns": "Columns",
+      "toolbarFilters": "Filters",
+      "toolbarExport": "Export",
+      "toolbarExportCSV": "Download as CSV",
+      "toolbarExportPrint": "Print",
+      "toolbarQuickFilterLabel": "Search",
+      "toolbarQuickFilterPlaceholder": "Search\u2026",
+      "toolbarQuickFilterDeleteIconLabel": "Clear search",
+      "toolbarSettings": "Settings",
+      "densityCompact": "Compact density",
+      "densityStandard": "Standard density",
+      "densityComfortable": "Comfortable density",
+      "showColumnBorders": "Show column borders",
+      "showCellBorders": "Show cell borders"
+    },
+    "tablePagination": {
+      "rowsPerPage": "Rows per page:",
+      "of": "of",
+      "dense": "Dense"
+    }
+  },
+  "search": "Search...",
+  "logout": "Logout",
+  "productsNotAvailable": "Products not available",
+  "productsLoadError": "We're sorry, we were unable to load the products at this time. Please try again later.",
+  "addProduct": "Add Product",
+  "noResultsFound": "No results found",
+  "product": "Product",
+  "sku": "SKU",
+  "price": "Price",
+  "stock": "Stock",
+  "view": "View",
+  "edit": "Edit",
+  "delete": "Delete",
+  "viewAll": "View all",
+  "outOfStock": "Out of Stock",
+  "inStock": "In Stock",
+  "lowStock": "Low Stock",
+  "print": "Print",
+  "import": "Import",
+  "export": "Export",
+  "searchCustomerOrId": "Search customer or Id...",
+  "completeProfile": "Complete your profile",
+  "orderReference": "Order Reference",
+  "customerName": "Customer",
+  "status": "Status",
+  "createdAt": "Created date",
+  "id": "Id",
+  "feedbackModule": {
+    "title": "Opiniones",
+    "table": {
+      "columns": {
+        "sku": "Sku",
+        "image": "Image",
+        "name": "Name",
+        "price": "Price",
+        "date": "Date",
+        "value": "Value",
+        "quality": "Quality",
+        "comment": "Comment",
+        "review": "Customer",
+        "status": "Status",
+        "created": "Created at"
+      },
+      "searchFilter": "Search by customer...",
+      "popup": {
+        "title": "Filter options",
+        "filterByRating": {
+          "title": "Select rating to filter",
+          "label": "Rating",
+          "options": {
+            "5": "5 stars",
+            "4": "4 stars",
+            "3": "3 stars",
+            "2": "2 stars",
+            "1": "1 star"
+          }
+        }
+      }
+    }
+  },
+  "noDataFound": "No data found",
+  "returnStatus": {
+    "all": "All",
+    "PENDING": "Pending",
+    "UNCONFIRMED": "Unconfirmed",
+    "AUTHORIZED": "Authorized",
+    "PARTIALLY_AUTHORIZED": "Partially Authorized",
+    "RECEIVED": "Received",
+    "PARTIALLY_RECEIVED": "Partially Received",
+    "APPROVED": "Approved",
+    "PARTIALLY_APPROVED": "Partially Approved",
+    "REJECTED": "Rejected",
+    "PARTIALLY_REJECTED": "Partially Rejected",
+    "DENIED": "Denied",
+    "PROCESSED_AND_CLOSED": "Processed and Closed",
+    "CLOSED": "Closed"
+  },
+  "productList": {
+    "heading": "Product List",
+    "breadcrumbHome": "Home",
+    "breadcrumbProduct": "Product",
+    "breadcrumbList": "List",
+    "addProduct": "Add product"
+  },
+  "productTypeSelector": {
+    "title": "Select product type",
+    "subtitle": "Choose the type of product you want to create.",
+    "simpleTitle": "Simple Product",
+    "simpleDescription": "A single product without variations of size, color, etc.",
+    "configurableTitle": "Configurable Product",
+    "configurableDescription": "A product with variations such as size, color, etc.",
+    "comingSoon": "Coming soon"
+  },
+  "productCreate": {
+    "heading": "Create simple product",
+    "breadcrumbCreate": "Create",
+    "basicInfo": "Product information",
+    "productName": "Product name *",
+    "sku": "SKU *",
+    "category": "Category *",
+    "loadingCategories": "Loading categories...",
+    "selectCategory": "Select a category",
+    "selectedCategories": "Selected categories",
+    "price": "Price *",
+    "weight": "Weight (kg) *",
+    "shortDescription": "Short description *",
+    "descriptionSection": "Full product description",
+    "fullDescription": "Full description *",
+    "descriptionPlaceholder": "Write the product description...",
+    "imagesSection": "Images",
+    "stockSection": "Product stock",
+    "stock": "Stock *",
+    "savePublish": "Save & Publish",
+    "successMessage": "Product created successfully!",
+    "errorMessage": "Error creating product",
+    "validation": {
+      "nameRequired": "Product name is required",
+      "skuRequired": "SKU is required",
+      "categoryRequired": "Category is required",
+      "pricePositive": "Price must be greater than 0",
+      "weightPositive": "Weight must be greater than 0",
+      "stockMin": "Stock cannot be negative",
+      "shortDescRequired": "Short description is required",
+      "descRequired": "Description is required"
+    }
+  },
+  "productImageUpload": {
+    "main": "Main",
+    "addImages": "Add images",
+    "images": "images",
+    "mainImageHint": "The first image will be the main image.",
+    "formatHint": "(Allowed formats: PNG, JPG, JPEG. Maximum size per image: {maxSizeKB}KB. Maximum {maxImages} images.)",
+    "errorFormat": "Format not allowed. Only PNG, JPG or JPEG images are accepted.",
+    "errorSize": "One or more images exceed the maximum size of {maxSizeKB}KB.",
+    "errorMaxImages": "You can only upload a maximum of {maxImages} images."
+  }
 }

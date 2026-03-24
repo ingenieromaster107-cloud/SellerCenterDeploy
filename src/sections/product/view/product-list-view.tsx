@@ -59,6 +59,9 @@ export function ProductListView() {
       if (type === 'simple') {
         router.push(paths.product.create);
       }
+      if (type === 'configurable') {
+        router.push(paths.product.createConfigurable);
+      }
     },
     [router]
   );

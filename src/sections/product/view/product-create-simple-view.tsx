@@ -22,8 +22,8 @@ import { useRouter } from 'src/routes/hooks';
 
 import { useTranslate } from 'src/locales';
 import { HomeContent } from 'src/layouts/home';
-import { useCategories } from 'src/actions/category/useCategories';
-import { useCreateProduct } from 'src/actions/product/useCreateProduct';
+import { useCategories } from 'src/actions/category/use-categories';
+import { useCreateProduct } from 'src/actions/product/use-create-product';
 
 import { toast } from 'src/components/snackbar';
 import { Form, Field } from 'src/components/hook-form';
