@@ -1,6 +1,15 @@
+<<<<<<< HEAD
 import { jwtDecode } from 'jwt-decode';
 
 import { CUSTOMER_ID, EXPIRATION_TIME, ACCESS_TOKEN_STORAGE_KEY } from './constant';
+=======
+import type { ICustomer } from 'src/interfaces/customer/customer.interface';
+
+import { paths } from 'src/routes/paths';
+
+import { CUSTOMER_KEY, EXPIRATION_TIME, ACCESS_TOKEN_STORAGE_KEY } from './constant';
+
+>>>>>>> 23017c8 (Merged PR 35835: Agregar pagina de perfil del cliente seller)
 
 // ----------------------------------------------------------------------
 
@@ -41,6 +50,19 @@ export function setSession(accessToken: string | null) {
   }
 }
 
+
+export async function setCustomerStorage(customer: ICustomer | null) {
+  try {
+    if (customer) {
+      localStorage.setItem(CUSTOMER_KEY, JSON.stringify(customer));
+    } else {
+      localStorage.removeItem(CUSTOMER_KEY);
+    }
+  } catch (error) {
+      console.error('Error during set customer storage:', error);
+    throw error;
+  }
+}
 
 export function getSession() {
   try {

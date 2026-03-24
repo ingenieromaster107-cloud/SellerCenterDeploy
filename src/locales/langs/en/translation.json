@@ -52,10 +52,13 @@
     "account": {
       "title": "Account"
     },
+<<<<<<< HEAD
     "subAccount": {
       "subheader": "Management",
       "title": "Sub Accounts"
     },
+=======
+>>>>>>> 23017c8 (Merged PR 35835: Agregar pagina de perfil del cliente seller)
     "myProducts": {
       "title": "My Products",
       "subtitles": {

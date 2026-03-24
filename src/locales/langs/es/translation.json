@@ -278,10 +278,11 @@
     "identificationNumberRequired": "Número de identificación es requerido",
     "avatarRequired": "Avatar es requerido",
     "countryRequired": "País es requerido",
-    "addressRequired": "Dirección es requerida",
     "stateRequired": "Estado es requerido",
-    "cityRequired": "Ciudad es requerida",
     "zipCodeRequired": "Código postal es requerido",
+    "cityRequired": "Ciudad es requerida",
+    "addressRequired": "Dirección es requerida",
+    "postalCodeRequired": "Código postal es requerido",
     "phoneNumberRequired": "Número de teléfono es requerido",
     "oldPasswordRequired": "Contraseña antigua es requerida",
     "newPasswordRequired": "Nueva contraseña es requerida",
@@ -510,3 +511,4 @@
     }
   }
 }
+
