@@ -5,6 +5,7 @@ import type { TableHeadCellProps } from 'src/components/table';
 import type { SubAccountInterface, AccountTableFiltersInterface } from 'src/interfaces';
 
 import { varAlpha } from 'minimal-shared/utils';
+import { useBoolean } from 'minimal-shared/hooks';
 
 import Tab from '@mui/material/Tab';
 import Box from '@mui/material/Box';
@@ -35,6 +36,7 @@ import {
 
 import { PERMISSIONS } from '../constants/status';
 import { useSubAccountTable } from './use-subaccount-table';
+import { SubAccountCreateForm } from './subaccount-create-form';
 import { SubAccountTableRow, SubAccountTableToolbar } from '../components';
 
 // ----------------------------------------------------------------------
@@ -46,13 +48,14 @@ const TABLE_HEAD: TableHeadCellProps[] = [
   { id: 'permissions', label: 'Permissions', width: 200   },
   { id: 'status', label: 'Status' },
   { id: 'createdAt', label: 'Created date' },
-  { id: 'lastAccess', label: 'Last Access' },
   { id: 'action', label: 'Actions' },
 ];
 
 // ----------------------------------------------------------------------
 
 export function SubAccountListView() {
+  const createForm = useBoolean();
+
   const {
     table,
     confirmDialog,
@@ -65,109 +68,118 @@ export function SubAccountListView() {
     handleFilterPermission,
   } = useSubAccountTable();
 
+  const renderCreateForm = () => (
+    <SubAccountCreateForm
+      open={createForm.value}
+      onClose={createForm.onFalse}
+    />
+  );
+
   return (
-    <HomeContent>
-      <CustomBreadcrumbs
-        heading="Manage Subaccounts"
-        links={[
-          { name: 'Home', href: paths.home.root },
-          { name: 'Subaccount', href: paths.account.subaccount.root },
-          { name: 'List' },
-        ]}
-        action={
-          <Button
-            component={RouterLink}
-            href={paths.account.subaccount.new}
-            variant="contained"
-            startIcon={<Iconify icon="mingcute:add-line" />}
-          >
-            Add Subaccount
-          </Button>
-        }
-        sx={{ mb: { xs: 3, md: 5 } }}
-      />
-
-      <Card>
-        {generateFilterTabs(currentFilters, handleFilterPermission, tableData)}
-
-        <SubAccountTableToolbar
-          filters={filters}
-          onResetPage={table.onResetPage}
+    <>
+      <HomeContent>
+        <CustomBreadcrumbs
+          heading="Manage Subaccounts"
+          links={[
+            { name: 'Home', href: paths.home.root },
+            { name: 'Subaccount', href: paths.account.subaccount.root },
+            { name: 'List' },
+          ]}
+          action={
+            <Button
+              onClick={createForm.onTrue}
+              variant="contained"
+              startIcon={<Iconify icon="mingcute:add-line" />}
+            >
+              Add Subaccount
+            </Button>
+          }
+          sx={{ mb: { xs: 3, md: 5 } }}
         />
 
-        <Box sx={{ position: 'relative' }}>
-          <TableSelectedAction
-            dense={table.dense}
-            numSelected={table.selected.length}
-            rowCount={dataFiltered.length}
-            onSelectAllRows={(checked) =>
-              table.onSelectAllRows(
-                checked,
-                dataFiltered.map((row) => row.id.toString())
-              )
-            }
-            action={
-              <Tooltip title="Delete">
-                <IconButton color="primary" onClick={confirmDialog.onTrue}>
-                  <Iconify icon="solar:trash-bin-trash-bold" />
-                </IconButton>
-              </Tooltip>
-            }
+        <Card>
+          {generateFilterTabs(currentFilters, handleFilterPermission, tableData)}
+
+          <SubAccountTableToolbar
+            filters={filters}
+            onResetPage={table.onResetPage}
           />
 
-          <Scrollbar sx={{ minHeight: 444 }}>
-            <Table size={table.dense ? 'small' : 'medium'} sx={{ minWidth: 960 }}>
-              <TableHeadCustom
-                order={table.order}
-                orderBy={table.orderBy}
-                headCells={TABLE_HEAD}
-                rowCount={dataFiltered.length}
-                numSelected={table.selected.length}
-                onSort={table.onSort}
-              />
+          <Box sx={{ position: 'relative' }}>
+            <TableSelectedAction
+              dense={table.dense}
+              numSelected={table.selected.length}
+              rowCount={dataFiltered.length}
+              onSelectAllRows={(checked) =>
+                table.onSelectAllRows(
+                  checked,
+                  dataFiltered.map((row) => row.id.toString())
+                )
+              }
+              action={
+                <Tooltip title="Delete">
+                  <IconButton color="primary" onClick={confirmDialog.onTrue}>
+                    <Iconify icon="solar:trash-bin-trash-bold" />
+                  </IconButton>
+                </Tooltip>
+              }
+            />
 
-              <TableBody>
-                {
-                  dataFiltered
-                    .slice(
-                      table.page * table.rowsPerPage,
-                      table.page * table.rowsPerPage + table.rowsPerPage
-                    )
-                    .map((row) => (
-                      <SubAccountTableRow
-                        key={row.id}
-                        row={row}
-                        selected={table.selected.includes(row.id.toString())}
-                        onSelectRow={() => table.onSelectRow(row.id.toString())}
-                        detailsHref={paths.return.details(+row.id)}
-                      />
-                    ))
-                }
+            <Scrollbar sx={{ minHeight: 444 }}>
+              <Table size={table.dense ? 'small' : 'medium'} sx={{ minWidth: 960 }}>
+                <TableHeadCustom
+                  order={table.order}
+                  orderBy={table.orderBy}
+                  headCells={TABLE_HEAD}
+                  rowCount={dataFiltered.length}
+                  numSelected={table.selected.length}
+                  onSort={table.onSort}
+                />
 
-                {
-                  isLoading ? (
-                    <TableSkeleton rowCount={5} cellCount={TABLE_HEAD.length} />
-                  ) : notFound ? (
-                    <TableNoData notFound={notFound} />
-                  ) : null
-                }
+                <TableBody>
+                  {
+                    dataFiltered
+                      .slice(
+                        table.page * table.rowsPerPage,
+                        table.page * table.rowsPerPage + table.rowsPerPage
+                      )
+                      .map((row) => (
+                        <SubAccountTableRow
+                          key={row.id}
+                          row={row}
+                          selected={table.selected.includes(row.id.toString())}
+                          onSelectRow={() => table.onSelectRow(row.id.toString())}
+                          detailsHref={paths.return.details(+row.id)}
+                        />
+                      ))
+                  }
 
-              </TableBody>
-            </Table>
-          </Scrollbar>
-        </Box>
+                  {
+                    isLoading ? (
+                      <TableSkeleton rowCount={5} cellCount={TABLE_HEAD.length} />
+                    ) : notFound ? (
+                      <TableNoData notFound={notFound} />
+                    ) : null
+                  }
 
-        <TablePaginationCustom
-          page={table.page}
-          // dense={table.dense}
-          count={dataFiltered.length}
-          rowsPerPage={table.rowsPerPage}
-          onPageChange={table.onChangePage}
-          // onChangeDense={table.onChangeDense}
-          onRowsPerPageChange={table.onChangeRowsPerPage}
-        />
-      </Card>
-    </HomeContent>
+                </TableBody>
+              </Table>
+            </Scrollbar>
+          </Box>
+
+          <TablePaginationCustom
+            page={table.page}
+            // dense={table.dense}
+            count={dataFiltered.length}
+            rowsPerPage={table.rowsPerPage}
+            onPageChange={table.onChangePage}
+            // onChangeDense={table.onChangeDense}
+            onRowsPerPageChange={table.onChangeRowsPerPage}
+          />
+        </Card>
+      </HomeContent>
+      {renderCreateForm()}
+    </>
   );
 }
 

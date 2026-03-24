@@ -42,7 +42,7 @@ type Props = {
   currentUser?: SubAccountInterface;
 };
 
-export function UserQuickEditForm({ currentUser, open, onClose }: Props) {
+export function SubAccountEditForm({ currentUser, open, onClose }: Props) {
   const defaultValues: UserQuickEditSchemaType = {
     name: '',
     lastname: '',

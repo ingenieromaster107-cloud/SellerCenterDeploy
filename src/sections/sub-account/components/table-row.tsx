@@ -22,8 +22,8 @@ import { Label } from 'src/components/label';
 import { Iconify } from 'src/components/iconify';
 import { CustomPopover } from 'src/components/custom-popover';
 
-import { UserQuickEditForm } from './quick-edit-form';
 import { PERMISSIONS, ACCOUNT_STATUS } from '../constants/status';
+import { SubAccountEditForm } from '../view/subaccount-edit-form';
 
 // ----------------------------------------------------------------------
 
@@ -74,8 +74,8 @@ export function SubAccountTableRow({ row, selected, onSelectRow, detailsHref }: 
     </CustomPopover>
   );
 
-  const renderQuickEditForm = () => (
-    <UserQuickEditForm
+  const renderEditForm = () => (
+    <SubAccountEditForm
       currentUser={row}
       open={quickEditForm.value}
       onClose={quickEditForm.onFalse}
@@ -94,7 +94,7 @@ export function SubAccountTableRow({ row, selected, onSelectRow, detailsHref }: 
             <ListItemText
               primary={
                 <Link component={RouterLink} href={detailsHref} color="inherit" underline="always">
-                  {row.name}
+                  {row.name} {row.lastname}
                 </Link>
               }
               secondary={row.email}
@@ -124,7 +124,7 @@ export function SubAccountTableRow({ row, selected, onSelectRow, detailsHref }: 
                     marginY: '0.1em',
                   }}
                 >
-                  {PERMISSIONS.find((status) => status.value === p)?.label || ''}
+                  {PERMISSIONS.find((status) => status.value === p)?.value || ''}
                 </Label>
               ))
           }
@@ -158,22 +158,6 @@ export function SubAccountTableRow({ row, selected, onSelectRow, detailsHref }: 
         </TableCell>
 
         <TableCell>
-          <ListItemText
-            primary={fDate(row.createdAt)}
-            secondary={fTime(row.createdAt)}
-            slotProps={{
-              primary: {
-                noWrap: true,
-                sx: { typography: 'body2' },
-              },
-              secondary: {
-                sx: { mt: 0.5, typography: 'caption' },
-              },
-            }}
-          />
-        </TableCell>
-
-        <TableCell>
           <IconButton onClick={menuActions.onOpen}>
             <Iconify icon="eva:more-vertical-fill" />
           </IconButton>
@@ -181,7 +165,7 @@ export function SubAccountTableRow({ row, selected, onSelectRow, detailsHref }: 
       </TableRow>
 
       {renderMenuActions()}
-      {renderQuickEditForm()}
+      {renderEditForm()}
     </>
   );
 }

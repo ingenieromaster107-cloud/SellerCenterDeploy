@@ -1,8 +1,8 @@
 export const PERMISSIONS = [
-  { value: 'INVENTORY', label: 'Inventory', color: 'default' },
-  { value: 'PRODUCTS', label: 'Products', color: 'warning' },
-  { value: 'ORDERS', label: 'Orders', color: 'success' },
-  { value: 'REPORTS', label: 'Reports', color: 'info' },
+  { value: 'Product List', label: 'Product list', color: 'default' },
+  { value: 'Account Dashboard', label: 'Account dashboard', color: 'warning' },
+  { value: 'Create Product', label: 'Create product', color: 'success' },
+  { value: 'Customer List', label: 'Customer list', color: 'info' },
 ]
 
 
