@@ -1,6 +1,5 @@
 // ----------------------------------------------------------------------
 
-
 const ROOTS = {
   AUTH: '/auth',
   HOME: '/home',
@@ -48,6 +47,7 @@ export const paths = {
     root: ROOTS.PRODUCT,
     load: `${ROOTS.PRODUCT}/load`,
     uploadList: `${ROOTS.PRODUCT}/load/list`,
+    details: (id: number) => `${ROOTS.PRODUCT}/${id}`,
   },
   return: {
     root: '/return',
