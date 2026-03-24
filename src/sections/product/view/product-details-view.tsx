@@ -12,7 +12,7 @@ import Tabs from '@mui/material/Tabs';
 import { paths } from 'src/routes/paths';
 
 import { HomeContent } from 'src/layouts/home';
-import { useGetProductDetailsById } from 'src/actions/product/useGetProductDetailsById';
+import { useGetProductDetailsById } from 'src/actions/product/use-get-product-details-by-id';
 
 import { ErrorContent } from 'src/components/error-content';
 import { LoadingScreen } from 'src/components/loading-screen';
