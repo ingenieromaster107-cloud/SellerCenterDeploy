@@ -75,10 +75,10 @@ export function ProductDetailsView({ id }: Props) {
   return (
     <HomeContent>
       <CustomBreadcrumbs
-        heading={translate('productDetails', 'heading')}
+        heading={String(translate('productDetails', 'heading'))}
         links={[
-          { name: translate('sidebarMenu.home', 'title'), href: paths.home.root },
-          { name: translate('sidebarMenu.myProducts', 'title'), href: paths.product.root },
+          { name: String(translate('sidebarMenu', 'home.title')), href: paths.home.root },
+          { name: String(translate('sidebarMenu', 'myProducts.title')), href: paths.product.root },
           { name: product.name },
         ]}
         sx={{ mb: { xs: 3, md: 4 } }}
