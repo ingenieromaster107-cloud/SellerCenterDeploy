@@ -26,8 +26,7 @@ import { TreeItem, treeItemClasses } from '@mui/x-tree-view/TreeItem';
 import { Iconify } from 'src/components/iconify';
 
 // ── Generador de colores dinámico basado en HSL ──────────────────────
-// Genera colores bien distribuidos en el espectro usando la proporción áurea
-// para que nunca se repitan colores cercanos, sin importar cuántas categorías haya.
+// Genera colores bien distribuidos usando proporción áurea para evitar repetición.
 
 function generateColor(index: number): string {
   const GOLDEN_ANGLE = 137.508; // grados

@@ -71,15 +71,7 @@ function getCurrentOptions(
 
 /**
  * Selector de categorías con chips en cascada.
- *
- * - Un solo `<Select>` que muestra las opciones del nivel actual.
- * - Cada categoría seleccionada se convierte en un chip visible.
- * - Los chips se muestran en fila con separadores "›" entre ellos.
- * - Cada chip tiene un botón ✕ para eliminar; al eliminar, el selector
- *   retrocede al nivel correspondiente.
- * - Si la categoría seleccionada tiene hijos, el select se actualiza
- *   para mostrar esos hijos. Si no tiene hijos, el select desaparece
- *   (ya se llegó al nivel más profundo).
+ * Cada selección se convierte en un chip y el select avanza al siguiente nivel.
  */
 export function CategoryCascadeSelect({
   name,

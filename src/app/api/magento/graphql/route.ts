@@ -3,9 +3,8 @@ import https from 'https';
 import { ENV } from 'src/environments';
 
 /**
- * API Route que actúa como proxy GraphQL hacia el backend Magento.
- * Necesario porque el certificado TLS del servidor no incluye el hostname
- * en sus altnames, y el rewrite de Next.js no puede ignorar esa validación.
+ * API Route proxy GraphQL hacia el backend Magento.
+ * Evita errores de certificado TLS que no puede manejar Next.js.
  */
 export async function POST(request: Request) {
   const body = await request.text();

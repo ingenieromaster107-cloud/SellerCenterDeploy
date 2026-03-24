@@ -3,11 +3,8 @@
 import { gql } from 'graphql-request';
 
 /**
- * Query GraphQL para obtener la lista completa de atributos de producto
- * desde Magento (entityType: CATALOG_PRODUCT).
- *
- * Retorna todos los atributos con sus opciones (label, value, is_default)
- * y el tipo de input (frontend_input) para filtrar los configurables (SELECT).
+ * Query GraphQL para obtener la lista completa de atributos de producto desde Magento.
+ * Incluye opciones y frontend_input para filtrar los atributos configurables (SELECT).
  */
 export const ATTRIBUTES_LIST_QUERY = gql`
   query AttributesList {

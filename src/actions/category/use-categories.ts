@@ -15,10 +15,8 @@ import { GET_CATEGORIES_QUERY } from './graphql';
 // ----------------------------------------------------------------------
 
 /**
- * Hook que obtiene las categorías del catálogo con soporte multinivel.
- *
- * Retorna el árbol completo de categorías para que el componente
- * `CategoryCascadeSelect` pueda renderizar N niveles dinámicamente.
+ * Hook que obtiene el árbol de categorías del catálogo con soporte multinivel.
+ * Retorna la estructura para que los selectores de categoría puedan renderizar N niveles.
  */
 export function useCategories() {
   const graphql = GraphQLService.getInstance();

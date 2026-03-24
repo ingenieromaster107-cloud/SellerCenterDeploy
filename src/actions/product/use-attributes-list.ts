@@ -11,16 +11,7 @@ import { ATTRIBUTES_LIST_QUERY, ATTRIBUTE_SET_ATTRIBUTES_QUERY } from './graphql
 
 const ATTRIBUTE_SET_ID = 4;
 
-/**
- * Hook que obtiene los atributos de producto disponibles desde Magento.
- *
- * Combina dos queries:
- * 1. attributesList: obtiene todos los atributos con sus opciones
- * 2. attributeSetAttributes: obtiene los attribute_id numéricos del attribute set
- *
- * Filtra solo los atributos tipo SELECT con opciones válidas y que
- * pertenezcan al attribute set usado para la creación de productos.
- */
+/** Hook que obtiene los atributos configurables de producto disponibles desde Magento. */
 export function useAttributesList() {
   const graphql = GraphQLService.getInstance();
 

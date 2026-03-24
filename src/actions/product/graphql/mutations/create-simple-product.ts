@@ -2,13 +2,7 @@
 
 import { gql } from 'graphql-request';
 
-/**
- * Mutation GraphQL para crear un producto simple en Magento.
- *
- * Recibe: nombre, SKU, categoría, precio, peso, descripciones,
- *         galería de imágenes en base64 y stock por bodega.
- * Retorna: SKU, éxito, mensajes y el ID del producto creado.
- */
+/** Mutation GraphQL para crear un producto simple en Magento. */
 export const CREATE_SIMPLE_PRODUCT_MUTATION = gql`
   mutation CreateSimpleProduct(
     $name: String!

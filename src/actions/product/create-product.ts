@@ -10,15 +10,7 @@ import { GraphQLService } from 'src/lib/graphql-client';
 
 import { CREATE_SIMPLE_PRODUCT_MUTATION } from './graphql';
 
-/**
- * Llama a la mutation GraphQL para crear un producto simple.
- *
- * Transforma los archivos (File[]) a entradas de galería con base64,
- * construye las variables y ejecuta la mutation.
- *
- * @returns { sku, success } si todo sale bien.
- * @throws Error con mensaje descriptivo si falla.
- */
+/** Llama a la mutation GraphQL para crear un producto simple. */
 export async function createProduct(payload: CreateProductPayload) {
   const {
     name,
@@ -80,8 +72,26 @@ export async function createProduct(payload: CreateProductPayload) {
   }
 
   if (!data.success) {
-    throw new Error(data.message || 'Error al crear producto');
+    throw new Error(sanitizeProductError(data.message));
   }
 
   return { sku: data.sku || sku, success: true };
+}
+
+/**
+ * Sanitiza mensajes de error del backend para no exponer información sensible.
+ * Detecta patrones conocidos y devuelve mensajes amigables.
+ */
+function sanitizeProductError(message?: string): string {
+  if (!message) return 'Ocurrió un error al crear el producto. Intenta nuevamente.';
+
+  const lowerMsg = message.toLowerCase();
+
+  // SKU duplicado
+  if (lowerMsg.includes('sku existente') || lowerMsg.includes('url ya existe') || lowerMsg.includes('already exists') || lowerMsg.includes('llave url')) {
+    return 'El SKU ingresado ya se encuentra registrado. Por favor utiliza un SKU diferente.';
+  }
+
+  // Error genérico para cualquier otro caso
+  return 'Ocurrió un error al crear el producto. Intenta nuevamente.';
 }

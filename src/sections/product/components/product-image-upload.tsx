@@ -34,11 +34,7 @@ type ProductImageUploadProps = {
 
 /**
  * Componente reutilizable para subir imágenes de producto.
- *
- * Muestra un área de selección y las miniaturas de las imágenes
- * seleccionadas. La primera imagen se marca como imagen principal.
- *
- * No usa librerías externas, solo input nativo de HTML.
+ * La primera imagen se marca como imagen principal.
  */
 export function ProductImageUpload({
   images,

@@ -10,15 +10,7 @@ import { GraphQLService } from 'src/lib/graphql-client';
 
 import { CREATE_CONFIGURABLE_PRODUCT_MUTATION } from './graphql';
 
-/**
- * Llama a la mutation GraphQL para crear un producto configurable completo.
- *
- * Construye el input con el producto padre (configurable) y todos los
- * productos hijos (simples/variaciones) en una sola llamada.
- *
- * @returns { status, skuStatus[], message }
- * @throws Error con mensaje descriptivo si falla.
- */
+/** Llama a la mutation GraphQL para crear un producto configurable completo. */
 export async function createConfigurableProduct(payload: CreateConfigurableProductPayload) {
   const {
     name,
@@ -192,11 +184,11 @@ export async function createConfigurableProduct(payload: CreateConfigurableProdu
   }
 
   if (data.status === 'failed') {
-    const details = data.skuStatus
+    const rawDetails = data.skuStatus
       ?.filter((s) => !s.created)
-      .map((s) => `${s.sku}: ${s.message}`)
+      .map((s) => s.message)
       .join(' | ');
-    throw new Error(details || data.message || 'Error al crear producto configurable');
+    throw new Error(sanitizeConfigurableProductError(rawDetails || data.message));
   }
 
   return {
@@ -204,4 +196,22 @@ export async function createConfigurableProduct(payload: CreateConfigurableProdu
     skuStatus: data.skuStatus,
     message: data.message,
   };
+}
+
+/**
+ * Sanitiza mensajes de error del backend para no exponer información sensible.
+ * Detecta patrones conocidos y devuelve mensajes amigables.
+ */
+function sanitizeConfigurableProductError(message?: string): string {
+  if (!message) return 'Ocurrió un error al crear el producto configurable. Intenta nuevamente.';
+
+  const lowerMsg = message.toLowerCase();
+
+  // SKU duplicado
+  if (lowerMsg.includes('sku existente') || lowerMsg.includes('url ya existe') || lowerMsg.includes('already exists') || lowerMsg.includes('llave url')) {
+    return 'Uno o más SKU ingresados ya se encuentran registrados. Por favor verifica los SKU de las variaciones.';
+  }
+
+  // Error genérico para cualquier otro caso
+  return 'Ocurrió un error al crear el producto configurable. Intenta nuevamente.';
 }
