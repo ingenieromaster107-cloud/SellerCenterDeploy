@@ -1,6 +1,6 @@
 'use client';
 
-import type { CreateConfigurableProductPayload } from 'src/interfaces';
+import type { CreateConfigurableProductInput } from 'src/interfaces';
 
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
@@ -22,15 +22,15 @@ type UseCreateConfigurableProductOptions = {
 /**
  * Hook de React Query que encapsula la mutation de crear producto configurable.
  *
- * Envía padre + hijos en una sola llamada. Al tener éxito, invalida
- * la cache de productos para que la lista se refresque.
+ * Recibe el input ya armado por useConfigurableProductPayload.
+ * Al tener éxito, invalida la cache de productos.
  */
 export function useCreateConfigurableProduct(options: UseCreateConfigurableProductOptions = {}) {
   const queryClient = useQueryClient();
 
   return useMutation({
     mutationKey: ['product', 'create-configurable'],
-    mutationFn: (payload: CreateConfigurableProductPayload) => createConfigurableProduct(payload),
+    mutationFn: (input: CreateConfigurableProductInput) => createConfigurableProduct(input),
     onSuccess: async (data) => {
       await queryClient.invalidateQueries({ queryKey: ['getProducts'] });
       options.onSuccess?.(data);

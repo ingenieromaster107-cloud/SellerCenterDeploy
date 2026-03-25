@@ -1,6 +1,5 @@
 'use client';
 
-import type { CreateProductPayload } from 'src/interfaces';
 import type { ImagePreview } from '../components/product-image-upload';
 
 import * as z from 'zod';
@@ -24,6 +23,7 @@ import { useTranslate } from 'src/locales';
 import { HomeContent } from 'src/layouts/home';
 import { useCategories } from 'src/actions/category/use-categories';
 import { useCreateProduct } from 'src/actions/product/use-create-product';
+import { useSimpleProductPayload } from 'src/hooks/product';
 
 import { toast } from 'src/components/snackbar';
 import { Form, Field } from 'src/components/hook-form';
@@ -236,6 +236,7 @@ export function ProductCreateSimpleView() {
   const [images, setImages] = useState<ImagePreview[]>([]);
 
   const { categoryTree, categoriesLoading } = useCategories();
+  const { buildPayload } = useSimpleProductPayload();
 
   /** Esquema de validación Zod para el formulario (usa traducciones) */
   const CreateProductSchema = z.object({
@@ -266,39 +267,9 @@ export function ProductCreateSimpleView() {
 
   const { handleSubmit } = methods;
 
-  /**
-   * Convierte archivos File a base64 para enviar al backend.
-   */
-  const fileToBase64 = useCallback((file: File): Promise<string> =>
-    new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.onload = () => {
-        const result = reader.result as string;
-        // Elimina el prefijo "data:image/...;base64,"
-        const base64 = result.split(',')[1] ?? '';
-        resolve(base64);
-      };
-      reader.onerror = reject;
-      reader.readAsDataURL(file);
-    }), []);
-
   const onSubmit = handleSubmit(async (data) => {
-    const base64Images = await Promise.all(images.map((img) => fileToBase64(img.file)));
-
-    const payload: CreateProductPayload = {
-      name: data.name,
-      sku: data.sku,
-      categoryId: data.categoryId,
-      price: Number(data.price),
-      weight: Number(data.weight),
-      stock: Number(data.stock),
-      shortDescription: data.shortDescription,
-      description: data.description,
-      images: base64Images,
-      files: images.map((img) => img.file),
-    };
-
-    await createProduct(payload);
+    const variables = await buildPayload(data, images);
+    await createProduct(variables);
   });
 
   const handleAddImages = useCallback((newImages: ImagePreview[]) => {

@@ -1,7 +1,6 @@
 'use client';
 
 import type {
-  CreateProductPayload,
   CreateSimpleProductResponse,
   CreateSimpleProductVariables,
 } from 'src/interfaces';
@@ -10,54 +9,11 @@ import { GraphQLService } from 'src/lib/graphql-client';
 
 import { CREATE_SIMPLE_PRODUCT_MUTATION } from './graphql';
 
-/** Llama a la mutation GraphQL para crear un producto simple. */
-export async function createProduct(payload: CreateProductPayload) {
-  const {
-    name,
-    categoryId,
-    sku,
-    price,
-    weight,
-    shortDescription,
-    description,
-    stock,
-    images = [],
-    files = [],
-  } = payload;
-
-  if (!name || !sku || !categoryId) {
-    throw new Error('missingFieldsError');
-  }
-
-  // Construye mediaGallery: cada imagen se envía como base64 al backend
-  const mediaGallery = files.map((file, index) => {
-    const label = file?.name?.replace(/\.[^/.]+$/, '') ?? `${sku}-${index}`;
-    return {
-      media_type: 'image',
-      label,
-      position: index,
-      disabled: false,
-      types: index === 0 ? ['image', 'small_image', 'thumbnail'] : ['image'],
-      content: {
-        base64_encoded_data: images[index] ?? '',
-        type: file?.type ?? 'image/png',
-        name: file?.name ?? `${label}.png`,
-      },
-    };
-  });
-
-  const variables: CreateSimpleProductVariables = {
-    name,
-    categoryId: String(categoryId),
-    sku: String(sku),
-    price: Number.parseFloat(String(price)) || 0,
-    weight: Number.parseFloat(String(weight)) || 0,
-    shortDescription: shortDescription ?? '',
-    description: description ?? '',
-    stock: Number(stock) || 0,
-    mediaGallery,
-  };
-
+/**
+ * Envía las variables ya armadas a la mutation GraphQL de crear producto simple.
+ * La lógica de armado del payload vive en useSimpleProductPayload.
+ */
+export async function createProduct(variables: CreateSimpleProductVariables) {
   const graphql = GraphQLService.getInstance();
 
   const result = await graphql.request<CreateSimpleProductResponse, CreateSimpleProductVariables>(
@@ -75,7 +31,7 @@ export async function createProduct(payload: CreateProductPayload) {
     throw new Error(sanitizeProductError(data.message));
   }
 
-  return { sku: data.sku || sku, success: true };
+  return { sku: data.sku || variables.sku, success: true };
 }
 
 /**

@@ -1,11 +1,10 @@
 'use client';
 
 import type { ImagePreview } from '../components/product-image-upload';
+import type { SelectedMagentoAttr } from 'src/hooks/product/use-configurable-product-payload';
 import type {
   ConfigurableChildInput,
   MagentoConfigurableAttribute,
-  ConfigurableProductOptionInput,
-  CreateConfigurableProductPayload,
 } from 'src/interfaces';
 
 import * as z from 'zod';
@@ -37,6 +36,8 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 
 import { paths } from 'src/routes/paths';
 import { useRouter } from 'src/routes/hooks';
+
+import { useConfigurableProductPayload } from 'src/hooks/product';
 
 import { useTranslate } from 'src/locales';
 import { HomeContent } from 'src/layouts/home';
@@ -251,13 +252,6 @@ function FormattedPriceInput({
 
 const ATTRIBUTE_SET_ID = 4;
 
-/** Atributo Magento seleccionado por el usuario con los valores elegidos */
-interface SelectedMagentoAttr {
-  attribute: MagentoConfigurableAttribute;
-  /** IDs de los valores seleccionados por el seller */
-  selectedValues: string[];
-}
-
 // ----------------------------------------------------------------------
 
 /**
@@ -331,6 +325,7 @@ export function ProductCreateConfigurableView() {
 
   const { categoryTree, categoriesLoading } = useCategories();
   const { attributes: magentoAttributes, attributesLoading } = useAttributesList();
+  const { buildPayload } = useConfigurableProductPayload();
 
   // ===== ESQUEMA ZOD =====
   const FormSchema = z.object({
@@ -364,21 +359,6 @@ export function ProductCreateConfigurableView() {
 
   const { handleSubmit } = methods;
 
-  const fileToBase64 = useCallback(
-    (file: File): Promise<string> =>
-      new Promise((resolve, reject) => {
-        const reader = new FileReader();
-        reader.onload = () => {
-          const result = reader.result as string;
-          const base64 = result.split(',')[1] ?? '';
-          resolve(base64);
-        };
-        reader.onerror = reject;
-        reader.readAsDataURL(file);
-      }),
-    []
-  );
-
   // ===== SUBMIT TODO (padre + hijos) =====
   const onSubmit = handleSubmit(async (data) => {
     if (children.length === 0) {
@@ -403,50 +383,15 @@ export function ProductCreateConfigurableView() {
       return;
     }
 
-    const base64Images = await Promise.all(images.map((img) => fileToBase64(img.file)));
-
-    // Convertir imágenes de cada hijo a base64
-    const childrenWithBase64 = await Promise.all(
-      children.map(async (child) => {
-        if (!child.files || child.files.length === 0) return child;
-        const childBase64 = await Promise.all(child.files.map((f) => fileToBase64(f)));
-        return { ...child, images: childBase64 };
-      })
+    const input = await buildPayload(
+      data,
+      images,
+      children,
+      selectedAttributes,
+      ATTRIBUTE_SET_ID
     );
 
-    // Construir las opciones configurables con datos reales de Magento
-    const configurableOptions: ConfigurableProductOptionInput[] = selectedAttributes.map(
-      (sa, idx) => ({
-        attribute_id: sa.attribute.attribute_id ?? 0,
-        label: sa.attribute.label,
-        position: idx,
-        values: sa.selectedValues.map((v) => ({ value_index: Number(v) })),
-      })
-    );
-
-    // Construir configurableAttributes para el server action
-    const configurableAttributes = selectedAttributes.map((sa) => ({
-      name: sa.attribute.code,
-      values: sa.selectedValues,
-    }));
-
-    const payload: CreateConfigurableProductPayload = {
-      name: data.name,
-      sku: data.sku,
-      categoryId: data.categoryId,
-      price: Number(data.price),
-      weight: Number(data.weight),
-      shortDescription: data.shortDescription,
-      description: data.description,
-      attributeSetId: ATTRIBUTE_SET_ID,
-      images: base64Images,
-      files: images.map((img) => img.file),
-      children: childrenWithBase64,
-      configurableAttributes,
-      configurableOptions,
-    };
-
-    await createConfigurable(payload);
+    await createConfigurable(input);
   });
 
   // ===== MANEJO DE IMÁGENES =====

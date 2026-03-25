@@ -1,6 +1,6 @@
 'use client';
 
-import type { CreateProductPayload } from 'src/interfaces';
+import type { CreateSimpleProductVariables } from 'src/interfaces';
 
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
@@ -16,21 +16,16 @@ type UseCreateProductOptions = {
 /**
  * Hook de React Query que encapsula la mutation de crear producto simple.
  *
- * Al tener éxito, invalida automáticamente la cache de productos
- * para que la lista se refresque sin recargar la página.
- *
- * Uso:
- *   const { mutateAsync, isPending } = useCreateProduct({ onSuccess, onError });
- *   await mutateAsync(payload);
+ * Recibe las variables ya armadas por useSimpleProductPayload.
+ * Al tener éxito, invalida la cache de productos.
  */
 export function useCreateProduct(options: UseCreateProductOptions = {}) {
   const queryClient = useQueryClient();
 
   return useMutation({
     mutationKey: ['product', 'create'],
-    mutationFn: (payload: CreateProductPayload) => createProduct(payload),
+    mutationFn: (variables: CreateSimpleProductVariables) => createProduct(variables),
     onSuccess: async (data) => {
-      // Refresca la lista de productos en cache
       await queryClient.invalidateQueries({ queryKey: ['getProducts'] });
       options.onSuccess?.(data);
     },
