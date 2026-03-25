@@ -11,7 +11,7 @@
     "signIn": "Sign In",
     "forgotPassword": "Forgot password?",
     "keepMe": "Keep the session open",
-    "noAccount": "Don\u2019t have an account?",
+    "noAccount": "Don’t have an account?",
     "getStarted": "Get started"
   },
   "productDetails": {
@@ -64,6 +64,12 @@
     },
     "feedback": {
       "title": "Feedback"
+    },
+    "account": {
+      "title": "Account"
+    },
+    "clients": {
+      "title": "Clients"
     }
   },
   "tableLatestOrders": {
@@ -96,7 +102,7 @@
       "toolbarExportCSV": "Download as CSV",
       "toolbarExportPrint": "Print",
       "toolbarQuickFilterLabel": "Search",
-      "toolbarQuickFilterPlaceholder": "Search\u2026",
+      "toolbarQuickFilterPlaceholder": "Search…",
       "toolbarQuickFilterDeleteIconLabel": "Clear search",
       "toolbarSettings": "Settings",
       "densityCompact": "Compact density",
@@ -161,11 +167,11 @@
           "title": "Select rating to filter",
           "label": "Rating",
           "options": {
-            "5": "5 stars",
-            "4": "4 stars",
-            "3": "3 stars",
+            "1": "1 star",
             "2": "2 stars",
-            "1": "1 star"
+            "3": "3 stars",
+            "4": "4 stars",
+            "5": "5 stars"
           }
         }
       }
@@ -288,5 +294,75 @@
     "errorFormat": "Format not allowed. Only PNG, JPG or JPEG images are accepted.",
     "errorSize": "One or more images exceed the maximum size of {maxSizeKB}KB.",
     "errorMaxImages": "You can only upload a maximum of {maxImages} images."
+  },
+  "clientsModule": {
+    "title": "Clients",
+    "table": {
+      "columns": {
+        "name": "Name",
+        "email": "Email",
+        "address": "Address",
+        "clientSince": "Client Since"
+      },
+      "searchFilter": "Search by name or email..."
+    }
+  },
+  "customerProfileView": {
+    "user": "User",
+    "profile": "Profile",
+    "configuration": "Configuration",
+    "security": "Security",
+    "documents": "Documents",
+    "personalData": "Personal Data"
+  },
+  "formErrorRequired": {
+    "nameRequired": "Name is required",
+    "identificationTypeRequired": "Identification type is required",
+    "identificationNumberRequired": "Identification number is required",
+    "avatarRequired": "Avatar is required",
+    "countryRequired": "Country is required",
+    "addressRequired": "Address is required",
+    "stateRequired": "State is required",
+    "cityRequired": "City is required",
+    "zipCodeRequired": "Zip code is required",
+    "phoneNumberRequired": "Phone number is required",
+    "oldPasswordRequired": "Old password is required",
+    "newPasswordRequired": "New password is required",
+    "confirmNewPasswordRequired": "Confirm new password is required",
+    "oldPasswordMin": "Old password must be at least characters",
+    "newPasswordDifferent": "New password must be different from old password",
+    "passwordsDoNotMatch": "Passwords do not match",
+    "documentRequired": "This document is required",
+    "acceptTyC": "You must accept the terms and conditions"
+  },
+  "formPlaceholder": {
+    "name": "Name",
+    "lastName": "Last Name",
+    "email": "Email",
+    "identificationType": "Identification Type",
+    "identificationNumber": "Identification Number",
+    "phoneNumber": "Phone Number",
+    "country": "Country",
+    "address": "Address",
+    "state": "State",
+    "city": "City",
+    "zipCode": "Zip Code",
+    "oldPassword": "Old Password",
+    "newPassword": "New Password",
+    "confirmNewPassword": "Confirm New Password",
+    "btnSave": "Save",
+    "btnLoad": "Load",
+    "btnRegister": "Register"
+  },
+  "customerProfileViewDocuments": {
+    "title": "Attachment of documents",
+    "sellerIdentification": "Seller Identification",
+    "bankCertificate": "Bank Certificate",
+    "allowedFormats": "Allowed formats: PDF",
+    "acceptTyC": "I accept the terms and conditions. I authorize the processing of my personal data for the purposes described in the",
+    "privacyPolicy": "Privacy Policy of Inter Rapid├¡simo"
+  },
+  "breadcrumbs": {
+    "home": "Home"
   }
 }

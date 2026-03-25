@@ -1,32 +1,32 @@
 {
   "languages": {
-    "es": "Español",
-    "en": "Inglés"
+    "es": "Espa├▒ol",
+    "en": "Ingl├®s"
   },
   "loginPage": {
-    "title": "Inicia sesión en tu cuenta",
-    "emailForm": "Correo electrónico",
-    "passwordForm": "Contraseña",
+    "title": "Inicia sesi├│n en tu cuenta",
+    "emailForm": "Correo electr├│nico",
+    "passwordForm": "Contrase├▒a",
     "passwordPh": "6+ Caracteres",
-    "signIn": "Iniciar sesión",
-    "forgotPassword": "¿Olvidaste tu contraseña?",
-    "keepMe": "Mantener la sesión abierta",
-    "noAccount": "¿No tienes una cuenta?",
+    "signIn": "Iniciar sesi├│n",
+    "forgotPassword": "┬┐Olvidaste tu contrase├▒a?",
+    "keepMe": "Mantener la sesi├│n abierta",
+    "noAccount": "┬┐No tienes una cuenta?",
     "getStarted": "Comenzar"
   },
   "productDetails": {
     "heading": "Detalle del producto",
     "tabs": {
-      "description": "Descripción"
+      "description": "Descripci├│n"
     },
     "errors": {
       "notAvailable": {
         "title": "Producto no disponible",
-        "description": "No pudimos cargar el producto en este momento. Por favor intenta más tarde."
+        "description": "No pudimos cargar el producto en este momento. Por favor intenta m├ís tarde."
       },
       "notFound": {
         "title": "Producto no encontrado",
-        "description": "No se encontró ningún producto con id:"
+        "description": "No se encontr├│ ning├║n producto con id:"
       }
     }
   },
@@ -36,8 +36,8 @@
     "units": "unidades",
     "alerts": {
       "combinationNotAvailable": {
-        "title": "Combinación no disponible",
-        "description": "Esta combinación de opciones no existe. Por favor selecciona otra."
+        "title": "Combinaci├│n no disponible",
+        "description": "Esta combinaci├│n de opciones no existe. Por favor selecciona otra."
       },
       "outOfStock": {
         "title": "Sin stock disponible",
@@ -64,10 +64,16 @@
     },
     "feedback": {
       "title": "Opiniones"
+    },
+    "account": {
+      "title": "Cuenta"
+    },
+    "clients": {
+      "title": "Clientes"
     }
   },
   "tableLatestOrders": {
-    "title": "Últimos Pedidos",
+    "title": "├Ültimos Pedidos",
     "columns": {
       "id": "Pedido",
       "customer": "Cliente",
@@ -96,25 +102,25 @@
       "toolbarExportCSV": "Descargar CSV",
       "toolbarExportPrint": "Imprimir",
       "toolbarQuickFilterLabel": "Buscar",
-      "toolbarQuickFilterPlaceholder": "Buscar…",
-      "toolbarQuickFilterDeleteIconLabel": "Limpiar búsqueda",
-      "toolbarSettings": "Configuración",
+      "toolbarQuickFilterPlaceholder": "BuscarÔÇª",
+      "toolbarQuickFilterDeleteIconLabel": "Limpiar b├║squeda",
+      "toolbarSettings": "Configuraci├│n",
       "densityCompact": "Densidad compacta",
-      "densityStandard": "Densidad estándar",
-      "densityComfortable": "Densidad cómoda",
+      "densityStandard": "Densidad est├índar",
+      "densityComfortable": "Densidad c├│moda",
       "showColumnBorders": "Mostrar bordes de columna",
       "showCellBorders": "Mostrar bordes de celda"
     },
     "tablePagination": {
-      "rowsPerPage": "Filas por página:",
+      "rowsPerPage": "Filas por p├ígina:",
       "of": "de",
       "dense": "Denso"
     }
   },
   "search": "Buscar...",
-  "logout": "Cerrar sesión",
+  "logout": "Cerrar sesi├│n",
   "productsNotAvailable": "Productos no disponibles",
-  "productsLoadError": "Lo sentimos, no pudimos cargar los productos en este momento. Por favor, inténtalo de nuevo más tarde.",
+  "productsLoadError": "Lo sentimos, no pudimos cargar los productos en este momento. Por favor, int├®ntalo de nuevo m├ís tarde.",
   "addProduct": "Agregar Producto",
   "noResultsFound": "No se encontraron resultados",
   "product": "Producto",
@@ -136,7 +142,7 @@
   "orderReference": "Referencia de pedido",
   "customerName": "Cliente",
   "status": "Estado",
-  "createdAt": "Fecha de creación",
+  "createdAt": "Fecha de creaci├│n",
   "id": "Id",
   "feedbackModule": {
     "title": "Opiniones",
@@ -158,8 +164,8 @@
       "popup": {
         "title": "Filtros",
         "filterByRating": {
-          "title": "Filtrar por calificación",
-          "label": "Calificación",
+          "title": "Filtrar por calificaci├│n",
+          "label": "Calificaci├│n",
           "options": {
             "1": "1 estrella",
             "2": "2 estrellas",
@@ -199,63 +205,63 @@
     "title": "Seleccionar tipo de producto",
     "subtitle": "Elige el tipo de producto que deseas crear.",
     "simpleTitle": "Producto Simple",
-    "simpleDescription": "Un producto único sin variaciones de talla, color, etc.",
+    "simpleDescription": "Un producto ├║nico sin variaciones de talla, color, etc.",
     "configurableTitle": "Producto Configurable",
     "configurableDescription": "Un producto con variaciones como talla, color, etc.",
-    "comingSoon": "Próximamente"
+    "comingSoon": "Pr├│ximamente"
   },
   "productCreate": {
     "heading": "Crear producto simple",
     "breadcrumbCreate": "Crear",
-    "basicInfo": "Información del producto",
+    "basicInfo": "Informaci├│n del producto",
     "productName": "Nombre del producto *",
     "sku": "SKU *",
-    "category": "Categoría *",
-    "loadingCategories": "Cargando categorías...",
-    "selectCategory": "Selecciona una categoría",
-    "selectedCategories": "Categorías seleccionadas",
+    "category": "Categor├¡a *",
+    "loadingCategories": "Cargando categor├¡as...",
+    "selectCategory": "Selecciona una categor├¡a",
+    "selectedCategories": "Categor├¡as seleccionadas",
     "price": "Precio *",
     "weight": "Peso (kg) *",
-    "shortDescription": "Descripción corta *",
-    "descriptionSection": "Descripción completa del producto",
-    "fullDescription": "Descripción completa *",
-    "descriptionPlaceholder": "Escribe la descripción del producto...",
-    "imagesSection": "Imágenes",
+    "shortDescription": "Descripci├│n corta *",
+    "descriptionSection": "Descripci├│n completa del producto",
+    "fullDescription": "Descripci├│n completa *",
+    "descriptionPlaceholder": "Escribe la descripci├│n del producto...",
+    "imagesSection": "Im├ígenes",
     "stockSection": "Stock del producto",
     "stock": "Stock *",
     "savePublish": "Guardar y Publicar",
-    "successMessage": "¡Producto creado exitosamente!",
+    "successMessage": "┬íProducto creado exitosamente!",
     "errorMessage": "Error al crear el producto",
     "loadingMessage": "Creando producto simple, espere por favor...",
     "validation": {
       "nameRequired": "El nombre del producto es obligatorio",
       "skuRequired": "El SKU es obligatorio",
-      "categoryRequired": "La categoría es obligatoria",
+      "categoryRequired": "La categor├¡a es obligatoria",
       "pricePositive": "El precio debe ser mayor a 0",
       "weightPositive": "El peso debe ser mayor a 0",
       "stockMin": "El stock no puede ser negativo",
-      "shortDescRequired": "La descripción corta es obligatoria",
-      "descRequired": "La descripción es obligatoria"
+      "shortDescRequired": "La descripci├│n corta es obligatoria",
+      "descRequired": "La descripci├│n es obligatoria"
     }
   },
   "configurableCreate": {
     "heading": "Crear producto configurable",
     "breadcrumbCreate": "Crear configurable",
     "infoBannerTitle": "Producto configurable",
-    "infoBannerDescription": "Completa la información del producto base y luego configura las variaciones (talla, color, etc.).",
-    "baseProductTitle": "Información base del producto",
-    "variationsSectionTitle": "Configuración de variaciones",
-    "attributesHint": "Selecciona los atributos que definirán las variaciones de tu producto (ej: Color, Talla).",
+    "infoBannerDescription": "Completa la informaci├│n del producto base y luego configura las variaciones (talla, color, etc.).",
+    "baseProductTitle": "Informaci├│n base del producto",
+    "variationsSectionTitle": "Configuraci├│n de variaciones",
+    "attributesHint": "Selecciona los atributos que definir├ín las variaciones de tu producto (ej: Color, Talla).",
     "selectAttributeLabel": "Seleccionar atributo",
     "selectAttributePlaceholder": "Buscar atributo...",
     "noAttributeFound": "No se encontraron atributos",
     "selectValuesHint": "Selecciona los valores",
-    "bulkModeTab": "Configuración masiva",
-    "manualModeTab": "Configuración manual",
-    "bulkConfigTitle": "Configuración masiva de variaciones",
-    "bulkConfigHint": "Configura imágenes, precios y cantidades de manera masiva para todas las variaciones.",
-    "imagesSingleLabel": "Mismas imágenes para todas",
-    "imagesByAttrLabel": "Imágenes por atributo",
+    "bulkModeTab": "Configuraci├│n masiva",
+    "manualModeTab": "Configuraci├│n manual",
+    "bulkConfigTitle": "Configuraci├│n masiva de variaciones",
+    "bulkConfigHint": "Configura im├ígenes, precios y cantidades de manera masiva para todas las variaciones.",
+    "imagesSingleLabel": "Mismas im├ígenes para todas",
+    "imagesByAttrLabel": "Im├ígenes por atributo",
     "imagesSkipLabel": "Omitir",
     "selectGroupAttr": "Agrupar por atributo",
     "priceSingleLabel": "Mismo precio para todas",
@@ -266,27 +272,96 @@
     "qtySkipLabel": "Omitir",
     "generateCombinations": "Generar combinaciones",
     "variationsTitle": "Variaciones",
-    "summaryHint": "Revisa y ajusta cada variación antes de publicar.",
+    "summaryHint": "Revisa y ajusta cada variaci├│n antes de publicar.",
     "childName": "Nombre",
-    "deleteVariation": "Eliminar variación",
-    "addVariationRow": "Agregar variación",
-    "duplicateWarning": "Existen variaciones con combinaciones duplicadas. Corrígelas antes de continuar.",
+    "deleteVariation": "Eliminar variaci├│n",
+    "addVariationRow": "Agregar variaci├│n",
+    "duplicateWarning": "Existen variaciones con combinaciones duplicadas. Corr├¡gelas antes de continuar.",
     "savePublish": "Guardar y Publicar",
-    "successMessage": "¡Producto configurable creado exitosamente!",
+    "successMessage": "┬íProducto configurable creado exitosamente!",
     "errorMessage": "Error al crear el producto configurable",
-    "noVariationsError": "Debes agregar al menos una variación",
-    "invalidChildError": "Hay variaciones con datos incompletos o inválidos",
-    "duplicateSkuError": "Hay variaciones con SKU duplicado. Cada variación debe tener un SKU único.",
+    "noVariationsError": "Debes agregar al menos una variaci├│n",
+    "invalidChildError": "Hay variaciones con datos incompletos o inv├ílidos",
+    "duplicateSkuError": "Hay variaciones con SKU duplicado. Cada variaci├│n debe tener un SKU ├║nico.",
     "loadingMessage": "Creando producto configurable, espere por favor..."
   },
   "productImageUpload": {
     "main": "Principal",
-    "addImages": "Agregar imágenes",
-    "images": "imágenes",
-    "mainImageHint": "La primera imagen será la imagen principal.",
-    "formatHint": "(Formatos permitidos: PNG, JPG, JPEG. Tamaño máximo por imagen: {maxSizeKB}KB. Máximo {maxImages} imágenes.)",
-    "errorFormat": "Formato no permitido. Solo se aceptan imágenes PNG, JPG o JPEG.",
-    "errorSize": "Una o más imágenes superan el tamaño máximo de {maxSizeKB}KB.",
-    "errorMaxImages": "Solo puedes subir un máximo de {maxImages} imágenes."
+    "addImages": "Agregar im├ígenes",
+    "images": "im├ígenes",
+    "mainImageHint": "La primera imagen ser├í la imagen principal.",
+    "formatHint": "(Formatos permitidos: PNG, JPG, JPEG. Tama├▒o m├íximo por imagen: {maxSizeKB}KB. M├íximo {maxImages} im├ígenes.)",
+    "errorFormat": "Formato no permitido. Solo se aceptan im├ígenes PNG, JPG o JPEG.",
+    "errorSize": "Una o m├ís im├ígenes superan el tama├▒o m├íximo de {maxSizeKB}KB.",
+    "errorMaxImages": "Solo puedes subir un m├íximo de {maxImages} im├ígenes."
+  },
+  "clientsModule": {
+    "title": "Clientes",
+    "table": {
+      "columns": {
+        "name": "Nombre",
+        "email": "Correo electr├│nico",
+        "address": "Direcci├│n",
+        "clientSince": "Cliente desde"
+      },
+      "searchFilter": "Buscar por nombre o correo..."
+    }
+  },
+  "customerProfileView": {
+    "user": "Usuario",
+    "profile": "Perfil",
+    "configuration": "Configuraci├│n",
+    "security": "Seguridad",
+    "documents": "Documentos",
+    "personalData": "Datos personales"
+  },
+  "formErrorRequired": {
+    "nameRequired": "Nombre es requerido",
+    "identificationTypeRequired": "Tipo de identificaci├│n es requerido",
+    "identificationNumberRequired": "N├║mero de identificaci├│n es requerido",
+    "avatarRequired": "Avatar es requerido",
+    "countryRequired": "Pa├¡s es requerido",
+    "cityRequired": "Ciudad es requerida",
+    "addressRequired": "Direcci├│n es requerida",
+    "postalCodeRequired": "C├│digo postal es requerido",
+    "phoneNumberRequired": "N├║mero de tel├®fono es requerido",
+    "oldPasswordRequired": "Contrase├▒a antigua es requerida",
+    "newPasswordRequired": "Nueva contrase├▒a es requerida",
+    "confirmNewPasswordRequired": "Confirmar nueva contrase├▒a es requerida",
+    "oldPasswordMin": "La contrase├▒a antigua debe tener al menos caracteres",
+    "newPasswordDifferent": "La nueva contrase├▒a debe ser diferente de la contrase├▒a antigua",
+    "passwordsDoNotMatch": "Las contrase├▒as no coinciden",
+    "documentRequired": "Este documento es obligatorio",
+    "acceptTyC": "Debes aceptar los t├®rminos y condiciones"
+  },
+  "formPlaceholder": {
+    "name": "Nombre",
+    "lastName": "Apellido",
+    "email": "Correo electr├│nico",
+    "identificationType": "Tipo de identificaci├│n",
+    "identificationNumber": "N├║mero de identificaci├│n",
+    "phoneNumber": "N├║mero de tel├®fono",
+    "country": "Pa├¡s",
+    "address": "Direcci├│n",
+    "state": "Estado",
+    "city": "Ciudad",
+    "zipCode": "C├│digo postal",
+    "oldPassword": "Contrase├▒a antigua",
+    "newPassword": "Nueva contrase├▒a",
+    "confirmNewPassword": "Confirmar nueva contrase├▒a",
+    "btnSave": "Guardar",
+    "btnLoad": "Cargar",
+    "btnRegister": "Registrar"
+  },
+  "customerProfileViewDocuments": {
+    "title": "Adjuntar documentos",
+    "sellerIdentification": "Identificaci├│n del vendedor",
+    "bankCertificate": "Certificado bancario",
+    "allowedFormats": "Formatos permitidos: PDF",
+    "acceptTyC": "Acepto los t├®rminos y condiciones. Autorizo el tratamiento de mis datos personales para los fines descritos en la",
+    "privacyPolicy": "Pol├¡tica de privacidad de Inter Rapid├¡simo"
+  },
+  "breadcrumbs": {
+    "home": "Inicio"
   }
 }
