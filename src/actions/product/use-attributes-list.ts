@@ -18,7 +18,6 @@ export function useAttributesList() {
   const { data, isLoading, isError, error, isFetching } = useQuery({
     queryKey: ['graphql', 'attributesList'],
     queryFn: () => graphql.request<AttributesListResponse>(ATTRIBUTES_LIST_QUERY),
-    staleTime: 1000 * 60 * 10,
     refetchOnWindowFocus: false,
   });
 
@@ -29,7 +28,6 @@ export function useAttributesList() {
         attributeSetId: ATTRIBUTE_SET_ID,
         isUserDefined: true,
       }),
-    staleTime: 1000 * 60 * 10,
     refetchOnWindowFocus: false,
   });
 

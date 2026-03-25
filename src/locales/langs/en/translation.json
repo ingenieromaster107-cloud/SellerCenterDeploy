@@ -232,6 +232,8 @@
     "savePublish": "Save & Publish",
     "successMessage": "Product created successfully!",
     "errorMessage": "Error creating product",
+    "missingFieldsError": "Missing required fields: name, SKU or category",
+    "skuDuplicateError": "The entered SKU is already registered. Please use a different SKU.",
     "loadingMessage": "Creating simple product, please wait...",
     "validation": {
       "nameRequired": "Product name is required",
@@ -280,6 +282,8 @@
     "savePublish": "Save & Publish",
     "successMessage": "Configurable product created successfully!",
     "errorMessage": "Error creating configurable product",
+    "missingFieldsError": "Missing required fields: name, SKU or category",
+    "skuDuplicateError": "One or more SKUs are already registered. Please verify the SKUs of the variations.",
     "noVariationsError": "You must add at least one variation",
     "invalidChildError": "Some variations have incomplete or invalid data",
     "duplicateSkuError": "There are variations with duplicate SKU. Each variation must have a unique SKU.",

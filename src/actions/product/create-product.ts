@@ -26,7 +26,7 @@ export async function createProduct(payload: CreateProductPayload) {
   } = payload;
 
   if (!name || !sku || !categoryId) {
-    throw new Error('Faltan campos obligatorios: nombre, sku o categoría');
+    throw new Error('missingFieldsError');
   }
 
   // Construye mediaGallery: cada imagen se envía como base64 al backend
@@ -68,7 +68,7 @@ export async function createProduct(payload: CreateProductPayload) {
   const data = result?.createSimpleProduct;
 
   if (!data) {
-    throw new Error('Error al crear producto');
+    throw new Error('errorMessage');
   }
 
   if (!data.success) {
@@ -79,19 +79,19 @@ export async function createProduct(payload: CreateProductPayload) {
 }
 
 /**
- * Sanitiza mensajes de error del backend para no exponer información sensible.
- * Detecta patrones conocidos y devuelve mensajes amigables.
+ * Sanitiza mensajes de error del backend.
+ * Retorna claves de traducción en vez de textos hardcodeados.
  */
 function sanitizeProductError(message?: string): string {
-  if (!message) return 'Ocurrió un error al crear el producto. Intenta nuevamente.';
+  if (!message) return 'errorMessage';
 
   const lowerMsg = message.toLowerCase();
 
   // SKU duplicado
   if (lowerMsg.includes('sku existente') || lowerMsg.includes('url ya existe') || lowerMsg.includes('already exists') || lowerMsg.includes('llave url')) {
-    return 'El SKU ingresado ya se encuentra registrado. Por favor utiliza un SKU diferente.';
+    return 'skuDuplicateError';
   }
 
   // Error genérico para cualquier otro caso
-  return 'Ocurrió un error al crear el producto. Intenta nuevamente.';
+  return 'errorMessage';
 }

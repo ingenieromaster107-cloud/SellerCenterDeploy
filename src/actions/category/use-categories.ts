@@ -24,7 +24,6 @@ export function useCategories() {
   const { data, isLoading, isError, error, isFetching } = useQuery({
     queryKey: ['graphql', 'categories'],
     queryFn: () => graphql.request<CategoriesResponseInterface>(GET_CATEGORIES_QUERY),
-    staleTime: 1000 * 60 * 10,  // 10 minutos
     refetchOnWindowFocus: false,
   });
 

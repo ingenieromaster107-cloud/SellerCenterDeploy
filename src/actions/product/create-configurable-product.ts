@@ -29,11 +29,11 @@ export async function createConfigurableProduct(payload: CreateConfigurableProdu
   } = payload;
 
   if (!name || !sku || !categoryId) {
-    throw new Error('Faltan campos obligatorios: nombre, sku o categoría');
+    throw new Error('missingFieldsError');
   }
 
   if (!children || children.length === 0) {
-    throw new Error('Debe agregar al menos una variación');
+    throw new Error('noVariationsError');
   }
 
   // Construye mediaGallery para el producto padre
@@ -157,7 +157,7 @@ export async function createConfigurableProduct(payload: CreateConfigurableProdu
   const data = result?.createConfigurableProduct;
 
   if (!data) {
-    throw new Error('Error al crear producto configurable');
+    throw new Error('errorMessage');
   }
 
   if (data.status === 'failed') {
@@ -176,19 +176,19 @@ export async function createConfigurableProduct(payload: CreateConfigurableProdu
 }
 
 /**
- * Sanitiza mensajes de error del backend para no exponer información sensible.
- * Detecta patrones conocidos y devuelve mensajes amigables.
+ * Sanitiza mensajes de error del backend.
+ * Retorna claves de traducción en vez de textos hardcodeados.
  */
 function sanitizeConfigurableProductError(message?: string): string {
-  if (!message) return 'Ocurrió un error al crear el producto configurable. Intenta nuevamente.';
+  if (!message) return 'errorMessage';
 
   const lowerMsg = message.toLowerCase();
 
   // SKU duplicado
   if (lowerMsg.includes('sku existente') || lowerMsg.includes('url ya existe') || lowerMsg.includes('already exists') || lowerMsg.includes('llave url')) {
-    return 'Uno o más SKU ingresados ya se encuentran registrados. Por favor verifica los SKU de las variaciones.';
+    return 'skuDuplicateError';
   }
 
   // Error genérico para cualquier otro caso
-  return 'Ocurrió un error al crear el producto configurable. Intenta nuevamente.';
+  return 'errorMessage';
 }

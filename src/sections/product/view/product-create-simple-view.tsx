@@ -35,19 +35,16 @@ import { CategoryTreeSelect } from '../components/category-tree-select';
 
 // ----------------------------------------------------------------------
 
-/** Mensajes seguros que nuestras funciones de sanitización generan */
-const SAFE_MESSAGES = [
-  'el sku ingresado ya se encuentra registrado',
-  'ocurrió un error al crear el producto',
-];
-
-/** Última capa: solo deja pasar mensajes conocidos como seguros. */
-function sanitizeUserError(error: Error, fallback: string): string {
-  const msg = error?.message;
-  if (!msg) return fallback;
-  const lower = msg.toLowerCase();
-  if (SAFE_MESSAGES.some((safe) => lower.includes(safe))) return msg;
-  return fallback;
+/** Traduce claves de error lanzadas por las acciones. */
+function translateError(
+  error: Error,
+  translate: (ns: string, key: string) => string
+): string {
+  const key = error?.message;
+  if (!key) return translate('productCreate', 'errorMessage');
+  const translated = translate('productCreate', key);
+  // Si la clave no existe en traducciones, devuelve el genérico
+  return translated !== key ? translated : translate('productCreate', 'errorMessage');
 }
 
 const defaultValues = {
@@ -258,7 +255,7 @@ export function ProductCreateSimpleView() {
       router.push(paths.product.root);
     },
     onError: (error) => {
-      toast.error(sanitizeUserError(error, translate('productCreate', 'errorMessage')));
+      toast.error(translateError(error, translate));
     },
   });
 

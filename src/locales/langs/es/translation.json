@@ -232,6 +232,8 @@
     "savePublish": "Guardar y Publicar",
     "successMessage": "¡Producto creado exitosamente!",
     "errorMessage": "Error al crear el producto",
+    "missingFieldsError": "Faltan campos obligatorios: nombre, SKU o categoría",
+    "skuDuplicateError": "El SKU ingresado ya se encuentra registrado. Por favor utiliza un SKU diferente.",
     "loadingMessage": "Creando producto simple, espere por favor...",
     "validation": {
       "nameRequired": "El nombre del producto es obligatorio",
@@ -280,6 +282,8 @@
     "savePublish": "Guardar y Publicar",
     "successMessage": "¡Producto configurable creado exitosamente!",
     "errorMessage": "Error al crear el producto configurable",
+    "missingFieldsError": "Faltan campos obligatorios: nombre, SKU o categoría",
+    "skuDuplicateError": "Uno o más SKU ingresados ya se encuentran registrados. Por favor verifica los SKU de las variaciones.",
     "noVariationsError": "Debes agregar al menos una variación",
     "invalidChildError": "Hay variaciones con datos incompletos o inválidos",
     "duplicateSkuError": "Hay variaciones con SKU duplicado. Cada variación debe tener un SKU único.",

@@ -55,20 +55,15 @@ import { CategoryTreeSelect } from '../components/category-tree-select';
 
 // ----------------------------------------------------------------------
 
-/** Mensajes seguros que nuestras funciones de sanitización generan */
-const SAFE_MESSAGES = [
-  'el sku ingresado ya se encuentra registrado',
-  'uno o más sku ingresados ya se encuentran registrados',
-  'ocurrió un error al crear el producto configurable',
-];
-
-/** Última capa: solo deja pasar mensajes conocidos como seguros. */
-function sanitizeUserError(error: Error, fallback: string): string {
-  const msg = error?.message;
-  if (!msg) return fallback;
-  const lower = msg.toLowerCase();
-  if (SAFE_MESSAGES.some((safe) => lower.includes(safe))) return msg;
-  return fallback;
+/** Traduce claves de error lanzadas por las acciones. */
+function translateError(
+  error: Error,
+  translate: (ns: string, key: string) => string
+): string {
+  const key = error?.message;
+  if (!key) return translate('configurableCreate', 'errorMessage');
+  const translated = translate('configurableCreate', key);
+  return translated !== key ? translated : translate('configurableCreate', 'errorMessage');
 }
 
 // ----------------------------------------------------------------------
@@ -357,7 +352,7 @@ export function ProductCreateConfigurableView() {
       router.push(paths.product.root);
     },
     onError: (error) => {
-      toast.error(sanitizeUserError(error, translate('configurableCreate', 'errorMessage')));
+      toast.error(translateError(error, translate));
     },
   });
 
