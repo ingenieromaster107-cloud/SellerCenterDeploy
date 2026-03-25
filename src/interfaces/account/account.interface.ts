@@ -1,13 +1,16 @@
 export interface SubAccountInterface {
   id: number;
-  name: string;
+  firstname: string;
   lastname: string;
   email: string;
   status: string;
   createdAt: string;
-  permissions: string[];
+  permissions: Permission[];
 }
 
+export type Permission = {
+  [key: string]: string;
+};
 
 export interface SubAccountResponseInterface {
   created_at: string,

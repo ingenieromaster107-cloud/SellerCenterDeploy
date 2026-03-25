@@ -8,7 +8,7 @@ import { capitalizeFirstLetter } from "src/utils";
 export function subaccountListAdapter(subAccounts: SubAccountResponseInterface[]): SubAccountInterface[] {
   return subAccounts.map((subAccount) => ({
     id: subAccount.entity_id,
-    name: capitalizeFirstLetter(subAccount.firstname),
+    firstname: capitalizeFirstLetter(subAccount.firstname),
     lastname: capitalizeFirstLetter(subAccount.lastname),
     email: subAccount.email,
     status: subAccount.status === 1 ? 'ACTIVE' : 'INACTIVE',

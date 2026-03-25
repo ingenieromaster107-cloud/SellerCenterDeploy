@@ -1,3 +1,5 @@
+import { jwtDecode } from 'jwt-decode';
+
 import { paths } from 'src/routes/paths';
 
 import { EXPIRATION_TIME, ACCESS_TOKEN_STORAGE_KEY } from './constant';
@@ -33,12 +35,17 @@ export async function setSession(accessToken: string | null) {
     if (accessToken) {
       sessionStorage.setItem(ACCESS_TOKEN_STORAGE_KEY, accessToken);
 
+      const payload: { uid: string } = jwtDecode(accessToken);
+
+      localStorage.setItem('customer_id', payload.uid);
+
       // variable para guardar momento que se guarda el token
       const currentTime = Date.now() / 1000;
       sessionStorage.setItem(EXPIRATION_TIME, currentTime.toString());
     } else {
       sessionStorage.removeItem(ACCESS_TOKEN_STORAGE_KEY);
       sessionStorage.removeItem(EXPIRATION_TIME);
+      localStorage.removeItem('customer_id');
       window.location.href = paths.auth.signIn;
     }
   } catch (error) {

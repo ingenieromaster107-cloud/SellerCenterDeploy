@@ -3,6 +3,7 @@ import type { SubAccountInterface } from 'src/interfaces';
 import * as z from 'zod';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useQueryClient } from '@tanstack/react-query';
 
 import Box from '@mui/material/Box';
 import Alert from '@mui/material/Alert';
@@ -12,6 +13,8 @@ import MenuItem from '@mui/material/MenuItem';
 import DialogTitle from '@mui/material/DialogTitle';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
+
+import { useUpdateSubAccount } from 'src/actions/account/use-edit-subaccount';
 
 import { toast } from 'src/components/snackbar';
 import { Form, Field, schemaUtils } from 'src/components/hook-form';
@@ -23,7 +26,7 @@ import { PERMISSIONS, ACCOUNT_STATUS } from '../constants/status';
 export type UserQuickEditSchemaType = z.infer<typeof UserQuickEditSchema>;
 
 export const UserQuickEditSchema = z.object({
-  name: z.string().min(1, { error: 'Name is required!' }),
+  firstname: z.string().min(1, { error: 'Name is required!' }),
   lastname: z.string().min(1, { error: 'Lastname is required!' }),
   email: schemaUtils.email(),
   permissions: z.array(z.string().min(1, { error: 'Each permission is required!' })).nonempty({
@@ -43,8 +46,11 @@ type Props = {
 };
 
 export function SubAccountEditForm({ currentUser, open, onClose }: Props) {
+  const { mutateAsync } = useUpdateSubAccount();
+  const queryClient = useQueryClient();
+
   const defaultValues: UserQuickEditSchemaType = {
-    name: '',
+    firstname: '',
     lastname: '',
     email: '',
     status: '',
@@ -55,7 +61,12 @@ export function SubAccountEditForm({ currentUser, open, onClose }: Props) {
     mode: 'all',
     resolver: zodResolver(UserQuickEditSchema),
     defaultValues,
-    values: currentUser!,
+    values: currentUser
+      ? {
+          ...currentUser,
+          permissions: currentUser.permissions.map((perm) => Object.keys(perm)[0]),
+        }
+      : defaultValues,
   });
 
   const {
@@ -65,23 +76,29 @@ export function SubAccountEditForm({ currentUser, open, onClose }: Props) {
   } = methods;
 
   const onSubmit = handleSubmit(async (data) => {
-    const promise = new Promise((resolve) => setTimeout(resolve, 1000));
-
     try {
-      reset();
-      onClose();
-
-      toast.promise(promise, {
-        loading: 'Loading...',
-        success: 'Update success!',
-        error: 'Update error!',
+     const res = await mutateAsync({
+        id: currentUser!.id.toString(),
+        firstname: data.firstname,
+        lastname: data.lastname,
+        email: data.email,
+        status: data.status == 'ACTIVE' ? '1' : '0',
+        permissionType: data.permissions.join(','),
+        customerId: localStorage.getItem('customer_id')!,
       });
 
-      await promise;
+      if (res.updateSellerSubAccount.message !== 'SubAccount updated successfully') {
+        throw new Error('Failed to update subaccount');
+      }
 
-      console.info('DATA', data);
+      queryClient.invalidateQueries({queryKey: ['getSubAccounts']});
+
+      toast.success('Subaccount updated successfully!');
+
+      reset();
+      onClose();
     } catch (error) {
-      console.error(error);
+      toast.error('Failed to update subaccount. Please try again.');
     }
   });
 
@@ -123,7 +140,7 @@ export function SubAccountEditForm({ currentUser, open, onClose }: Props) {
 
             <Box sx={{ display: { xs: 'none', sm: 'block' } }} />
 
-            <Field.Text name="name" label="Name" />
+            <Field.Text name="firstname" label="Name" />
             <Field.Text name="lastname" label="Last name" />
             <Field.Text name="email" label="Email address" />
 
@@ -138,7 +155,13 @@ export function SubAccountEditForm({ currentUser, open, onClose }: Props) {
         </DialogContent>
 
         <DialogActions>
-          <Button variant="outlined" onClick={onClose}>
+          <Button
+            variant="outlined"
+            onClick={() => {
+              reset();
+              onClose();
+            }}
+          >
             Cancel
           </Button>
           <Button type="submit" variant="contained" loading={isSubmitting}>
@@ -149,5 +172,3 @@ export function SubAccountEditForm({ currentUser, open, onClose }: Props) {
     </Dialog>
   );
 }
-
-

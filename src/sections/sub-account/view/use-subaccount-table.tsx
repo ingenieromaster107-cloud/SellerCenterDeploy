@@ -96,15 +96,17 @@ function applyFilter({ inputData, comparator, filters }: ApplyFilterProps) {
   inputData = stabilizedThis.map((el) => el[0]);
 
   if (name) {
-    inputData = inputData.filter(({ name: accountName, email }) =>
-      [accountName, email].some((field) =>
+    inputData = inputData.filter(({ firstname, email }) =>
+      [firstname, email].some((field) =>
         field?.toLowerCase().includes(name.toLowerCase())
       )
     );
   }
 
   if (permission !== 'all') {
-    inputData = inputData.filter((account) => account.permissions.includes(permission));
+    inputData = inputData.filter((account) =>
+      account.permissions.some((perm) => Object.keys(perm).includes(permission))
+  );
   }
 
   return inputData;

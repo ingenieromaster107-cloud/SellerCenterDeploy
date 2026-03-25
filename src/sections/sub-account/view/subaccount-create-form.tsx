@@ -11,13 +11,16 @@ import DialogTitle from '@mui/material/DialogTitle';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 
+import { useCreateSubAccount } from 'src/actions/account/use-create-subaccount';
+
 import { toast } from 'src/components/snackbar';
 import { Form, Field, schemaUtils } from 'src/components/hook-form';
 
 import { PERMISSIONS, ACCOUNT_STATUS } from '../constants/status';
 
+
 export const SubAccountSchema = z.object({
-  name: z.string().min(1, { error: 'Name is required!' }),
+  firstname: z.string().min(1, { error: 'Name is required!' }),
   lastname: z.string().min(1, { error: 'Lastname is required!' }),
   email: schemaUtils.email(),
   permissions: z.array(z.string().min(1, { error: 'Each permission is required!' })).nonempty({
@@ -37,21 +40,34 @@ export function SubAccountCreateForm({ open, onClose }: Omit<Props, 'currentUser
   const methods = useForm({
     mode: 'all',
     resolver: zodResolver(SubAccountSchema),
-    defaultValues: { name: '', lastname: '', email: '', status: 'ACTIVE', permissions: [] },
+    defaultValues: { firstname: '', lastname: '', email: '', status: 'ACTIVE', permissions: [] },
   });
+  const { mutateAsync } = useCreateSubAccount();
 
   const { reset, handleSubmit, formState: { isSubmitting } } = methods;
 
   const onSubmit = handleSubmit(async (data) => {
     try {
-      // TODO: llamar mutation de creación
-      console.info('CREATE', data);
+      const res = await mutateAsync({
+        firstname: data.firstname,
+        lastname: data.lastname,
+        email: data.email,
+        status: data.status == 'ACTIVE' ? '1' : '0',
+        permissionType: data.permissions.join(','),
+        customerId: localStorage.getItem('customer_id')!,
+      });
+
+      if (res.createSellerSubAccount.successMessage != 'Sub Account was saved successfully') {
+        throw new Error('Failed to create subaccount');
+      }
+
+      toast.success('Subaccount created successfully!');
+
       reset();
       onClose();
-      toast.success('SubAccount created!');
     } catch (error) {
       console.error(error);
-      toast.error('Create error!');
+      toast.error('Failed to create subaccount!');
     }
   });
 
@@ -93,7 +109,7 @@ export function SubAccountCreateForm({ open, onClose }: Omit<Props, 'currentUser
 
             <Box sx={{ display: { xs: 'none', sm: 'block' } }} />
 
-            <Field.Text name="name" label="Name" />
+            <Field.Text name="firstname" label="Name" />
             <Field.Text name="lastname" label="Last name" />
             <Field.Text name="email" label="Email address" />
 

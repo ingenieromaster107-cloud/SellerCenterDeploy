@@ -18,7 +18,6 @@ import TableBody from '@mui/material/TableBody';
 import IconButton from '@mui/material/IconButton';
 
 import { paths } from 'src/routes/paths';
-import { RouterLink } from 'src/routes/components';
 
 import { HomeContent } from 'src/layouts/home';
 
@@ -215,7 +214,9 @@ function generateFilterTabs(
               'default'}
           >
             {
-              tableData.filter((account) => tab.value === 'all' || account.permissions.includes(tab.value)).length
+              tableData.filter((account) =>
+                tab.value === 'all' || account.permissions.some((perm) => Object.keys(perm).includes(tab.value))
+              ).length
             }
           </Label>} />
       ))}

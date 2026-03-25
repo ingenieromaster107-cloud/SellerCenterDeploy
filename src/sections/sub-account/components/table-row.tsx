@@ -76,7 +76,10 @@ export function SubAccountTableRow({ row, selected, onSelectRow, detailsHref }: 
 
   const renderEditForm = () => (
     <SubAccountEditForm
-      currentUser={row}
+      currentUser={{
+        ...row,
+        firstname: row.firstname
+      }}
       open={quickEditForm.value}
       onClose={quickEditForm.onFalse}
     />
@@ -94,7 +97,7 @@ export function SubAccountTableRow({ row, selected, onSelectRow, detailsHref }: 
             <ListItemText
               primary={
                 <Link component={RouterLink} href={detailsHref} color="inherit" underline="always">
-                  {row.name} {row.lastname}
+                  {row.firstname} {row.lastname}
                 </Link>
               }
               secondary={row.email}
@@ -111,10 +114,11 @@ export function SubAccountTableRow({ row, selected, onSelectRow, detailsHref }: 
         </TableCell>
 
         <TableCell align="left">
-          { /* TODO: CONFIGURAR bien estos estados */}
           {
-            row.permissions
-              .map((p, idx) => (
+            row.permissions.map((p, idx) => {
+              const key = Object.keys(p)[0]; // Extrae la clave del objeto de permiso
+              const permission = PERMISSIONS.find((status) => status.value === key);
+              return (
                 <Label
                   key={idx}
                   variant="soft"
@@ -124,15 +128,15 @@ export function SubAccountTableRow({ row, selected, onSelectRow, detailsHref }: 
                     marginY: '0.1em',
                   }}
                 >
-                  {PERMISSIONS.find((status) => status.value === p)?.value || ''}
+                  {permission?.label || 'Unknown Permission'}
                 </Label>
-              ))
+              );
+            })
           }
         </TableCell>
 
 
         <TableCell>
-          { /* TODO: CONFIGURAR bien estos estados */}
           <Label
             variant="soft"
             color={(ACCOUNT_STATUS.find((status) => status.value === row.status)?.color ?? 'default') as LabelColor}
