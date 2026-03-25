@@ -36,7 +36,7 @@ export default function ClientsView() {
       <CustomBreadcrumbs
         heading={translate('clientsModule.title')}
         links={[
-          { name: 'Home', href: paths.home.root },
+          { name: translate('breadcrumbs.home'), href: paths.home.root },
           { name: translate('clientsModule.title') },
         ]}
         sx={{ mb: { xs: 3, md: 5 } }}
