@@ -3,6 +3,7 @@
 const ROOTS = {
   AUTH: '/auth',
   HOME: '/home',
+  ACCOUNT: '/account',
   PRODUCT: '/product',
 };
 
@@ -43,6 +44,9 @@ export const paths = {
       root: `${ROOTS.HOME}/product`,
     },
   },
+  account:{
+    root: ROOTS.ACCOUNT,
+  },
   product: {
     root: ROOTS.PRODUCT,
     load: `${ROOTS.PRODUCT}/load`,
@@ -52,6 +56,10 @@ export const paths = {
   return: {
     root: '/return',
     details: (id: number) => `/return/${id}`,
+  },
+  clients: {
+    root: '/clients',
+    // details: (id: number) => `/clients/${id}`,
   },
   feedback: {
     root: '/feedback',
