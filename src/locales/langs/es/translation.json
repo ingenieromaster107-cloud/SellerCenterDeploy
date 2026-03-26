@@ -262,6 +262,56 @@
   },
     "breadcrumbs": {
     "home": "Inicio"
+  },
+  "dashboardModule":{
+    "averageOrderValue":{
+      "title":"Promedio valor órdenes",
+      "period":{
+        "title":"periodo",
+        "options":{
+          "day":"Hoy",
+          "week":"Esta semana",
+          "month":"Este mes",
+          "year":"Este año"
+        }
+      },
+      "body":{
+        "last": "Últimos"
+      }
+    },
+    "totalSales":{
+      "title":"Ventas totales",
+      "period":{
+        "title":"periodo",
+        "options":{
+          "day":"Hoy",
+          "week":"Esta semana",
+          "month":"Este mes",
+          "year":"Este año"
+        }
+      },
+      "body":{
+        "last": "Últimos"
+      }
+    },
+    "ordersOverTime":{
+      "title":"Pedidos a lo largo del tiempo",
+      "period":{
+        "title":"periodo",
+        "options":{
+          "day":"Hoy",
+          "week":"Esta semana",
+          "month":"Este mes",
+          "year":"Este año"
+        }
+      },
+      "body":{
+        "last": "Últimos"
+      }
+    },
+          "body":{
+        "last": "Últimos"
+      }
   }
 }
 

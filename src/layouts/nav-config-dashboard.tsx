@@ -33,7 +33,7 @@ export const useNavData = (): NavSectionProps['data'] => {
       {
         items: [
           {
-            title: translate('tableLatestOrders', 'columns.id'),
+            title: translate('sidebarMenu.home.title'),
             path: paths.home.root,
             icon: ICONS.dashboard,
           },
