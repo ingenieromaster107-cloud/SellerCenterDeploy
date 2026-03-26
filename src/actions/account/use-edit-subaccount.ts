@@ -30,7 +30,7 @@ export function useUpdateSubAccount() {
     mutationFn: (variables: UpdateSubAccountVariables) =>
       graphql.request<UpdateSubAccountResponse, UpdateSubAccountVariables>(UPDATE_SUBACCOUNT_MUTATION, variables),
     onSuccess: async (data) => {
-      queryClient.invalidateQueries({ queryKey: ['getSubAccounts'] });
+      queryClient.invalidateQueries({ queryKey: ['getSubSellerList'] });
     }
   });
 }

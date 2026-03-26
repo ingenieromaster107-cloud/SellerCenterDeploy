@@ -15,11 +15,11 @@ export function useGetSubAccounts() {
   const graphql = GraphQLService.getInstance();
 
   const { data, isLoading, isError } = useQuery({
-    queryKey: ['getSubAccounts'],
-    queryFn: () => graphql.request<{ getSellerSubAccounts: SubAccountResponseInterface[] }, {}>(GET_SUBACCOUNTS_QUERY),
+    queryKey: ['getSubSellerList'],
+    queryFn: () => graphql.request<{ getSubSellerList: SubAccountResponseInterface[] }, {}>(GET_SUBACCOUNTS_QUERY, { customerId: localStorage.getItem('customer_id')! }),
     // staleTime: 1000 * 60 * 5, // Mantiene los datos actualizados por 5 minutos
   });
 
-  const accounts = useMemo<SubAccountInterface[]>(() => subaccountListAdapter(data?.getSellerSubAccounts || []), [data]);
+  const accounts = useMemo<SubAccountInterface[]>(() => subaccountListAdapter(data?.getSubSellerList || []), [data]);
   return { accounts, isLoading, isError };
 }

@@ -1,10 +1,9 @@
 import { PERMISSIONS } from "src/sections/sub-account/constants/status";
 
-export function parsePermissions(permissionType: string): { [key: string]: string }[] {
+export function parsePermissions(permissionType: string[]): { [key: string]: string }[] {
   if (!permissionType) return [];
 
   return permissionType
-    .split(',')
     .map((key) => key.trim())
     .filter(Boolean)
     .map((key) => {

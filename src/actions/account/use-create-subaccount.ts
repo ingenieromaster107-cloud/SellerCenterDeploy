@@ -31,7 +31,7 @@ export function useCreateSubAccount() {
     mutationFn: (variables: CreateSubAccountVariables) =>
       graphql.request<CreateSubAccountResponse, CreateSubAccountVariables>(CREATE_SUBACCOUNT_MUTATION, variables),
     onSuccess: async (data) => {
-      queryClient.invalidateQueries({ queryKey: ['getSubAccounts'] });
+      queryClient.invalidateQueries({ queryKey: ['getSubSellerList'] });
     }
   });
 }

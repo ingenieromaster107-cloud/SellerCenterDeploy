@@ -3,7 +3,6 @@ import type { SubAccountInterface } from 'src/interfaces';
 import * as z from 'zod';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useQueryClient } from '@tanstack/react-query';
 
 import Box from '@mui/material/Box';
 import Alert from '@mui/material/Alert';
@@ -47,13 +46,12 @@ type Props = {
 
 export function SubAccountEditForm({ currentUser, open, onClose }: Props) {
   const { mutateAsync } = useUpdateSubAccount();
-  const queryClient = useQueryClient();
 
   const defaultValues: UserQuickEditSchemaType = {
-    firstname: '',
-    lastname: '',
-    email: '',
-    status: '',
+    firstname: "",
+    lastname: "",
+    email: "",
+    status: "",
     permissions: [],
   };
 
@@ -90,8 +88,6 @@ export function SubAccountEditForm({ currentUser, open, onClose }: Props) {
       if (res.updateSellerSubAccount.message !== 'SubAccount updated successfully') {
         throw new Error('Failed to update subaccount');
       }
-
-      queryClient.invalidateQueries({queryKey: ['getSubAccounts']});
 
       toast.success('Subaccount updated successfully!');
 
@@ -140,8 +136,8 @@ export function SubAccountEditForm({ currentUser, open, onClose }: Props) {
 
             <Box sx={{ display: { xs: 'none', sm: 'block' } }} />
 
-            <Field.Text name="firstname" label="Name" />
-            <Field.Text name="lastname" label="Last name" />
+            <Field.Text name="firstname" label="First Name" />
+            <Field.Text name="lastname" label="Last Name" />
             <Field.Text name="email" label="Email address" />
 
             <Field.MultiSelect

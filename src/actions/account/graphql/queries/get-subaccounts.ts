@@ -1,19 +1,16 @@
 import { gql } from 'graphql-request';
 
 export const GET_SUBACCOUNTS_QUERY = gql`
-query GetSellerSubAccounts {
-    getSellerSubAccounts {
+query GetSellerSubAccounts($customerId: String!) {
+    getSubSellerList(customerId: $customerId) {
       created_at
       customer_id
       email
       entity_id
-      firstname
-      lastname
-      parent_account_id
-      permission_type
+      name
+      permissionType
       seller_id
       status
-      updated_at
     }
 }
 `;
