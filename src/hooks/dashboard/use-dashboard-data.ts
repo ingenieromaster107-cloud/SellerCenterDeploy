@@ -20,14 +20,26 @@ interface ItemCustomerProps {
   readonly name: string;
   readonly email: string;
 }
+function getDateRange() {
+  const today = new Date();
+  const sevenDaysAgo = new Date(today.getTime() - 7 * 24 * 60 * 60 * 1000);
+
+  const formatDate = (date: Date) => date.toISOString().split('T')[0];
+
+  return {
+    today: formatDate(today),
+    sevenDaysAgo: formatDate(sevenDaysAgo),
+  };
+}
 export function useDashboardData() {
-  const { returns, isLoading } = useGetDashboardData();
+  const dateRange = getDateRange();
+
+  const { returns, isLoading } = useGetDashboardData(dateRange);
   const dashboardData = useMemo(
     () => (Array.isArray(returns?.data) ? returns.data : []),
     [returns]
   );
-  
-console.log('isLoading', isLoading);
+
   let topProducts: ItemProps[] = [];
   let topCustomers: ItemCustomerProps[] = [];
   let averageOrderValue: AverageOrderValue = {
@@ -84,6 +96,6 @@ console.log('isLoading', isLoading);
     averageOrderValue,
     totalSales,
     ordersOverTime,
-    isLoading
+    isLoading,
   };
 }

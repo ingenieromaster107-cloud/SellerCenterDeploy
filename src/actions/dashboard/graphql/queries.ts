@@ -1,8 +1,8 @@
 import { gql } from 'graphql-request';
 
 export const GET_DASHBOARD_DATA_QUERY = gql`
-  query SellerMetricsDashboard {
-    sellerMetricsDashboard(from_date: "2026/03/18", to_date: "2026/03/25") {
+  query SellerMetricsDashboard($fromDate: String!, $toDate: String!) {
+    sellerMetricsDashboard(from_date: $fromDate, to_date: $toDate) {
       message
       success
       data {
