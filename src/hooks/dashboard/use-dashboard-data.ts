@@ -5,7 +5,7 @@ import type {
   AverageOrderValue,
 } from 'src/interfaces/dashboard/dashboard';
 
-import { useMemo, useState } from 'react';
+import { useMemo } from 'react';
 
 import { useGetDashboardData } from 'src/actions/dashboard/use-get-dashboard-data';
 
