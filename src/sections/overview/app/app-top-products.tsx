@@ -19,7 +19,6 @@ type Props = CardProps & {
 };
 
 export function AppTopProducts({ title, subheader, list, sx, ...other }: Props) {
-  console.log(other);
   return (
     <Card sx={sx} {...other}>
       <FieldsetLegend>Top products</FieldsetLegend>
