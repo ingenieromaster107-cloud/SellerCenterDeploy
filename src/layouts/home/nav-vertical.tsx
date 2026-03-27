@@ -17,8 +17,6 @@ import { useMockedUser } from 'src/auth/hooks';
 
 import { layoutClasses } from '../core';
 import { SignOutButton, NavToggleButton } from '../components';
-import { useRouter } from 'src/routes/hooks';
-import { paths } from 'src/routes/paths';
 
 // ----------------------------------------------------------------------
 
@@ -45,14 +43,6 @@ export function NavVertical({
   layoutQuery = 'md',
   ...other
 }: NavVerticalProps) {
-
-  //go to account page
-  const router = useRouter();
-  const handleAccount = () => {
-    router.push(paths.account.root);
-  };
-  //go to account page
-
   const { user } = useMockedUser();
 
   const renderNavVertical = () => (
@@ -64,7 +54,7 @@ export function NavVertical({
       )}
 
       <Box sx={{ pt: 2.5, pb: 2, display: 'flex', justifyContent: 'center' }}>
-        <StoreIdentity user={user} onSettingsClick={handleAccount} />
+        <StoreIdentity user={user} />
       </Box>
 
       <Box sx={{ pt: 1, pb: 2, display: 'flex', justifyContent: 'center' }}>

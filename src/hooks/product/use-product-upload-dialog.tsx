@@ -136,14 +136,21 @@ export const useProductUploadDialog = ({ onClose }: { onClose: () => void }) => 
     (csvInvalid && (csvInvalid.badType || csvInvalid.tooBig)) ||
     (csvErrors && csvErrors.length > 0);
 
-  const handleCancelUpload = useCallback(() => {
-    setCsvFile(null);
-    setImages([]);
-    setImagesZip(null);
-    setResult(null);
-    setShowCancelDialog(false);
-    onClose();
-  }, [onClose]);
+  const buildImagesZip = useCallback(async (files: File[]) => {
+    const JSZip = (await import('jszip')).default;
+    const zip = new JSZip();
+    await Promise.all(
+      files.map(async (file) => {
+        const arrayBuffer = await file.arrayBuffer();
+        zip.file(file.name, arrayBuffer);
+      })
+    );
+    const blob = await zip.generateAsync({
+      type: 'blob',
+      compression: 'STORE',
+    });
+    return new File([blob], 'images.zip', { type: 'application/zip' });
+  }, []);
 
   const handleUpload = useCallback(async () => {
     if (!csvFile) {
@@ -200,7 +207,13 @@ export const useProductUploadDialog = ({ onClose }: { onClose: () => void }) => 
     } finally {
       setUploading(false);
     }
-  }, [csvFile, handleCancelUpload, disabledUpload, mutateAsync]);
+  }, [csvFile, disabledUpload]);
+
+  const handleCancelUpload = () => {
+    clearAll();
+    setShowCancelDialog(false);
+    onClose();
+  };
 
   const handleCancelBulkUpload = () => {
     if (!!csvFile || images.length > 0 || !!imagesZip) {
