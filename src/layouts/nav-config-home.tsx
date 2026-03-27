@@ -78,10 +78,10 @@ export const useNavData = (): NavSectionProps['data'] => {
         ],
       },
       {
-        subheader: 'Management',
+        subheader: translate('sidebarMenu.subAccount.subheader'),
         items: [
           {
-            title: 'Sub Accounts',
+            title: translate('sidebarMenu.subAccount.title'),
             path: paths.account.subaccount.root ,
             icon: ICONS.users,
           }

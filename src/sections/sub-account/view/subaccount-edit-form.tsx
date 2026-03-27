@@ -19,22 +19,36 @@ import { toast } from 'src/components/snackbar';
 import { Form, Field, schemaUtils } from 'src/components/hook-form';
 
 import { PERMISSIONS, ACCOUNT_STATUS } from '../constants/status';
+import { useTranslate } from 'src/locales';
 
 // ----------------------------------------------------------------------
 
-export type UserQuickEditSchemaType = z.infer<typeof UserQuickEditSchema>;
+export type UserQuickEditSchemaType = z.infer<ReturnType<typeof createSubaccountSchema>>;
 
-export const UserQuickEditSchema = z.object({
-  firstname: z.string().min(1, { error: 'Name is required!' }),
-  lastname: z.string().min(1, { error: 'Lastname is required!' }),
-  email: schemaUtils.email(),
-  permissions: z.array(z.string().min(1, { error: 'Each permission is required!' })).nonempty({
-    message: 'At least one permission is required!',
-  }),
-  status: z.string().nonempty({
-    message: 'Status is required!',
-  }),
-});
+export const createSubaccountSchema = (translate: (key: string) => string) => {
+  const { firstname, lastname, email, permissionsRequired, permissionsNonEmpty, statusRequired } = {
+    firstname: translate('validation.firstnameRequired'),
+    lastname: translate('validation.lastnameRequired'),
+    email: {
+      required: translate('validation.emailRequired'),
+      invalid: translate('validation.emailInvalid'),
+    },
+    permissionsRequired: translate('validation.permissionsRequired'),
+    permissionsNonEmpty: translate('validation.permissionsNonEmpty'),
+    statusRequired: translate('validation.statusRequired'),
+  };
+
+  return z.object({
+    firstname: z.string().min(1, { error: firstname }),
+    lastname: z.string().min(1, { error: lastname }),
+    email: schemaUtils.email({ error: email }),
+    permissions: z.array(z.string().min(1, { error: permissionsRequired })).nonempty({
+      message: permissionsNonEmpty,
+    }),
+    status: z.string().nonempty({
+      message: statusRequired,
+    }),
+  })};
 
 // ----------------------------------------------------------------------
 
@@ -46,6 +60,7 @@ type Props = {
 
 export function SubAccountEditForm({ currentUser, open, onClose }: Props) {
   const { mutateAsync } = useUpdateSubAccount();
+  const { translate } = useTranslate();
 
   const defaultValues: UserQuickEditSchemaType = {
     firstname: "",
@@ -57,7 +72,7 @@ export function SubAccountEditForm({ currentUser, open, onClose }: Props) {
 
   const methods = useForm({
     mode: 'all',
-    resolver: zodResolver(UserQuickEditSchema),
+    resolver: zodResolver(createSubaccountSchema(translate)),
     defaultValues,
     values: currentUser
       ? {
@@ -89,12 +104,12 @@ export function SubAccountEditForm({ currentUser, open, onClose }: Props) {
         throw new Error('Failed to update subaccount');
       }
 
-      toast.success('Subaccount updated successfully!');
+      toast.success(translate('subAccountListView.updateSubAccount.successMessage'));
 
       reset();
       onClose();
     } catch (error) {
-      toast.error('Failed to update subaccount. Please try again.');
+      toast.error(translate('subAccountListView.updateSubAccount.errorMessage'));
     }
   });
 
@@ -110,12 +125,12 @@ export function SubAccountEditForm({ currentUser, open, onClose }: Props) {
         },
       }}
     >
-      <DialogTitle>Update subaccount</DialogTitle>
+      <DialogTitle>{translate('subAccountListView.updateSubAccount.title')}</DialogTitle>
 
       <Form methods={methods} onSubmit={onSubmit}>
         <DialogContent>
           <Alert variant="outlined" severity="info" sx={{ mb: 3 }}>
-            SubAccount is waiting for confirmation
+            {translate('subAccountListView.updateSubAccount.info')}
           </Alert>
 
           <Box
@@ -126,7 +141,7 @@ export function SubAccountEditForm({ currentUser, open, onClose }: Props) {
               gridTemplateColumns: { xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)' },
             }}
           >
-            <Field.Select name="status" label="Status">
+            <Field.Select name="status" label={translate('subAccountListView.updateSubAccount.status')}>
               {ACCOUNT_STATUS.map((status) => (
                 <MenuItem key={status.value} value={status.value}>
                   {status.label}
@@ -136,14 +151,14 @@ export function SubAccountEditForm({ currentUser, open, onClose }: Props) {
 
             <Box sx={{ display: { xs: 'none', sm: 'block' } }} />
 
-            <Field.Text name="firstname" label="First Name" />
-            <Field.Text name="lastname" label="Last Name" />
-            <Field.Text name="email" label="Email address" />
+            <Field.Text name="firstname" label={translate('subAccountListView.updateSubAccount.firstname')} />
+            <Field.Text name="lastname" label={translate('subAccountListView.updateSubAccount.lastname')} />
+            <Field.Text name="email" label={translate('subAccountListView.updateSubAccount.email')} />
 
             <Field.MultiSelect
                 chip
                 name="permissions"
-                label="Permissions"
+                label={translate('subAccountListView.updateSubAccount.permissions')}
                 options={PERMISSIONS}
             />
 
@@ -158,10 +173,10 @@ export function SubAccountEditForm({ currentUser, open, onClose }: Props) {
               onClose();
             }}
           >
-            Cancel
+            {translate('subAccountListView.updateSubAccount.btnCancel')}
           </Button>
           <Button type="submit" variant="contained" loading={isSubmitting}>
-            Update
+            {translate('subAccountListView.updateSubAccount.btnUpdate')}
           </Button>
         </DialogActions>
       </Form>

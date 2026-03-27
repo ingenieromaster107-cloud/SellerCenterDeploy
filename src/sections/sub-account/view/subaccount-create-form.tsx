@@ -17,19 +17,32 @@ import { toast } from 'src/components/snackbar';
 import { Form, Field, schemaUtils } from 'src/components/hook-form';
 
 import { PERMISSIONS, ACCOUNT_STATUS } from '../constants/status';
+import { useTranslate } from 'src/locales';
 
+export const SubAccountSchema = (translate: (key: string) => string) => {
+  const { firstname, lastname, email, permissionsRequired, permissionsNonEmpty, statusRequired } = {
+    firstname: translate('validation.firstnameRequired'),
+    lastname: translate('validation.lastnameRequired'),
+    email: {
+      required: translate('validation.emailRequired'),
+      invalid: translate('validation.emailInvalid'),
+    },
+    permissionsRequired: translate('validation.permissionsRequired'),
+    permissionsNonEmpty: translate('validation.permissionsNonEmpty'),
+    statusRequired: translate('validation.statusRequired'),
+  };
 
-export const SubAccountSchema = z.object({
-  firstname: z.string().min(1, { error: 'Name is required!' }),
-  lastname: z.string().min(1, { error: 'Lastname is required!' }),
-  email: schemaUtils.email(),
-  permissions: z.array(z.string().min(1, { error: 'Each permission is required!' })).nonempty({
-    message: 'At least one permission is required!',
-  }),
-  status: z.string().nonempty({
-    message: 'Status is required!',
-  }),
-});
+  return z.object({
+    firstname: z.string().min(1, { error: firstname }),
+    lastname: z.string().min(1, { error: lastname }),
+    email: schemaUtils.email({ error: email }),
+    permissions: z.array(z.string().min(1, { error: permissionsRequired })).nonempty({
+      message: permissionsNonEmpty,
+    }),
+    status: z.string().nonempty({
+      message: statusRequired,
+    }),
+  })};
 
 interface Props {
   open: boolean;
@@ -37,11 +50,22 @@ interface Props {
 }
 
 export function SubAccountCreateForm({ open, onClose }: Omit<Props, 'currentUser'>) {
+  const { translate } = useTranslate();
+
+  const schema = SubAccountSchema(translate);
+
   const methods = useForm({
     mode: 'all',
-    resolver: zodResolver(SubAccountSchema),
-    defaultValues: { firstname: '', lastname: '', email: '', status: 'ACTIVE', permissions: [] },
+    resolver: zodResolver(schema),
+    defaultValues: {
+      firstname: '',
+      lastname: '',
+      email: '',
+      status: 'ACTIVE',
+      permissions: []
+    },
   });
+
   const { mutateAsync } = useCreateSubAccount();
 
   const { reset, handleSubmit, formState: { isSubmitting } } = methods;
@@ -61,13 +85,12 @@ export function SubAccountCreateForm({ open, onClose }: Omit<Props, 'currentUser
         throw new Error('Failed to create subaccount');
       }
 
-      toast.success('Subaccount created successfully!');
+      toast.success(translate('subAccountListView.createSubAccount.successMessage'));
 
       reset();
       onClose();
     } catch (error) {
-      console.error(error);
-      toast.error('Failed to create subaccount!');
+      toast.error(translate('subAccountListView.createSubAccount.errorMessage'));
     }
   });
 
@@ -76,19 +99,23 @@ export function SubAccountCreateForm({ open, onClose }: Omit<Props, 'currentUser
       fullWidth
       maxWidth={false}
       open={open}
-      onClose={onClose}
+      onClose={(event, reason) => {
+        if (reason !== 'backdropClick') {
+          onClose();
+        }
+      }}
       slotProps={{
         paper: {
           sx: { maxWidth: 720 },
         },
       }}
     >
-      <DialogTitle>Create subaccount</DialogTitle>
+      <DialogTitle>{translate('subAccountListView.createSubAccount.title')}</DialogTitle>
 
       <Form methods={methods} onSubmit={onSubmit}>
         <DialogContent>
           <Alert variant="outlined" severity="info" sx={{ mb: 3 }}>
-            SubAccount is waiting for confirmation
+            {translate('subAccountListView.createSubAccount.info')}
           </Alert>
 
           <Box
@@ -99,7 +126,7 @@ export function SubAccountCreateForm({ open, onClose }: Omit<Props, 'currentUser
               gridTemplateColumns: { xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)' },
             }}
           >
-            <Field.Select name="status" label="Status">
+            <Field.Select name="status" label={translate('subAccountListView.createSubAccount.status')}>
               {ACCOUNT_STATUS.map((status) => (
                 <MenuItem key={status.value} value={status.value}>
                   {status.label}
@@ -109,14 +136,14 @@ export function SubAccountCreateForm({ open, onClose }: Omit<Props, 'currentUser
 
             <Box sx={{ display: { xs: 'none', sm: 'block' } }} />
 
-            <Field.Text name="firstname" label="Name" />
-            <Field.Text name="lastname" label="Last name" />
-            <Field.Text name="email" label="Email address" />
+            <Field.Text name="firstname" label={translate('subAccountListView.createSubAccount.firstname')} />
+            <Field.Text name="lastname" label={translate('subAccountListView.createSubAccount.lastname')} />
+            <Field.Text name="email" label={translate('subAccountListView.createSubAccount.email')} />
 
             <Field.MultiSelect
                 chip
                 name="permissions"
-                label="Permissions"
+                label={translate('subAccountListView.createSubAccount.permissions')}
                 options={PERMISSIONS}
             />
 
@@ -124,11 +151,17 @@ export function SubAccountCreateForm({ open, onClose }: Omit<Props, 'currentUser
         </DialogContent>
 
         <DialogActions>
-          <Button variant="outlined" onClick={onClose}>
-            Cancel
+          <Button
+            variant="outlined"
+            onClick={() => {
+              reset()
+              onClose()
+            }}
+          >
+            {translate('subAccountListView.createSubAccount.btnCancel')}
           </Button>
           <Button type="submit" variant="contained" loading={isSubmitting}>
-            Create
+            {translate('subAccountListView.createSubAccount.btnCreate')}
           </Button>
         </DialogActions>
       </Form>

@@ -24,6 +24,7 @@ import { CustomPopover } from 'src/components/custom-popover';
 
 import { PERMISSIONS, ACCOUNT_STATUS } from '../constants/status';
 import { SubAccountEditForm } from '../view/subaccount-edit-form';
+import { useTranslate } from 'src/locales';
 
 // ----------------------------------------------------------------------
 
@@ -37,6 +38,7 @@ type Props = {
 export function SubAccountTableRow({ row, selected, onSelectRow, detailsHref }: Props) {
   const menuActions = usePopover();
   const quickEditForm = useBoolean();
+  const { translate } = useTranslate();
 
   const renderMenuActions = () => (
     <CustomPopover
@@ -48,7 +50,7 @@ export function SubAccountTableRow({ row, selected, onSelectRow, detailsHref }: 
       <MenuList>
         <MenuItem onClick={() => menuActions.onClose()}>
           <Iconify icon="solar:eye-bold" />
-          View
+          {translate('subAccountListView.actions.view')}
         </MenuItem>
 
         <MenuItem
@@ -58,7 +60,7 @@ export function SubAccountTableRow({ row, selected, onSelectRow, detailsHref }: 
           }}
         >
           <Iconify icon="solar:pen-bold" />
-          Edit
+          {translate('subAccountListView.actions.edit')}
         </MenuItem>
 
         <MenuItem
@@ -68,11 +70,17 @@ export function SubAccountTableRow({ row, selected, onSelectRow, detailsHref }: 
           }}
         >
           <Iconify icon="solar:trash-bin-trash-bold" />
-          Delete
+          {translate('subAccountListView.actions.delete')}
         </MenuItem>
       </MenuList>
     </CustomPopover>
   );
+
+  const getStatusLabel = (status: string): string => {
+    const statusKey = ACCOUNT_STATUS.find((s) => s.value === status);
+    if (!statusKey) return '';
+    return translate(`subAccountListView.status.${statusKey.value}`);
+  };
 
   const renderEditForm = () => (
     <SubAccountEditForm
@@ -128,7 +136,8 @@ export function SubAccountTableRow({ row, selected, onSelectRow, detailsHref }: 
                     marginY: '0.1em',
                   }}
                 >
-                  {permission?.label || 'Unknown Permission'}
+                  {/* TODO: hay que definir los permisos  */}
+                  {permission?.label || translate('subAccountListView.unknownPermissions')}
                 </Label>
               );
             })
@@ -141,7 +150,7 @@ export function SubAccountTableRow({ row, selected, onSelectRow, detailsHref }: 
             variant="soft"
             color={(ACCOUNT_STATUS.find((status) => status.value === row.status)?.color ?? 'default') as LabelColor}
           >
-            {ACCOUNT_STATUS.find((status) => status.value === row.status)?.label || ''}
+            {getStatusLabel(row.status)}
           </Label>
         </TableCell>
 

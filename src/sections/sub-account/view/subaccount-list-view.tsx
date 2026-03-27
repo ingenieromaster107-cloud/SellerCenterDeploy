@@ -37,23 +37,18 @@ import { PERMISSIONS } from '../constants/status';
 import { useSubAccountTable } from './use-subaccount-table';
 import { SubAccountCreateForm } from './subaccount-create-form';
 import { SubAccountTableRow, SubAccountTableToolbar } from '../components';
+import { useTranslate } from 'src/locales';
+import { useMemo } from 'react';
 
 // ----------------------------------------------------------------------
 
 const PERMISSION_OPTIONS = [{ value: 'all', label: 'All', color: 'default' }, ...PERMISSIONS];
 
-const TABLE_HEAD: TableHeadCellProps[] = [
-  { id: 'user', label: 'User' },
-  { id: 'permissions', label: 'Permissions', width: 200   },
-  { id: 'status', label: 'Status' },
-  { id: 'createdAt', label: 'Created date' },
-  { id: 'action', label: 'Actions' },
-];
-
 // ----------------------------------------------------------------------
 
 export function SubAccountListView() {
   const createForm = useBoolean();
+  const { translate } = useTranslate();
 
   const {
     table,
@@ -67,6 +62,18 @@ export function SubAccountListView() {
     handleFilterPermission,
   } = useSubAccountTable();
 
+  const TABLE_HEAD = useMemo<TableHeadCellProps[]>(() => {
+  const t = translate;
+
+  return [
+      { id: 'user', label: t('subAccountListView.table.columns.user') },
+      { id: 'permissions', label: t('subAccountListView.table.columns.permissions'), width: 200 },
+      { id: 'status', label: t('subAccountListView.table.columns.status') },
+      { id: 'createdAt', label: t('subAccountListView.table.columns.createdAt') },
+      { id: 'action', label: t('subAccountListView.table.columns.actions') },
+    ];
+  }, [translate]);
+
   const renderCreateForm = () => (
     <SubAccountCreateForm
       open={createForm.value}
@@ -78,11 +85,11 @@ export function SubAccountListView() {
     <>
       <HomeContent>
         <CustomBreadcrumbs
-          heading="Manage Subaccounts"
+          heading={translate('subAccount.manageSubaccounts')}
           links={[
-            { name: 'Home', href: paths.home.root },
-            { name: 'Subaccount', href: paths.account.subaccount.root },
-            { name: 'List' },
+            { name: translate('subAccountListView.breadcrumbs.home'), href: paths.home.root },
+            { name: translate('subAccountListView.breadcrumbs.subaccount'), href: paths.account.subaccount.root },
+            { name: translate('subAccountListView.breadcrumbs.list') },
           ]}
           action={
             <Button
@@ -90,7 +97,7 @@ export function SubAccountListView() {
               variant="contained"
               startIcon={<Iconify icon="mingcute:add-line" />}
             >
-              Add Subaccount
+              {translate('subAccountListView.actions.addSubaccount')}
             </Button>
           }
           sx={{ mb: { xs: 3, md: 5 } }}
@@ -106,7 +113,7 @@ export function SubAccountListView() {
 
           <Box sx={{ position: 'relative' }}>
             <TableSelectedAction
-              dense={table.dense}
+              // dense={table.dense}
               numSelected={table.selected.length}
               rowCount={dataFiltered.length}
               onSelectAllRows={(checked) =>

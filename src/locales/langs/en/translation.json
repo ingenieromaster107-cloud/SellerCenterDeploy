@@ -52,6 +52,10 @@
     "account": {
       "title": "Account"
     },
+    "subAccount": {
+      "subheader": "Management",
+      "title": "Sub Accounts"
+    },
     "myProducts": {
       "title": "My Products",
       "subtitles": {
@@ -263,5 +267,80 @@
   },
   "breadcrumbs": {
     "home": "Home"
+  },
+  "subAccountListView": {
+    "heading": "Manage Subaccounts",
+    "breadcrumbs": {
+      "home": "Home",
+      "subaccount": "Subaccount",
+      "list": "List"
+    },
+    "actions": {
+      "addSubaccount": "Add Subaccount",
+      "view": "View",
+      "edit": "Edit",
+      "delete": "Delete",
+      "print": "Print",
+      "export": "Export",
+      "import": "Import"
+    },
+    "table": {
+      "columns": {
+        "user": "User",
+        "permissions": "Permissions",
+        "status": "Status",
+        "createdAt": "Created date",
+        "actions": "Actions"
+      },
+      "noData": "No data found",
+      "loading": "Loading..."
+    },
+    "filters": {
+      "all": "All",
+      "permissions": "Permissions"
+    },
+    "status": {
+      "ACTIVE": "Active",
+      "INACTIVE": "Inactive"
+    },
+    "updateSubAccount": {
+      "info": "SubAccount is waiting for confirmation",
+      "title": "Update Subaccount",
+      "status": "Status",
+      "firstname": "First Name",
+      "lastname": "Last Name",
+      "email": "Email",
+      "permissions": "Permissions",
+      "btnUpdate": "Update",
+      "btnSave": "Save Changes",
+      "btnCancel": "Cancel",
+      "successMessage": "Subaccount updated successfully!",
+      "errorMessage": "Failed to update subaccount. Please try again."
+    },
+    "createSubAccount": {
+      "info": "SubAccount is waiting for confirmation",
+      "title": "Create Subaccount",
+      "status": "Status",
+      "firstname": "First Name",
+      "lastname": "Last Name",
+      "email": "Email",
+      "permissions": "Permissions",
+      "btnUpdate": "Update",
+      "btnCreate": "Create",
+      "btnCancel": "Cancel",
+      "successMessage": "Subaccount created successfully!",
+      "errorMessage": "Failed to create subaccount!"
+    },
+    "unknownPermissions": "Unknown Permissions",
+    "searchPlaceholder": "Search name or email..."
+  },
+  "validation": {
+    "firstnameRequired": "Name is required!",
+    "lastnameRequired": "Lastname is required!",
+    "emailRequired": "Email is required!",
+    "emailInvalid": "Email must be a valid email address!",
+    "permissionsRequired": "Each permission is required!",
+    "permissionsNonEmpty": "At least one permission is required!",
+    "statusRequired": "Status is required!"
   }
 }
