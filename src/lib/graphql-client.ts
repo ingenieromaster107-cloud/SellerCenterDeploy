@@ -20,8 +20,8 @@ export class GraphQLService {
     const isBrowser = typeof window !== 'undefined';
 
     const localUrl = isBrowser
-      ? `${window.location.origin}/api/magento/graphql/`
-      : '/api/magento/graphql/';
+      ? `${window.location.origin}/api/magento/graphql`
+      : '/api/magento/graphql';
 
     // Temporalmente se usa la URL local para evitar problemas de CORS.
     //const endpoint = ENV.environment === 'local' ? localUrl : urlBackend;
@@ -50,7 +50,7 @@ export class GraphQLService {
     this.client.setHeader(key, value);
   }
 
-  public async request<TData, TVariables extends Record<string, any> = Record<string, unknown>>(query: string, variables?: TVariables): Promise<TData> {
+  public async request<TData, TVariables extends Record<string, any> = Record<string, never>>(query: string, variables?: TVariables): Promise<TData> {
     return this.client.request<TData>(query, variables as TVariables);
   }
 }
