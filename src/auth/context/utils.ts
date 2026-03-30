@@ -1,4 +1,4 @@
-import type { ICustomer } from 'src/interfaces/customer/customer.interface';
+import type { ICustomer } from 'src/interfaces/customer/customer-response.interface';
 
 import { paths } from 'src/routes/paths';
 

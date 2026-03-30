@@ -28,8 +28,8 @@ export function ProfileHome({ sx, customer }: ProfileHomeProps) {
   
   const email = customer?.email || '';
 
-  const identificationType = customer?.identificationType?.[0]?.code ?? '-';
-  const identificationNumber = customer?.identificationNumber?.[0]?.value ?? '-';
+  const identificationType = customer?.identificationType?.label ?? '-';
+  const identificationNumber = customer?.identificationNumber?.value ?? '-';
 
   const renderPostCard = () => (
     <Card sx={{ p: 3 }}>

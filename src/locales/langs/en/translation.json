@@ -269,7 +269,8 @@
     "personalData": "Personal Data"
   },
   "formErrorRequired": {
-    "nameRequired": "Name is required",
+    "firstNameRequired": "First name is required",
+    "lastNameRequired": "Last name is required",
     "identificationTypeRequired": "Identification type is required",
     "identificationNumberRequired": "Identification number is required",
     "avatarRequired": "Avatar is required",
@@ -289,7 +290,7 @@
     "acceptTyC": "You must accept the terms and conditions"
   },
   "formPlaceholder": {
-    "name": "Name",
+    "firstName": "First Name",
     "lastName": "Last Name",
     "email": "Email",
     "identificationType": "Identification Type",
