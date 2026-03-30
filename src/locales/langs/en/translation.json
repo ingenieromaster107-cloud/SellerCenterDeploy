@@ -316,7 +316,11 @@
     "privacyPolicy": "Privacy Policy of Inter Rapidísimo"
   },
   "breadcrumbs": {
-    "home": "Home"
+    "home": "Home",
+    "orders": {
+      "list": "Orders List",
+      "details": "Order Details"
+    }
   },
   "dashboardModule": {
     "averageOrderValue": {
@@ -366,6 +370,25 @@
     },
     "body": {
       "last": "Last"
+    }
+  },
+  "ordersModule": {
+    "title": "Orders",
+    "table": {
+      "tabs":{
+        "all":"All"
+      },
+      "columns": {
+        "id": "Order Reference",
+        "customer": "Customer",
+        "status": "Status",
+        "createdAt": "Created date",
+        "total": "Total"
+      },
+      "searchFilter": "Search by customer or order reference..."
+    },
+    "list": {
+      "title": "Orders List"
     }
   }
 

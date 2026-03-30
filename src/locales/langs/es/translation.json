@@ -314,8 +314,12 @@
     "acceptTyC":"Acepto los términos y condiciones. Autorizo el tratamiento de mis datos personales para los fines descritos en la",
     "privacyPolicy": "Política de privacidad de Inter Rapidísimo"
   },
-    "breadcrumbs": {
-    "home": "Inicio"
+  "breadcrumbs": {
+    "home": "Inicio",
+    "orders": {
+      "list": "Listado de órdenes",
+      "details": "Detalles de la orden"
+    }
   },
   "dashboardModule":{
     "averageOrderValue":{
@@ -366,6 +370,25 @@
           "body":{
         "last": "Últimos"
       }
+  },
+  "ordersModule":{
+    "title":"Pedidos",
+    "table":{
+      "tabs":{
+        "all":"Todos"
+      },
+      "columns":{
+        "id":"ID",
+        "customer":"Cliente",
+        "date":"Fecha",
+        "total":"Total",
+        "status":"Estado"
+      },
+      "searchFilter":"Buscar por cliente o ID..."
+    },
+    "list": {
+      "title": "Listado de órdenes"
+    }
   }
 }
 
