@@ -1,8 +1,8 @@
 'use client';
 
 import { HomeContent } from 'src/layouts/home';
-import { useGetOrderDetail } from 'src/actions/order/useOrderDetails';
-import { orderDetailsAdapter } from 'src/actions/order/adapters/orderDetailsAdapter';
+import { useGetOrderDetail } from 'src/actions/order/use-order-details';
+import { orderDetailsAdapter } from 'src/actions/order/adapters/order-details-adapter';
 
 import { ErrorContent } from 'src/components/error-content';
 import { LoadingScreen } from 'src/components/loading-screen';
@@ -31,7 +31,7 @@ export default function OrderDetailsClient({ orderId }: { orderId: string }) {
     );
   }
 
-  const order = orderDetailsAdapter(data);
+  const order = orderDetailsAdapter(data!);
 
   if (data !== undefined) {
     return <OrderDetailsView order={order} />;

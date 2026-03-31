@@ -1,7 +1,7 @@
 // This file contains the TypeScript interfaces for the order list
 
 import type { Dayjs } from 'dayjs';
-import type { Prices, TotalDetail } from './orderDetail';
+import type { Prices, TotalDetail } from './order-detail';
 
 // Response returned by the GraphQL API.
 export interface OrderListResponse {

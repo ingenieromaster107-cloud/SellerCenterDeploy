@@ -7,8 +7,8 @@ import { useQuery } from '@tanstack/react-query';
 
 import { GraphQLService } from 'src/lib/graphql-client';
 
-import { GET_DASHBOARD_DATA_QUERY } from './graphql/queries';
 import { dashboardDataAdapter } from './adapters/dashboard-data-adapter';
+import { GET_DASHBOARD_DATA_QUERY } from './graphql/queries/get-dashboard-data';
 
 export function useGetDashboardData(dateRange?: { today: string; sevenDaysAgo: string }) {
 

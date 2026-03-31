@@ -199,7 +199,7 @@
   "createdAt": "Created date",
   "id": "Id",
   "feedbackModule": {
-    "title": "Opiniones",
+    "title": "Feedback",
     "table": {
       "columns": {
         "sku": "Sku",

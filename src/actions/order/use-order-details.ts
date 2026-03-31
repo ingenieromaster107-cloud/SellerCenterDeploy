@@ -1,10 +1,10 @@
-import type { DataDetail } from 'src/interfaces/order/orderDetail';
+import type { DataDetail } from 'src/interfaces/order/order-detail';
 
 import { useQuery } from '@tanstack/react-query';
 
 import { GraphQLService } from 'src/lib/graphql-client';
 
-import { GET_ORDER_DETAIL } from '../order/queries';
+import { GET_ORDER_DETAIL } from './queries/get-order-data';
 
 export function useGetOrderDetail(incrementId: string) {
   const variables = { increment_id: incrementId };

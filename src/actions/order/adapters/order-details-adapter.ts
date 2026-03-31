@@ -1,5 +1,5 @@
-import type { DataDetail } from 'src/types/order';
-import type { DetailAdaptedResponse } from 'src/types/order/orderDetail';
+import type { DataDetail } from 'src/interfaces/order';
+import type { DetailAdaptedResponse } from 'src/interfaces/order/order-detail';
 
 export function orderDetailsAdapter(response: DataDetail): DetailAdaptedResponse {
   if (!response.sellerOrders.items) {

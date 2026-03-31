@@ -21,8 +21,8 @@ import { fIsAfter, fIsBetween } from 'src/utils/format-time';
 
 import { useTranslate } from 'src/locales';
 import { HomeContent } from 'src/layouts/home';
-import { useGetOrders } from 'src/actions/order/useGetOrders';
-import { adaptOrderListResponse } from 'src/actions/order/adapters/orderListAdapter';
+import { useGetOrders } from 'src/actions/order/use-get-orders';
+import { adaptOrderListResponse } from 'src/actions/order/adapters/order-list-adapter';
 
 import { Label } from 'src/components/label';
 import { Scrollbar } from 'src/components/scrollbar';
