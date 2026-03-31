@@ -1,6 +1,6 @@
 'use client';
 
-import type { SxProps, Theme } from '@mui/material/styles';
+import type { Theme, SxProps } from '@mui/material/styles';
 import type { ICustomer } from 'src/interfaces/customer/customer.interface';
 
 import Box from '@mui/material/Box';
@@ -25,7 +25,7 @@ export function ProfileHome({ sx, customer }: ProfileHomeProps) {
 
   const displayName =
     [firstName, lastName].filter(Boolean).join(' ') || customer?.email || translate('customerProfileView.user');
-  
+
   const email = customer?.email || '';
 
   const identificationType = customer?.identificationType?.[0]?.code ?? '-';

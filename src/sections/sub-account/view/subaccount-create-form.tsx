@@ -11,13 +11,13 @@ import DialogTitle from '@mui/material/DialogTitle';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 
+import { useTranslate } from 'src/locales';
 import { useCreateSubAccount } from 'src/actions/account/use-create-subaccount';
 
 import { toast } from 'src/components/snackbar';
 import { Form, Field, schemaUtils } from 'src/components/hook-form';
 
 import { PERMISSIONS, ACCOUNT_STATUS } from '../constants/status';
-import { useTranslate } from 'src/locales';
 
 export const SubAccountSchema = (translate: (key: string) => string) => {
   const { firstname, lastname, email, permissionsRequired, permissionsNonEmpty, statusRequired } = {

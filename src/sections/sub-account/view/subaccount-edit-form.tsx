@@ -13,13 +13,13 @@ import DialogTitle from '@mui/material/DialogTitle';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 
+import { useTranslate } from 'src/locales';
 import { useUpdateSubAccount } from 'src/actions/account/use-edit-subaccount';
 
 import { toast } from 'src/components/snackbar';
 import { Form, Field, schemaUtils } from 'src/components/hook-form';
 
 import { PERMISSIONS, ACCOUNT_STATUS } from '../constants/status';
-import { useTranslate } from 'src/locales';
 
 // ----------------------------------------------------------------------
 

@@ -2,7 +2,7 @@ import type { SubAccountInterface, SubAccountResponseInterface } from "src/inter
 
 import { parsePermissions } from "src/utils/parse-permissions";
 
-import { capitalizeFirstLetter, splitName } from "src/utils";
+import { splitName, capitalizeFirstLetter } from "src/utils";
 
 
 export function subaccountListAdapter(subAccounts: SubAccountResponseInterface[]): SubAccountInterface[] {

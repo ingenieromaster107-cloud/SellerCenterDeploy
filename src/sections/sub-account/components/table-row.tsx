@@ -18,13 +18,14 @@ import { RouterLink } from 'src/routes/components';
 
 import { fDate, fTime } from 'src/utils/format-time';
 
+import { useTranslate } from 'src/locales';
+
 import { Label } from 'src/components/label';
 import { Iconify } from 'src/components/iconify';
 import { CustomPopover } from 'src/components/custom-popover';
 
 import { PERMISSIONS, ACCOUNT_STATUS } from '../constants/status';
 import { SubAccountEditForm } from '../view/subaccount-edit-form';
-import { useTranslate } from 'src/locales';
 
 // ----------------------------------------------------------------------
 
