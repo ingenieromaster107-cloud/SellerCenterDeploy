@@ -44,9 +44,6 @@ export const paths = {
       root: `${ROOTS.HOME}/product`,
     },
   },
-  account:{
-    root: ROOTS.ACCOUNT,
-  },
   product: {
     root: ROOTS.PRODUCT,
     load: `${ROOTS.PRODUCT}/load`,
@@ -65,7 +62,7 @@ export const paths = {
     root: '/feedback',
   },
   account: {
-    root: '/account',
+    root: ROOTS.ACCOUNT,
     subaccount: {
       root: '/account/subaccount',
       details: (id: number) => `/account/subaccount/${id}`,

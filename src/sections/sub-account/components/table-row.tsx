@@ -14,6 +14,8 @@ import TableCell from '@mui/material/TableCell';
 import IconButton from '@mui/material/IconButton';
 import ListItemText from '@mui/material/ListItemText';
 
+import { paths } from 'src/routes/paths';
+import { useRouter } from 'src/routes/hooks';
 import { RouterLink } from 'src/routes/components';
 
 import { fDate, fTime } from 'src/utils/format-time';
@@ -25,7 +27,7 @@ import { Iconify } from 'src/components/iconify';
 import { CustomPopover } from 'src/components/custom-popover';
 
 import { PERMISSIONS, ACCOUNT_STATUS } from '../constants/status';
-import { SubAccountEditForm } from '../view/subaccount-edit-form';
+import { SubAccountEditDialogForm } from './subaccount-edit-dialog-form';
 
 // ----------------------------------------------------------------------
 
@@ -40,6 +42,7 @@ export function SubAccountTableRow({ row, selected, onSelectRow, detailsHref }: 
   const menuActions = usePopover();
   const quickEditForm = useBoolean();
   const { translate } = useTranslate();
+  const router = useRouter();
 
   const renderMenuActions = () => (
     <CustomPopover
@@ -49,7 +52,13 @@ export function SubAccountTableRow({ row, selected, onSelectRow, detailsHref }: 
       slotProps={{ arrow: { placement: 'right-top' } }}
     >
       <MenuList>
-        <MenuItem onClick={() => menuActions.onClose()}>
+        <MenuItem
+          onClick={() => {
+            menuActions.onClose()
+            router.push(paths.account.subaccount.details(row.id));
+          }
+          }>
+
           <Iconify icon="solar:eye-bold" />
           {translate('subAccountListView.actions.view')}
         </MenuItem>
@@ -84,7 +93,7 @@ export function SubAccountTableRow({ row, selected, onSelectRow, detailsHref }: 
   };
 
   const renderEditForm = () => (
-    <SubAccountEditForm
+    <SubAccountEditDialogForm
       currentUser={{
         ...row,
         firstname: row.firstname
@@ -125,7 +134,7 @@ export function SubAccountTableRow({ row, selected, onSelectRow, detailsHref }: 
         <TableCell align="left">
           {
             row.permissions.map((p, idx) => {
-              const key = Object.keys(p)[0]; // Extrae la clave del objeto de permiso
+              const key = Object.keys(p)[0];
               const permission = PERMISSIONS.find((status) => status.value === key);
               return (
                 <Label

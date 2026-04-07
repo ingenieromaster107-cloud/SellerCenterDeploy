@@ -396,5 +396,31 @@
     "permissionsRequired": "Each permission is required!",
     "permissionsNonEmpty": "At least one permission is required!",
     "statusRequired": "Status is required!"
+  },
+  "subAccountDetailsView": {
+    "breadcrumbs": {
+      "heading": "Subaccount Details",
+      "home": "Home",
+      "subaccount": "Subaccount",
+      "details": "Details"
+    },
+    "accountInfo": {
+      "id": "Id",
+      "title": "Account Information",
+      "status": "Status",
+      "permissionsAssigned": "Permissions assigned",
+      "firstName": "First Name",
+      "lastName": "Last Name",
+      "createdAt": "Created at",
+      "email": "Email"
+    },
+    "actions": {
+      "addSubaccount": "Add Subaccount",
+      "edit": "Edit",
+      "update": "Update",
+      "delete": "Delete",
+      "suspendAccount": "Suspend Account",
+      "deleteAccount": "Delete Account"
+    }
   }
 }

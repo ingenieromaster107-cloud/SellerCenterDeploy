@@ -58,7 +58,7 @@ type Props = {
   currentUser?: SubAccountInterface;
 };
 
-export function SubAccountEditForm({ currentUser, open, onClose }: Props) {
+export function SubAccountEditDialogForm({ currentUser, open, onClose }: Props) {
   const { mutateAsync } = useUpdateSubAccount();
   const { translate } = useTranslate();
 
@@ -108,7 +108,7 @@ export function SubAccountEditForm({ currentUser, open, onClose }: Props) {
 
       reset();
       onClose();
-    } catch (error) {
+    } catch {
       toast.error(translate('subAccountListView.updateSubAccount.errorMessage'));
     }
   });

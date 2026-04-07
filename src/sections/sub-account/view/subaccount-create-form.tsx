@@ -89,7 +89,7 @@ export function SubAccountCreateForm({ open, onClose }: Omit<Props, 'currentUser
 
       reset();
       onClose();
-    } catch (error) {
+    } catch {
       toast.error(translate('subAccountListView.createSubAccount.errorMessage'));
     }
   });

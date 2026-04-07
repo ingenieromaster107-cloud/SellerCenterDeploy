@@ -2,8 +2,6 @@ import type { ICustomer } from 'src/interfaces/customer/customer.interface';
 
 import { jwtDecode } from 'jwt-decode';
 
-import { GraphQLService } from 'src/lib/graphql-client';
-
 import { CUSTOMER_ID, CUSTOMER_KEY, EXPIRATION_TIME, ACCESS_TOKEN_STORAGE_KEY } from './constant';
 
 // ----------------------------------------------------------------------

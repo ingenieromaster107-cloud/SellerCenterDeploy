@@ -395,5 +395,31 @@
     "permissionsRequired": "¡Cada permiso es obligatorio!",
     "permissionsNonEmpty": "¡Se requiere al menos un permiso!",
     "statusRequired": "¡El estado es obligatorio!"
+  },
+  "subAccountDetailsView": {
+    "breadcrumbs": {
+      "heading": "Detalles de la Subcuenta",
+      "home": "Inicio",
+      "subaccount": "Subcuenta",
+      "details": "Detalles"
+    },
+    "accountInfo": {
+      "id": "Id",
+      "title": "Información de la cuenta",
+      "status": "Estado",
+      "permissionsAssigned": "Permisos asignados",
+      "firstName": "Nombre",
+      "lastName": "Apellido",
+      "createdAt": "Creado el",
+      "email": "Correo electrónico"
+    },
+    "actions": {
+      "addSubaccount": "Agregar Subcuenta",
+      "edit": "Editar",
+      "delete": "Eliminar",
+      "update": "Actualizar",
+      "suspendAccount": "Suspender Cuenta",
+      "deleteAccount": "Eliminar Cuenta"
+    }
   }
 }
