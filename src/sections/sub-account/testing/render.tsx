@@ -1,7 +1,7 @@
-import type { PropsWithChildren, ReactElement } from 'react';
+import type { ReactElement, PropsWithChildren } from 'react';
 
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { render as rtlRender, type RenderOptions } from '@testing-library/react';
+import { type RenderOptions, render as rtlRender } from '@testing-library/react';
 
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
