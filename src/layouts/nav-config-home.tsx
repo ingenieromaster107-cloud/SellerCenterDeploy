@@ -18,7 +18,7 @@ const ICONS = {
   users: icon('ic-users'),
   order: icon('ic-shopping-cart'),
   product: icon('ic-product'),
-  dashboard: icon('ic-dashboard'),
+  home: icon('ic-dashboard'),
   return: icon('ic-refresh'),
   feedback: icon('ic-feedback'),
 };
@@ -33,9 +33,9 @@ export const useNavData = (): NavSectionProps['data'] => {
       {
         items: [
           {
-            title: translate('tableLatestOrders', 'columns.id'),
+            title: translate('sidebarMenu.home.title'),
             path: paths.home.root,
-            icon: ICONS.dashboard,
+            icon: ICONS.home,
           },
         ],
       },
@@ -54,16 +54,41 @@ export const useNavData = (): NavSectionProps['data'] => {
             title: translate('sidebarMenu.returns.title'),
             path: paths.return.root,
             icon: ICONS.return,
-            children: [{ title: translate('sidebarMenu.returns.subtitles.list'), path: paths.return.root }],
-          },{
-                        title: translate('sidebarMenu.feedback.title'),
+            children: [
+              { title: translate('sidebarMenu.returns.subtitles.list'), path: paths.return.root },
+            ],
+          },
+          {
+            title: translate('ordersModule.title'),
+            path: paths.order.root,
+            icon: ICONS.order,
+            children: [
+              { title: translate('ordersModule.list.title'), path: paths.order.root },
+            ],
+          },
+          {
+            title: translate('sidebarMenu.clients.title'),
+            path: paths.clients.root,
+            icon: ICONS.users,
+          },
+          {
+            title: translate('sidebarMenu.feedback.title'),
             path: paths.feedback.root,
             icon: ICONS.feedback,
           }
-          
+
         ],
       },
-
+      {
+        subheader: translate('sidebarMenu.subAccount.subheader'),
+        items: [
+          {
+            title: translate('sidebarMenu.subAccount.title'),
+            path: paths.account.subaccount.root ,
+            icon: ICONS.users,
+          }
+        ],
+      },
     ],
     [translate]
   );

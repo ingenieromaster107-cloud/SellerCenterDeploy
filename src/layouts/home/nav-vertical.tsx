@@ -6,6 +6,9 @@ import { varAlpha, mergeClasses } from 'minimal-shared/utils';
 import Box from '@mui/material/Box';
 import { styled } from '@mui/material/styles';
 
+import { paths } from 'src/routes/paths';
+import { useRouter } from 'src/routes/hooks';
+
 import { ProfileCompletionCard } from 'src/components';
 
 import { Logo } from 'src/components/logo';
@@ -13,7 +16,7 @@ import { Scrollbar } from 'src/components/scrollbar';
 import { StoreIdentity } from 'src/components/store-identity';
 import { NavSectionMini, NavSectionVertical } from 'src/components/nav-section';
 
-import { useMockedUser } from 'src/auth/hooks';
+import { useAuthContext } from 'src/auth/hooks';
 
 import { layoutClasses } from '../core';
 import { SignOutButton, NavToggleButton } from '../components';
@@ -43,7 +46,15 @@ export function NavVertical({
   layoutQuery = 'md',
   ...other
 }: NavVerticalProps) {
-  const { user } = useMockedUser();
+
+  //go to account page
+  const router = useRouter();
+  const handleAccount = () => {
+    router.push(paths.account.root);
+  };
+  //go to account page
+
+  const { user } = useAuthContext();
 
   const renderNavVertical = () => (
     <>
@@ -54,7 +65,9 @@ export function NavVertical({
       )}
 
       <Box sx={{ pt: 2.5, pb: 2, display: 'flex', justifyContent: 'center' }}>
-        <StoreIdentity user={user} />
+        {
+          user && <StoreIdentity user={user} onSettingsClick={handleAccount} />
+        }
       </Box>
 
       <Box sx={{ pt: 1, pb: 2, display: 'flex', justifyContent: 'center' }}>

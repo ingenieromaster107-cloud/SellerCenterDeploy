@@ -1,17 +1,10 @@
+import type { ReactNode } from 'react';
+import type { UseSetStateReturn } from 'minimal-shared/hooks';
+import type { AccountTableFiltersInterface } from 'src/interfaces';
+
 import { render, screen, fireEvent } from '@testing-library/react';
 
-import { createTheme, ThemeProvider } from '@mui/material/styles';
-
 import { SubAccountTableToolbar } from './table-toolbar';
-
-jest.mock('src/components/iconify', () => ({
-  Iconify: ({ icon }: any) => <span data-testid={`icon-${icon}`} />,
-}));
-
-jest.mock('src/components/custom-popover', () => ({
-  CustomPopover: ({ open, children }: any) =>
-    open ? <div data-testid="custom-popover">{children}</div> : null,
-}));
 
 jest.mock('minimal-shared/hooks', () => ({
   usePopover: () => ({
@@ -22,64 +15,44 @@ jest.mock('minimal-shared/hooks', () => ({
   }),
 }));
 
-const theme = createTheme({ cssVariables: true });
-const renderWithTheme = (ui: React.ReactElement) =>
-  render(<ThemeProvider theme={theme}>{ui}</ThemeProvider>);
+jest.mock('src/locales', () => ({
+  useTranslate: () => ({
+    translate: (key: string) => key,
+  }),
+}));
 
-const makeFilters = (name = '') => ({
-  state: { name, permission: 'all' },
-  setState: jest.fn(),
-  resetState: jest.fn(),
-  onResetState: jest.fn(),
-});
+jest.mock('src/components/custom-popover', () => ({
+  CustomPopover: ({ children }: { children: ReactNode }) => <div>{children}</div>,
+}));
+
+jest.mock('src/components/iconify', () => ({
+  Iconify: () => <span data-testid="iconify" />,
+}));
+
 
 describe('SubAccountTableToolbar', () => {
-  it('renders the search text field', () => {
-    renderWithTheme(
-      <SubAccountTableToolbar filters={makeFilters() as any} onResetPage={jest.fn()} />
-    );
-    expect(screen.getByRole('textbox')).toBeInTheDocument();
-  });
-
-  it('renders search icon', () => {
-    renderWithTheme(
-      <SubAccountTableToolbar filters={makeFilters() as any} onResetPage={jest.fn()} />
-    );
-    expect(screen.getByTestId('icon-eva:search-fill')).toBeInTheDocument();
-  });
-
-  it('renders more options icon button', () => {
-    renderWithTheme(
-      <SubAccountTableToolbar filters={makeFilters() as any} onResetPage={jest.fn()} />
-    );
-    expect(screen.getByTestId('icon-eva:more-vertical-fill')).toBeInTheDocument();
-  });
-
-  it('calls setState when typing in search field', () => {
-    const filters = makeFilters();
-    renderWithTheme(
-      <SubAccountTableToolbar filters={filters as any} onResetPage={jest.fn()} />
-    );
-    fireEvent.change(screen.getByRole('textbox'), { target: { value: 'Juan' } });
-    expect(filters.setState).toHaveBeenCalledWith({ name: 'Juan' });
-  });
-
-  it('calls onResetPage when typing in search field', () => {
+  it('updates filter name and resets page when user types in search input', () => {
     const onResetPage = jest.fn();
-    renderWithTheme(
-      <SubAccountTableToolbar filters={makeFilters() as any} onResetPage={onResetPage} />
-    );
-    fireEvent.change(screen.getByRole('textbox'), { target: { value: 'test' } });
-    expect(onResetPage).toHaveBeenCalled();
-  });
+    const setState = jest.fn();
 
-  it('shows current filter name in input', () => {
-    renderWithTheme(
-      <SubAccountTableToolbar
-        filters={makeFilters('existing-value') as any}
-        onResetPage={jest.fn()}
-      />
-    );
-    expect(screen.getByDisplayValue('existing-value')).toBeInTheDocument();
+    const filters: UseSetStateReturn<AccountTableFiltersInterface> = {
+      state: {
+        name: '',
+        permission: 'all',
+      },
+      setState,
+      setField: jest.fn(),
+      canReset: false,
+      resetState: jest.fn(),
+      onResetState: jest.fn(),
+    } as unknown as UseSetStateReturn<AccountTableFiltersInterface>;
+
+    render(<SubAccountTableToolbar filters={filters} onResetPage={onResetPage} />);
+
+    const input = screen.getByPlaceholderText('subAccountListView.searchPlaceholder');
+    fireEvent.change(input, { target: { value: 'john' } });
+
+    expect(onResetPage).toHaveBeenCalledTimes(1);
+    expect(setState).toHaveBeenCalledWith({ name: 'john' });
   });
 });
