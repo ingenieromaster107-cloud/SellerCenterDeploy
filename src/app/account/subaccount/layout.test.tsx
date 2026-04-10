@@ -1,6 +1,7 @@
 import { render, screen } from '@testing-library/react';
 
-import Layout from './layout';
+import Layout from '../layout';
+
 
 jest.mock('src/global-config', () => ({
   CONFIG: { auth: { skip: true } },

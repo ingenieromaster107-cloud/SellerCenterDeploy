@@ -42,20 +42,21 @@ jest.mock('src/components/settings', () => ({
 }));
 
 jest.mock('src/auth/hooks', () => ({
-  useMockedUser: () => ({
+  useAuthContext: () => ({
     user: { role: 'admin' },
   }),
 }));
 
 jest.mock('src/routes/hooks', () => ({
   usePathname: () => mockedUsePathname(),
+  useRouter: () => ({ push: jest.fn(), refresh: jest.fn() }),
 }));
 
 jest.mock('src/_mock', () => ({
   _notifications: [],
 }));
 
-jest.mock('src/layouts/nav-config-dashboard', () => ({
+jest.mock('src/layouts/nav-config-home', () => ({
   useNavData: () => [{ title: 'nav-item', path: '/x' }],
 }));
 

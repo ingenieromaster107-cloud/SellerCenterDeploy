@@ -79,6 +79,12 @@ jest.mock('minimal-shared/hooks', () => ({
   useSetState: (initial: any) => ({ state: initial, setState: jest.fn() }),
 }));
 
+jest.mock('src/locales', () => ({
+  useTranslate: () => ({
+    translate: (key: string) => key,
+  }),
+}));
+
 jest.mock('minimal-shared/utils', () => ({
   varAlpha: () => 'rgba(0,0,0,0.5)',
 }));
@@ -92,7 +98,11 @@ jest.mock('../components', () => ({
   SubAccountTableToolbar: () => <div data-testid="subaccount-toolbar" />,
 }));
 
-jest.mock('./useSubAccountTable', () => ({
+jest.mock('./subaccount-create-form', () => ({
+  SubAccountCreateForm: () => <div data-testid="subaccount-create-form" />,
+}));
+
+jest.mock('./use-subaccount-table', () => ({
   useSubAccountTable: () => ({
     table: {
       dense: false,
@@ -154,9 +164,9 @@ describe('SubAccountListView', () => {
     expect(screen.getByTestId('home-content')).toBeInTheDocument();
   });
 
-  it('renders breadcrumbs with "Manage Subaccounts"', () => {
+  it('renders breadcrumbs with heading', () => {
     renderWithTheme(<SubAccountListView />);
-    expect(screen.getByText('Manage Subaccounts')).toBeInTheDocument();
+    expect(screen.getByText('subAccount.manageSubaccounts')).toBeInTheDocument();
   });
 
   it('renders SubAccountTableToolbar', () => {

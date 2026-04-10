@@ -1,7 +1,7 @@
 import React from 'react';
 import { renderHook } from '@testing-library/react';
 
-import { useNavData } from './nav-config-dashboard';
+import { useNavData } from './nav-config-home';
 
 jest.mock('src/global-config', () => ({
   CONFIG: { assetsDir: '/assets' },

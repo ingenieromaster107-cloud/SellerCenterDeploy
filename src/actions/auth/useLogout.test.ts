@@ -2,7 +2,7 @@ import React from 'react';
 import { waitFor, renderHook } from '@testing-library/react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
-import { useLogout } from './useLogout';
+import { useLogout } from './use-logout';
 
 const mockRequest = jest.fn();
 const mockSetHeader = jest.fn();

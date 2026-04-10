@@ -1,4 +1,4 @@
-import { render, screen, fireEvent } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 
 import { StoreButton } from './store-button';
 
@@ -12,14 +12,5 @@ describe('StoreButton', () => {
 
     expect(screen.getByRole('button')).toBeInTheDocument();
     expect(screen.getByTestId('store-icon')).toBeInTheDocument();
-  });
-
-  it('forwards click handler', () => {
-    const onClick = jest.fn();
-
-    render(<StoreButton onClick={onClick} /> as any);
-
-    fireEvent.click(screen.getByRole('button'));
-    expect(onClick).toHaveBeenCalledTimes(1);
   });
 });

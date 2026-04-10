@@ -1,8 +1,8 @@
 import { renderHook } from '@testing-library/react';
 
-import { useSubAccountTable } from './useSubAccountTable';
+import { useSubAccountTable } from './use-subaccount-table';
 
-jest.mock('src/actions/account/useGetSubAccounts', () => ({
+jest.mock('src/actions/account/use-get-subaccounts', () => ({
   useGetSubAccounts: () => ({
     accounts: [
       {

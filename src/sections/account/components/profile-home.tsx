@@ -59,12 +59,12 @@ export function ProfileHome({ sx, customer }: ProfileHomeProps) {
         </Box>
 
         <Box sx={{ gap: 2, display: 'flex', lineHeight: '24px', alignItems: 'center', mb: 1.0 }}>
-          <Iconify width={24} icon="mdi:card-account-details-outline" />
+          <Iconify width={24} icon="solar:user-id-bold" />
           <Typography variant="body2">{identificationType}</Typography>
         </Box>
 
         <Box sx={{ gap: 2, display: 'flex', lineHeight: '24px', alignItems: 'center' }}>
-          <Iconify width={24} icon="mdi:identifier" />
+          <Iconify width={24} icon="solar:tag-horizontal-bold-duotone" />
           <Typography variant="body2">{identificationNumber}</Typography>
         </Box>
       </Box>

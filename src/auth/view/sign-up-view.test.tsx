@@ -3,7 +3,6 @@ import { render, screen, waitFor, fireEvent } from '@testing-library/react';
 import { SignUpView } from './sign-up-view';
 
 const mockRefresh = jest.fn();
-const mockCheckUserSession = jest.fn();
 const mockSignUp = jest.fn();
 const mockGetErrorMessage = jest.fn();
 
@@ -70,10 +69,6 @@ jest.mock('../context', () => ({
   signUp: (...args: unknown[]) => mockSignUp(...args),
 }));
 
-jest.mock('../hooks', () => ({
-  useAuthContext: () => ({ checkUserSession: mockCheckUserSession }),
-}));
-
 jest.mock('../utils', () => ({
   getErrorMessage: (error: unknown) => mockGetErrorMessage(error),
 }));
@@ -89,7 +84,6 @@ jest.mock('../components/sign-up-terms', () => ({
 describe('SignUpView', () => {
   beforeEach(() => {
     mockRefresh.mockClear();
-    mockCheckUserSession.mockReset();
     mockSignUp.mockReset();
     mockGetErrorMessage.mockReset();
   });
@@ -104,9 +98,8 @@ describe('SignUpView', () => {
     expect(screen.getByTestId('sign-up-terms')).toBeInTheDocument();
   });
 
-  it('submits sign up and refreshes session on success', async () => {
+  it('submits sign up and refreshes on success', async () => {
     mockSignUp.mockResolvedValue(undefined);
-    mockCheckUserSession.mockResolvedValue(undefined);
 
     render(<SignUpView />);
 
@@ -121,7 +114,6 @@ describe('SignUpView', () => {
       });
     });
 
-    expect(mockCheckUserSession).toHaveBeenCalledTimes(1);
     expect(mockRefresh).toHaveBeenCalledTimes(1);
   });
 

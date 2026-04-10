@@ -1,31 +1,40 @@
 import React from 'react';
 import { render, screen, waitFor } from '@testing-library/react';
-
-jest.mock('minimal-shared/hooks', () => ({
-  useSetState: <T extends object>(initialState: T) => {
-    const ReactActual = jest.requireActual('react');
-    const [state, setState] = ReactActual.useState(initialState);
-    return {
-      setState: (update: Partial<T>) => setState((prev: T) => ({ ...prev, ...update })),
-      state,
-    };
-  },
-}));
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
 import { AuthContext } from './auth-context';
 import { AuthProvider } from './auth-provider';
-import { ACCESS_TOKEN_STORAGE_KEY } from './constant';
 
 const mockedSetSession = jest.fn();
-const mockedUser = { id: 'u-1', name: 'User A', role: 'seller' };
-const mockedUseMockedUser = jest.fn(() => ({ user: mockedUser }));
+const mockedUser = { id: 'u-1', firstname: 'User A' };
 
-jest.mock('src/auth/hooks', () => ({
-  useMockedUser: () => mockedUseMockedUser(),
+const mockedUseCurrentUser = jest.fn(() => ({
+  data: null as any,
+  isLoading: false,
+}));
+
+const mockedLoginMutateAsync = jest.fn();
+const mockedLogoutMutateAsync = jest.fn();
+const mockedUpdateTokenMutateAsync = jest.fn();
+
+jest.mock('src/actions/auth/use-current-user', () => ({
+  useCurrentUser: () => mockedUseCurrentUser(),
+}));
+
+jest.mock('src/actions/auth/use-login', () => ({
+  useLogin: () => ({ mutateAsync: mockedLoginMutateAsync }),
+}));
+
+jest.mock('src/actions/auth/use-logout', () => ({
+  useLogout: () => ({ mutateAsync: mockedLogoutMutateAsync }),
+}));
+
+jest.mock('src/actions/auth/use-update-token', () => ({
+  useUpdateToken: () => ({ mutateAsync: mockedUpdateTokenMutateAsync }),
 }));
 
 jest.mock('./utils', () => ({
-  setSession: (token: string) => mockedSetSession(token),
+  setSession: (...args: any[]) => mockedSetSession(...args),
 }));
 
 const Consumer = () => (
@@ -35,21 +44,32 @@ const Consumer = () => (
         <div data-testid="loading">{String(value?.loading)}</div>
         <div data-testid="auth">{String(value?.authenticated)}</div>
         <div data-testid="unauth">{String(value?.unauthenticated)}</div>
-        <div data-testid="name">{value?.user?.name ?? 'none'}</div>
+        <div data-testid="name">{value?.user?.firstname ?? 'none'}</div>
       </div>
     )}
   </AuthContext.Consumer>
 );
 
+function createTestQueryClient() {
+  return new QueryClient({
+    defaultOptions: { queries: { retry: false } },
+  });
+}
+
 describe('auth context/provider coverage harness', () => {
+  let queryClient: QueryClient;
+
   beforeEach(() => {
+    queryClient = createTestQueryClient();
     mockedSetSession.mockReset();
-    mockedUseMockedUser.mockClear();
-    sessionStorage.clear();
+    mockedUseCurrentUser.mockReturnValue({ data: null, isLoading: false });
   });
 
-  it('provides unauthenticated state without token', async () => {
-    render(
+  const renderWithProviders = (ui: React.ReactElement) =>
+    render(<QueryClientProvider client={queryClient}>{ui}</QueryClientProvider>);
+
+  it('provides unauthenticated state when no user', async () => {
+    renderWithProviders(
       <AuthProvider>
         <Consumer />
       </AuthProvider>
@@ -59,22 +79,35 @@ describe('auth context/provider coverage harness', () => {
     expect(screen.getByTestId('auth')).toHaveTextContent('false');
     expect(screen.getByTestId('unauth')).toHaveTextContent('true');
     expect(screen.getByTestId('name')).toHaveTextContent('none');
+    expect(mockedSetSession).toHaveBeenCalledWith(null);
   });
 
-  it('provides authenticated state with token and default role fallback branch', async () => {
-    mockedUseMockedUser.mockReturnValueOnce({ user: { id: 'u-2', name: 'NoRoleUser' } });
-    sessionStorage.setItem(ACCESS_TOKEN_STORAGE_KEY, 'token-123');
+  it('shows loading state while checking user', async () => {
+    mockedUseCurrentUser.mockReturnValue({ data: null, isLoading: true });
 
-    render(
+    renderWithProviders(
+      <AuthProvider>
+        <Consumer />
+      </AuthProvider>
+    );
+
+    expect(screen.getByTestId('loading')).toHaveTextContent('true');
+    expect(screen.getByTestId('auth')).toHaveTextContent('false');
+    expect(screen.getByTestId('unauth')).toHaveTextContent('false');
+  });
+
+  it('provides authenticated state when user exists', async () => {
+    mockedUseCurrentUser.mockReturnValue({ data: mockedUser, isLoading: false });
+
+    renderWithProviders(
       <AuthProvider>
         <Consumer />
       </AuthProvider>
     );
 
     await waitFor(() => expect(screen.getByTestId('loading')).toHaveTextContent('false'));
-    expect(mockedSetSession).toHaveBeenCalledWith('token-123');
     expect(screen.getByTestId('auth')).toHaveTextContent('true');
     expect(screen.getByTestId('unauth')).toHaveTextContent('false');
-    expect(screen.getByTestId('name')).toHaveTextContent('NoRoleUser');
+    expect(screen.getByTestId('name')).toHaveTextContent('User A');
   });
 });

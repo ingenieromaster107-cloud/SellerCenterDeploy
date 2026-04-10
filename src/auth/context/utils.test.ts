@@ -1,12 +1,22 @@
-jest.mock('src/routes/paths', () => ({
-  paths: { auth: { signIn: '/auth/sign-in' } },
+import { getSession, setSession, validateSession } from './utils';
+
+const FAKE_UID = 'user-42';
+const FAKE_EXP_VALID = Math.floor(Date.now() / 1000) + 3600; // 1h in the future
+const FAKE_EXP_EXPIRED = Math.floor(Date.now() / 1000) - 3600; // 1h in the past
+
+jest.mock('jwt-decode', () => ({
+  jwtDecode: jest.fn(() => ({ uid: FAKE_UID, exp: FAKE_EXP_VALID })),
 }));
+
+import { jwtDecode } from 'jwt-decode';
+
+const jwtDecodeMock = jwtDecode as jest.Mock;
 
 describe('auth/context/utils', () => {
   beforeEach(() => {
-    sessionStorage.clear();
+    localStorage.clear();
     jest.clearAllMocks();
-    jest.restoreAllMocks();
+    jwtDecodeMock.mockReturnValue({ uid: FAKE_UID, exp: FAKE_EXP_VALID });
   });
 
   afterEach(() => {
@@ -14,20 +24,16 @@ describe('auth/context/utils', () => {
   });
 
   describe('getSession', () => {
-    it('returns null when no token in sessionStorage', async () => {
-      const { getSession } = await import('./utils');
+    it('returns null when no token in localStorage', () => {
       expect(getSession()).toBeNull();
     });
 
-    it('returns the stored token', async () => {
-      sessionStorage.setItem('access_token', 'my-token');
-      const { getSession } = await import('./utils');
+    it('returns the stored token', () => {
+      localStorage.setItem('access_token', 'my-token');
       expect(getSession()).toBe('my-token');
     });
 
-    it('throws when sessionStorage.getItem fails', async () => {
-      const { getSession } = await import('./utils');
-
+    it('throws when localStorage.getItem fails', () => {
       const getItemSpy = jest.spyOn(Storage.prototype, 'getItem').mockImplementation(() => {
         throw new Error('boom');
       });
@@ -38,73 +44,73 @@ describe('auth/context/utils', () => {
   });
 
   describe('setSession', () => {
-    it('stores token + expiration', async () => {
-      const { setSession } = await import('./utils');
-      await setSession('abc-123');
-      expect(sessionStorage.getItem('access_token')).toBe('abc-123');
-      expect(sessionStorage.getItem('expiration_time')).toBeTruthy();
+    it('stores token, customer_id and expiration_time for valid token', () => {
+      setSession('abc-123');
+
+      expect(jwtDecodeMock).toHaveBeenCalledWith('abc-123');
+      expect(localStorage.getItem('access_token')).toBe('abc-123');
+      expect(localStorage.getItem('customer_id')).toBe(FAKE_UID);
+      expect(localStorage.getItem('expiration_time')).toBe(FAKE_EXP_VALID.toString());
     });
 
-    it('removes token when null passed', async () => {
-      sessionStorage.setItem('access_token', 'abc');
-      sessionStorage.setItem('expiration_time', '123');
-      const { setSession } = await import('./utils');
+    it('does not store expiration_time when token is expired', () => {
+      jwtDecodeMock.mockReturnValue({ uid: FAKE_UID, exp: FAKE_EXP_EXPIRED });
 
-      await setSession(null).catch(() => {});
+      setSession('expired-token');
 
-      expect(sessionStorage.getItem('access_token')).toBeNull();
-      expect(sessionStorage.getItem('expiration_time')).toBeNull();
+      expect(localStorage.getItem('access_token')).toBe('expired-token');
+      expect(localStorage.getItem('customer_id')).toBe(FAKE_UID);
+      expect(localStorage.getItem('expiration_time')).toBeNull();
     });
 
-    it('throws on storage error branch', async () => {
-      const { setSession } = await import('./utils');
+    it('removes all keys when null passed', () => {
+      localStorage.setItem('access_token', 'abc');
+      localStorage.setItem('expiration_time', '123');
+      localStorage.setItem('customer_id', 'uid');
 
-      const setItemSpy = jest.spyOn(Storage.prototype, 'setItem').mockImplementation(() => {
-        throw new Error('set error');
-      });
+      setSession(null);
 
-      await expect(setSession('x')).rejects.toThrow('set error');
-      setItemSpy.mockRestore();
+      expect(localStorage.getItem('access_token')).toBeNull();
+      expect(localStorage.getItem('expiration_time')).toBeNull();
+      expect(localStorage.getItem('customer_id')).toBeNull();
     });
   });
 
   describe('validateSession', () => {
-    it('executes no-token branch', async () => {
-      const { validateSession } = await import('./utils');
-      await validateSession().catch(() => {});
-      expect(sessionStorage.getItem('access_token')).toBeNull();
+    it('returns false and clears session when no token exists', () => {
+      const result = validateSession();
+
+      expect(result).toBe(false);
+      expect(localStorage.getItem('access_token')).toBeNull();
     });
 
-    it('keeps token when valid non-expired token exists', async () => {
-      sessionStorage.setItem('access_token', 'valid-token');
-      sessionStorage.setItem('expiration_time', (Date.now() / 1000).toString());
+    it('returns false when token exists but no expiration_time', () => {
+      localStorage.setItem('access_token', 'some-token');
 
-      const { validateSession } = await import('./utils');
-      await validateSession();
+      const result = validateSession();
 
-      expect(sessionStorage.getItem('access_token')).toBe('valid-token');
+      expect(result).toBe(false);
     });
 
-    it('removes expired token', async () => {
-      sessionStorage.setItem('access_token', 'old-token');
-      sessionStorage.setItem('expiration_time', (Date.now() / 1000 - 7200).toString());
+    it('returns true when valid non-expired token exists', () => {
+      localStorage.setItem('access_token', 'valid-token');
+      localStorage.setItem('expiration_time', FAKE_EXP_VALID.toString());
 
-      const { validateSession } = await import('./utils');
-      await validateSession().catch(() => {});
+      const result = validateSession();
 
-      expect(sessionStorage.getItem('access_token')).toBeNull();
-      expect(sessionStorage.getItem('expiration_time')).toBeNull();
+      expect(result).toBe(true);
+      expect(localStorage.getItem('access_token')).toBe('valid-token');
     });
 
-    it('throws on unexpected error branch', async () => {
-      const { validateSession } = await import('./utils');
+    it('returns false and clears session for expired token', () => {
+      localStorage.setItem('access_token', 'old-token');
+      localStorage.setItem('expiration_time', FAKE_EXP_EXPIRED.toString());
 
-      const getItemSpy = jest.spyOn(Storage.prototype, 'getItem').mockImplementation(() => {
-        throw new Error('read error');
-      });
+      const result = validateSession();
 
-      await expect(validateSession()).rejects.toThrow('read error');
-      getItemSpy.mockRestore();
+      expect(result).toBe(false);
+      expect(localStorage.getItem('access_token')).toBeNull();
+      expect(localStorage.getItem('expiration_time')).toBeNull();
     });
   });
 });

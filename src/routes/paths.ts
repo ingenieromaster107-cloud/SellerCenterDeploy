@@ -55,6 +55,9 @@ export const paths = {
     load: `${ROOTS.ORDER}/load`,
     details: (id: string) => `${ROOTS.ORDER}/${id}`,
   },
+  clients: {
+    root: '/clients',
+  },
   return: {
     root: '/return',
     details: (id: number) => `/return/${id}`,

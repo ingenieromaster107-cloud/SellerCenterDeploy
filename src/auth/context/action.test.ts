@@ -37,7 +37,7 @@ describe('auth/context/action signUp', () => {
       firstName: 'Juan',
       lastName: 'Ramirez',
     });
-    expect(sessionStorage.getItem(ACCESS_TOKEN_STORAGE_KEY)).toBe('token-123');
+    expect(localStorage.getItem(ACCESS_TOKEN_STORAGE_KEY)).toBe('token-123');
   });
 
   it('throws when response has no accessToken', async () => {

@@ -21,18 +21,16 @@ describe('auth types', () => {
     expect((state.user as Record<string, unknown>).email).toBe('test@mail.com');
   });
 
-  it('supports AuthContextValue required flags', async () => {
+  it('supports AuthContextValue required flags', () => {
     const ctx: AuthContextValue = {
       user: null,
       loading: true,
       authenticated: false,
       unauthenticated: true,
-      checkUserSession: async () => {},
     };
 
     expect(ctx.loading).toBe(true);
     expect(ctx.authenticated).toBe(false);
     expect(ctx.unauthenticated).toBe(true);
-    await expect(ctx.checkUserSession?.()).resolves.toBeUndefined();
   });
 });

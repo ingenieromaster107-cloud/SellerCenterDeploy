@@ -4,7 +4,7 @@ import { render, screen, waitFor, fireEvent } from '@testing-library/react';
 import { SignOutButton } from './sign-out-button';
 
 const refresh = jest.fn();
-const mutateAsync = jest.fn();
+const logout = jest.fn();
 
 jest.mock('minimal-shared/utils', () => ({ varAlpha: () => 'rgba(0,0,0,0.1)' }));
 jest.mock('src/global-config', () => ({ CONFIG: { assetsDir: '/assets' } }));
@@ -14,8 +14,8 @@ jest.mock('src/locales/langs/i18n', () => ({
 jest.mock('src/routes/hooks', () => ({
   useRouter: () => ({ refresh }),
 }));
-jest.mock('src/actions/auth/useLogout', () => ({
-  useLogout: () => ({ mutateAsync }),
+jest.mock('src/auth/hooks', () => ({
+  useAuthContext: () => ({ logout }),
 }));
 jest.mock('src/components/svg-color', () => ({
   SvgColor: ({ src }: any) => <span data-testid={`svg-${src}`} />,
@@ -24,7 +24,7 @@ jest.mock('src/components/svg-color', () => ({
 describe('SignOutButton', () => {
   beforeEach(() => {
     jest.clearAllMocks();
-    mutateAsync.mockResolvedValue(undefined);
+    logout.mockResolvedValue(undefined);
   });
 
   it('renders translated label', () => {
@@ -37,7 +37,7 @@ describe('SignOutButton', () => {
     fireEvent.click(screen.getByRole('button', { name: 'logout' }));
 
     await waitFor(() => {
-      expect(mutateAsync).toHaveBeenCalled();
+      expect(logout).toHaveBeenCalled();
       expect(refresh).toHaveBeenCalled();
     });
   });

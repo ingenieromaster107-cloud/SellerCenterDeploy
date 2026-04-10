@@ -25,13 +25,13 @@ import * as routesHooks from 'src/routes/hooks';
 import { StoreIdentity } from './index';
 
 const mockUser = {
-  displayName: 'John Doe',
+  firstname: 'John',
+  lastname: 'Doe',
   email: 'john@example.com',
-  photoURL: null,
 };
 
 describe('StoreIdentity', () => {
-  it('renders display name', () => {
+  it('renders full name', () => {
     render(<StoreIdentity user={mockUser as any} />);
     expect(screen.getByText('John Doe')).toBeInTheDocument();
   });

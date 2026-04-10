@@ -29,7 +29,8 @@ import { HomeContent } from 'src/layouts/home';
 import { Iconify } from 'src/components/iconify';
 import { CustomBreadcrumbs } from 'src/components/custom-breadcrumbs';
 
-import { CommonTable } from '../components/common-table';
+import { CommonTable } from 'src/sections/common';
+
 
 export default function FeedbackView() {
   const { reviewsList, tableHead, handleFilterClick } = useFeedbackList();
@@ -76,9 +77,9 @@ export default function FeedbackView() {
         </TableCell>
         <TableCell align="left">
           <Box sx={{ display: 'flex', flexDirection: 'row' }}>
-            {Array.from({ length: Number(review.price) }).map((_, index) => (
+            {Array.from({ length: Number(review.price) }).map((_, inx) => (
               <img
-                key={index}
+                key={inx}
                 src="/assets/icons/common/ic-star.svg"
                 alt="star"
                 width={16}

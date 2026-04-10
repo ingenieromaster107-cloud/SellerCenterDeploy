@@ -16,8 +16,8 @@ jest.mock('minimal-shared/hooks', () => ({
 }));
 
 jest.mock('src/auth/hooks', () => ({
-  useMockedUser: () => ({
-    user: { displayName: 'Juan', email: 'juan@mail.com', photoURL: '/a.png' },
+  useAuthContext: () => ({
+    user: { firstname: 'Juan', lastname: 'Pérez', email: 'juan@mail.com' },
   }),
 }));
 
@@ -58,7 +58,7 @@ describe('AccountPopover', () => {
 
   it('renders user info', () => {
     render(<AccountPopover />);
-    expect(screen.getByText('Juan')).toBeInTheDocument();
+    expect(screen.getByText('Juan Pérez')).toBeInTheDocument();
     expect(screen.getByText('juan@mail.com')).toBeInTheDocument();
   });
 

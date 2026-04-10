@@ -1,5 +1,3 @@
-import type { AuthContextValue } from '../types';
-
 import { renderHook } from '@testing-library/react';
 
 import { useAuthContext } from './use-auth-context';
@@ -7,16 +5,18 @@ import { AuthContext } from '../context/auth-context';
 
 describe('useAuthContext', () => {
   it('returns context value when used inside AuthContext provider', () => {
-    const value: AuthContextValue = {
-      user: { id: '1' },
+    const value = {
+      user: { id: '1' } as any,
+      authStatus: 'authenticated' as const,
       loading: false,
       authenticated: true,
       unauthenticated: false,
-      checkUserSession: jest.fn(),
+      login: jest.fn(),
+      logout: jest.fn(),
     };
 
     const wrapper = ({ children }: { children: React.ReactNode }) => (
-      <AuthContext.Provider value={value}>{children}</AuthContext.Provider>
+      <AuthContext value={value}>{children}</AuthContext>
     );
 
     const { result } = renderHook(() => useAuthContext(), { wrapper });

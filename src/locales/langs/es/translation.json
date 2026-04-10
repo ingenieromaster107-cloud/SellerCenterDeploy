@@ -278,9 +278,10 @@
     "identificationNumberRequired": "Número de identificación es requerido",
     "avatarRequired": "Avatar es requerido",
     "countryRequired": "País es requerido",
-    "cityRequired": "Ciudad es requerida",
     "addressRequired": "Dirección es requerida",
-    "postalCodeRequired": "Código postal es requerido",
+    "stateRequired": "Estado es requerido",
+    "cityRequired": "Ciudad es requerida",
+    "zipCodeRequired": "Código postal es requerido",
     "phoneNumberRequired": "Número de teléfono es requerido",
     "oldPasswordRequired": "Contraseña antigua es requerida",
     "newPasswordRequired": "Nueva contraseña es requerida",
@@ -329,7 +330,7 @@
     "averageOrderValue": {
       "title": "Promedio valor órdenes",
       "period": {
-        "title": "periodo",
+        "title": "Periodo",
         "options": {
           "day": "Hoy",
           "week": "Esta semana",

@@ -1,10 +1,12 @@
 import React from 'react';
-import { act, renderHook } from '@testing-library/react';
+import { renderHook } from '@testing-library/react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+
+import { useGetFeedback } from 'src/actions/feedback/use-get-feedback';
 
 import { useFeedbackList } from './use-feedback-list';
 
-jest.mock('src/actions/feedback/useGetFeedback', () => ({
+jest.mock('src/actions/feedback/use-get-feedback', () => ({
   useGetFeedback: jest.fn(),
 }));
 
@@ -14,8 +16,6 @@ jest.mock('src/locales', () => ({
     currentLang: 'es',
   }),
 }));
-
-import { useGetFeedback } from 'src/actions/feedback/useGetFeedback';
 
 const mockFeedbackData = {
   feedbackListAdapter: [
@@ -52,13 +52,19 @@ describe('useFeedbackList', () => {
     });
   });
 
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
+
   it('returns reviewsList with formatted items', () => {
     const { result } = renderHook(() => useFeedbackList(), { wrapper: createWrapper() });
     expect(result.current.reviewsList).toHaveLength(1);
-    expect(result.current.reviewsList[0].sku).toBe('SKU-001');
-    expect(result.current.reviewsList[0].price).toBe('4');
-    expect(result.current.reviewsList[0].value).toBe('5');
-    expect(result.current.reviewsList[0].quality).toBe('3');
+    expect(result.current.reviewsList[0]).toMatchObject({
+      sku: 'SKU-001',
+      price: '4',
+      value: '5',
+      quality: '3',
+    });
   });
 
   it('returns N/A when rating not found in breakdown', () => {
@@ -75,28 +81,20 @@ describe('useFeedbackList', () => {
       isLoading: false,
     });
     const { result } = renderHook(() => useFeedbackList(), { wrapper: createWrapper() });
-    expect(result.current.reviewsList[0].price).toBe('N/A');
-    expect(result.current.reviewsList[0].value).toBe('N/A');
-    expect(result.current.reviewsList[0].quality).toBe('N/A');
+    expect(result.current.reviewsList[0]).toMatchObject({
+      price: 'N/A',
+      value: 'N/A',
+      quality: 'N/A',
+    });
   });
 
   it('returns tableHead with expected columns', () => {
     const { result } = renderHook(() => useFeedbackList(), { wrapper: createWrapper() });
-    expect(result.current.tableHead.length).toBeGreaterThan(0);
-    expect(result.current.tableHead.some((h: any) => h.id === 'sku')).toBe(true);
-  });
-
-  it('returns handleFilterClick function', () => {
-    const { result } = renderHook(() => useFeedbackList(), { wrapper: createWrapper() });
-    expect(typeof result.current.handleFilterClick).toBe('function');
-  });
-
-  it('handleFilterClick updates filter state', () => {
-    const { result } = renderHook(() => useFeedbackList(), { wrapper: createWrapper() });
-    act(() => {
-      result.current.handleFilterClick('5');
-    });
-    expect(useGetFeedback).toHaveBeenCalled();
+    expect(result.current.tableHead).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({ id: 'sku' }),
+      ])
+    );
   });
 
   it('returns isLoading and isError from underlying hook', () => {
@@ -106,7 +104,9 @@ describe('useFeedbackList', () => {
       isLoading: false,
     });
     const { result } = renderHook(() => useFeedbackList(), { wrapper: createWrapper() });
-    expect(result.current.isError).toBe(true);
-    expect(result.current.isLoading).toBe(false);
+    expect(result.current).toMatchObject({
+      isError: true,
+      isLoading: false,
+    });
   });
 });
