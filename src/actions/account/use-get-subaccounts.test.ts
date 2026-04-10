@@ -4,7 +4,6 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
 import { useGetSubAccounts } from './use-get-subaccounts';
 
-// ── Mocks ───────────────────────────────────────────────────
 
 const mockRequest = jest.fn();
 
@@ -14,7 +13,6 @@ jest.mock('src/lib/graphql-client', () => ({
   },
 }));
 
-// ── Fixtures ────────────────────────────────────────────────
 
 const mockApiResponse = [
   {
