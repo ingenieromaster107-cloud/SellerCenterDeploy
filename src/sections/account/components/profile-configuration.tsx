@@ -14,9 +14,14 @@ import Button from '@mui/material/Button';
 
 import { FieldsetLegend } from 'src/components';
 import { useTranslate } from 'src/locales/langs/i18n';
+import { EntityType } from 'src/shared/constants/graphql-entity-type';
+import { useGetAttributes } from 'src/actions/attributes/use-attributes';
+import { AttributeCode } from 'src/shared/constants/graphql-attribute-code';
 
 import { toast } from 'src/components/snackbar';
+import { ErrorContent } from 'src/components/error-content';
 import { Form, Field, schemaUtils } from 'src/components/hook-form';
+import { LoadingScreen } from 'src/components/loading-screen/loading-screen';
 
 //---- Define the validation schema for user personal data using Zod
 export type FormPersonalDataValues = z.infer<ReturnType<typeof UserPersonalDataSchema>>;
@@ -26,9 +31,10 @@ export const UserPersonalDataSchema = (t: (key: string) => string) =>
     firstName: z.string().min(1, { error: t('formErrorRequired.firstNameRequired') }),
     lastName: z.string().min(1, { error: t('formErrorRequired.lastNameRequired') }),
     email: schemaUtils.email(),
-    identificationType: z
-      .string()
-      .min(1, { error: t('formErrorRequired.identificationTypeRequired') }),
+    identificationType: z.object({
+      label: z.string().min(1, { error: t('formErrorRequired.identificationTypeRequired') }),
+      value: z.string().min(1, { error: t('formErrorRequired.identificationTypeRequired') }),
+    }),
     identificationNumber: z
       .string()
       .min(1, { error: t('formErrorRequired.identificationNumberRequired') }),
@@ -40,7 +46,10 @@ const defaultPersonalDataValues: FormPersonalDataValues = {
   firstName: '',
   lastName: '',
   email: '',
-  identificationType: '',
+  identificationType: {
+    label: '',
+    value: '',
+  },
   identificationNumber: '',
 };
 //---- Define the validation schema for user personal data using Zod
@@ -50,7 +59,9 @@ export type FormAddressDataValues = z.infer<ReturnType<typeof UserAddressDataSch
 
 export const UserAddressDataSchema = (t: (key: string) => string) =>
   z.object({
-    phoneNumber: schemaUtils.phoneNumber({ isValid: isValidPhoneNumber }),
+    phoneNumber: z
+      .string()
+      .min(10, { error: t('formErrorRequired.phoneNumberRequired') }),
     country: schemaUtils.nullableInput(
       z.string().min(1, { error: t('formErrorRequired.countryRequired') }),
       {
@@ -82,16 +93,30 @@ type ProfileConfigurationProps = {
 export function ProfileConfiguration({ customer }: ProfileConfigurationProps) {
   const { translate } = useTranslate();
 
+  const {
+    attributes,
+    isLoading: isLoadingAttributes,
+    isError: isErrorAttributes,
+  } = useGetAttributes({
+    attributeCode: AttributeCode.TipoIdentificacionUsuario,
+    entityType: EntityType.Customer,
+  });
+
   //---- Validation schema for user personal data and methods for handling the personal data form
   const schemaUserPersonalData = useMemo(() => UserPersonalDataSchema(translate), [translate]);
-  const currentUserPersonalData: FormPersonalDataValues = useMemo(() => ({
+  const currentUserPersonalData: FormPersonalDataValues = useMemo(() => {
+    const option = attributes?.items?.options.find(
+      (attr) => attr.value === customer?.identificationType?.value
+    );
+    return {
       firstName: (customer?.firstname || '').trim(),
       lastName: (customer?.lastname || '').trim(),
       email: customer?.email || '',
-      identificationType: customer?.identificationType?.value || '',
+      identificationType: option || { label: '', value: '' },
       identificationNumber: customer?.identificationNumber?.value || '',
-    }), [customer]);
-  
+    };
+  }, [customer, attributes]);
+
   const methodPersonalData = useForm({
     mode: 'all',
     resolver: zodResolver(schemaUserPersonalData),
@@ -132,7 +157,7 @@ export function ProfileConfiguration({ customer }: ProfileConfigurationProps) {
       zipCode: address?.postcode || '',
     };
   }, [customer]);
-  
+
   const methodAddressData = useForm({
     mode: 'all',
     resolver: zodResolver(schemaUserAddressData),
@@ -150,12 +175,22 @@ export function ProfileConfiguration({ customer }: ProfileConfigurationProps) {
       // TODO: Mutación para actualizar datos en backend
       await new Promise((r) => setTimeout(r, 500));
       toast.success('Update success!');
-      // console.info('DATA', data);
+      console.info('DATA', data);
     } catch (error) {
       console.error(error);
     }
   });
   //---- Validation schema for user personal data and methods for handling the personal data form
+
+  if (isLoadingAttributes) {
+    return <LoadingScreen />;
+  }
+
+  if (isErrorAttributes) {
+    return (
+      <ErrorContent title={translate('noResultsFound')} description={translate('noDataFound')} />
+    );
+  }
 
   return (
     <>
@@ -176,9 +211,22 @@ export function ProfileConfiguration({ customer }: ProfileConfigurationProps) {
                   <Field.Text name="firstName" label={translate('formPlaceholder.firstName')} />
                   <Field.Text name="lastName" label={translate('formPlaceholder.lastName')} />
                   <Field.Text name="email" label={translate('formPlaceholder.email')} />
-                  <Field.Text
+                  <Field.Autocomplete
                     name="identificationType"
                     label={translate('formPlaceholder.identificationType')}
+                    options={
+                      Array.isArray(attributes?.items?.options)
+                        ? attributes.items?.options.map(
+                            (attribute: { label: any; value: any }) => ({
+                              label: attribute.label,
+                              value: attribute.value,
+                            })
+                          )
+                        : []
+                    }
+                    getOptionLabel={(option) => option.label ?? ''}
+                    isOptionEqualToValue={(option, value) => option.value === value?.value}
+                    loading={isLoadingAttributes}
                   />
                   <Field.Text
                     name="identificationNumber"
@@ -210,17 +258,18 @@ export function ProfileConfiguration({ customer }: ProfileConfigurationProps) {
                     gridTemplateColumns: { xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)' },
                   }}
                 >
-                  <Field.Phone
+                  <Field.Text name="phoneNumber"  label={translate('formPlaceholder.phoneNumber')} />
+                  {/* <Field.Phone
                     name="phoneNumber"
                     label={translate('formPlaceholder.phoneNumber')}
-                  />
+                  /> */}
                   <Field.Text name="address" label={translate('formPlaceholder.address')} />
-                  <Field.CountrySelect
+                  {/*<Field.CountrySelect
                     name="country"
                     label={translate('formPlaceholder.country')}
                     placeholder={translate('formPlaceholder.country')}
                     displayValue="code"
-                  />
+                  />*/}
                   <Field.Text name="state" label={translate('formPlaceholder.state')} />
                   <Field.Text name="city" label={translate('formPlaceholder.city')} />
                   <Field.Text name="zipCode" label={translate('formPlaceholder.zipCode')} />
