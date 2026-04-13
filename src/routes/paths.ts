@@ -45,9 +45,6 @@ export const paths = {
       root: `${ROOTS.HOME}/product`,
     },
   },
-  account:{
-    root: ROOTS.ACCOUNT,
-  },
   product: {
     root: ROOTS.PRODUCT,
     load: `${ROOTS.PRODUCT}/load`,
