@@ -1,15 +1,9 @@
-<<<<<<< HEAD
-import { jwtDecode } from 'jwt-decode';
-
-import { CUSTOMER_ID, EXPIRATION_TIME, ACCESS_TOKEN_STORAGE_KEY } from './constant';
-=======
 import type { ICustomer } from 'src/interfaces/customer/customer.interface';
 
-import { paths } from 'src/routes/paths';
+import { jwtDecode } from 'jwt-decode';
 
-import { CUSTOMER_KEY, EXPIRATION_TIME, ACCESS_TOKEN_STORAGE_KEY } from './constant';
+import { CUSTOMER_ID, CUSTOMER_KEY, EXPIRATION_TIME, ACCESS_TOKEN_STORAGE_KEY } from './constant';
 
->>>>>>> 23017c8 (Merged PR 35835: Agregar pagina de perfil del cliente seller)
 
 // ----------------------------------------------------------------------
 
