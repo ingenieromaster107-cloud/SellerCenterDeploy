@@ -8,7 +8,6 @@ import Card from '@mui/material/Card';
 import Avatar from '@mui/material/Avatar';
 import CardHeader from '@mui/material/CardHeader';
 
-import { FieldsetLegend } from 'src/components';
 
 // ----------------------------------------------------------------------
 
@@ -19,10 +18,8 @@ type Props = CardProps & {
 };
 
 export function AppTopProducts({ title, subheader, list, sx, ...other }: Props) {
-  console.log(other);
   return (
     <Card sx={sx} {...other}>
-      <FieldsetLegend>Top products</FieldsetLegend>
       <CardHeader title={title} subheader={subheader} />
       <Box
         sx={{

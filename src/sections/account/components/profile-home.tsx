@@ -1,6 +1,6 @@
 'use client';
 
-import type { SxProps, Theme } from '@mui/material/styles';
+import type { Theme, SxProps } from '@mui/material/styles';
 import type { ICustomer } from 'src/interfaces/customer/customer.interface';
 
 import Box from '@mui/material/Box';
@@ -25,7 +25,6 @@ export function ProfileHome({ sx, customer }: ProfileHomeProps) {
 
   const displayName =
     [firstName, lastName].filter(Boolean).join(' ') || customer?.email || translate('customerProfileView.user');
-  
   const email = customer?.email || '';
 
   const identificationType = customer?.identificationType?.label ?? '-';
@@ -59,12 +58,12 @@ export function ProfileHome({ sx, customer }: ProfileHomeProps) {
         </Box>
 
         <Box sx={{ gap: 2, display: 'flex', lineHeight: '24px', alignItems: 'center', mb: 1.0 }}>
-          <Iconify width={24} icon="mdi:card-account-details-outline" />
+          <Iconify width={24} icon="solar:user-id-bold" />
           <Typography variant="body2">{identificationType}</Typography>
         </Box>
 
         <Box sx={{ gap: 2, display: 'flex', lineHeight: '24px', alignItems: 'center' }}>
-          <Iconify width={24} icon="mdi:identifier" />
+          <Iconify width={24} icon="solar:tag-horizontal-bold-duotone" />
           <Typography variant="body2">{identificationNumber}</Typography>
         </Box>
       </Box>
