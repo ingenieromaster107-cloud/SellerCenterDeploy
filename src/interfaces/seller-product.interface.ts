@@ -1,11 +1,12 @@
+import type { PageInfo } from './graphql/graphql-shared.interfaces';
+
 export interface SellerProductsResponseInterface {
   sellerProducts: {
     items: ItemsProducsInterface[];
     total_count: number;
-    page_info: PageInfoInterface;
+    page_info: PageInfo;
   };
 }
-
 
 export interface ItemsProducsInterface {
   id: number;
@@ -18,7 +19,7 @@ export interface ItemsProducsInterface {
   rating_summary: number;
   thumbnail: ThumbnailProductInterface;
   custom_attributes_info: CustomAttributesInfo;
-};
+}
 
 export interface PriceRangeInterface {
   minimum_price: {
@@ -35,26 +36,20 @@ export interface PriceRangeInterface {
       value: number;
     };
   };
-};
+}
 
 export interface ProductCategoryInterface {
   uid: string;
   name: string;
-};
+}
 
 export interface ThumbnailProductInterface {
   label: string;
   url: string;
-};
-
-export interface PageInfoInterface {
-  current_page: number;
-  page_size: number;
-  total_pages: number;
-};
+}
 
 export interface CustomAttributesInfo {
-    items: { code: string; value: string }[];
+  items: { code: string; value: string }[];
 }
 
 export interface ProductListInterface {
@@ -69,4 +64,4 @@ export interface ProductListInterface {
   stock: number;
   inStock: boolean;
   rating: number;
-};
+}
