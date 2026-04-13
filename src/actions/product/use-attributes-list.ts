@@ -1,6 +1,6 @@
 'use client';
 
-import type { AttributeSetAttributesResponse, AttributesListResponse } from 'src/interfaces';
+import type { AttributesListResponse, AttributeSetAttributesResponse } from 'src/interfaces';
 
 import { useMemo } from 'react';
 import { useQuery } from '@tanstack/react-query';
@@ -24,7 +24,7 @@ export function useAttributesList() {
   const { data: setData, isLoading: setLoading } = useQuery({
     queryKey: ['graphql', 'attributeSetAttributes', ATTRIBUTE_SET_ID],
     queryFn: () =>
-      graphql.request<AttributeSetAttributesResponse>(ATTRIBUTE_SET_ATTRIBUTES_QUERY, {
+      graphql.request<AttributeSetAttributesResponse, { attributeSetId: number; isUserDefined: boolean }>(ATTRIBUTE_SET_ATTRIBUTES_QUERY, {
         attributeSetId: ATTRIBUTE_SET_ID,
         isUserDefined: true,
       }),

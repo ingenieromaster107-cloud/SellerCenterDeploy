@@ -7,8 +7,8 @@ import type {
 
 import { GraphQLService } from 'src/lib/graphql-client';
 
-import { CREATE_SIMPLE_PRODUCT_MUTATION } from './graphql';
 import { checkSkuExists } from './check-sku-exists';
+import { CREATE_SIMPLE_PRODUCT_MUTATION } from './graphql';
 
 /**
  * Envía las variables ya armadas a la mutation GraphQL de crear producto simple.

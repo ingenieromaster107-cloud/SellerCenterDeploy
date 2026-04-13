@@ -26,13 +26,13 @@ import { useToolbarSettings, CustomGridActionsCellItem } from 'src/components/cu
 
 import { PRODUCT_STOCK_OPTIONS } from 'src/sections/product/constants/product-constants';
 
+import { ProductTypeSelectorDialog } from '../components/product-type-selector-dialog';
 import {
   RenderCellSku,
   RenderCellStock,
   RenderCellPrice,
   RenderCellProduct,
 } from '../components/product-table-row';
-import { ProductTypeSelectorDialog } from '../components/product-type-selector-dialog';
 
 // ----------------------------------------------------------------------
 

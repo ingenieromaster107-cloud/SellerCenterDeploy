@@ -19,11 +19,12 @@ import InputAdornment from '@mui/material/InputAdornment';
 import { paths } from 'src/routes/paths';
 import { useRouter } from 'src/routes/hooks';
 
+import { useSimpleProductPayload } from 'src/hooks/product';
+
 import { useTranslate } from 'src/locales';
 import { HomeContent } from 'src/layouts/home';
 import { useCategories } from 'src/actions/category/use-categories';
 import { useCreateProduct } from 'src/actions/product/use-create-product';
-import { useSimpleProductPayload } from 'src/hooks/product';
 
 import { toast } from 'src/components/snackbar';
 import { Form, Field } from 'src/components/hook-form';
