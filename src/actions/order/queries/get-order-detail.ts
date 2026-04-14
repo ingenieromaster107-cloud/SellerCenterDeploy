@@ -1,15 +1,12 @@
-'use client';
+import { gql } from "graphql-request";
 
-import { gql } from 'graphql-request';
-
-export const GET_ORDERS = gql`
-  query GetSellerOrders($pageSize: Int!, $currentPage: Int!) {
-    sellerOrders(pageSize: $pageSize, currentPage: $currentPage) {
+export const GET_ORDER_DETAIL = gql`
+  query GetSellerOrders($increment_id: String!) {
+    sellerOrders(increment_id: $increment_id) {
       total_count
       user_message
       items {
         status
-        created_at
         total {
           grand_total {
             value
@@ -66,9 +63,12 @@ export const GET_ORDERS = gql`
           product_sale_price {
             value
           }
-          row_total
           product_name
           quantity_invoiced
+          selected_options {
+            label
+            value
+          }
         }
         order_number
         payment_methods {
@@ -81,6 +81,32 @@ export const GET_ORDERS = gql`
           lastname
         }
         grand_total
+        order_date
+        shipping_address {
+          city
+          firstname
+          lastname
+          postcode
+          prefix
+          region
+          street
+          suffix
+          telephone
+        }
+        order_track_number
+        shipping_method
+        shippingDate
+        billing_address {
+          city
+          firstname
+          lastname
+          postcode
+          prefix
+          region
+          street
+          suffix
+          telephone
+        }
       }
       page_info {
         current_page

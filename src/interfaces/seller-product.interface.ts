@@ -1,10 +1,10 @@
-import type { PageInfo } from './graphql/graphql-shared.interfaces';
+import type { PageListInfo } from './graphql/graphql-shared.interfaces';
 
 export interface SellerProductsResponseInterface {
   sellerProducts: {
     items: ItemsProducsInterface[];
     total_count: number;
-    page_info: PageInfo;
+    page_info: PageListInfo;
   };
 }
 

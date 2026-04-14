@@ -43,7 +43,6 @@ export function ProductListView() {
   const toolbarOptions = useToolbarSettings();
 
   const [totalCounts, setTotalCounts] = useState(0);
-  // Estado para paginación
 
   const [paginationModel, setPaginationModel] = useState({ pageSize: 10, page: 0 });
 
