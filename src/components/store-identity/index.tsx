@@ -1,4 +1,4 @@
-import type { ICustomer } from 'src/interfaces/customer/customer.interface';
+import type { Customer } from 'src/interfaces/customer/customer.interface';
 
 import Box from '@mui/material/Box';
 import Avatar from '@mui/material/Avatar';
@@ -17,7 +17,7 @@ import { AnimateBorder } from 'src/components/animate';
 import { SvgColor } from '../svg-color';
 
 interface Props {
-  user: ICustomer;
+  user: Customer;
   onSettingsClick?: () => void;
 }
 

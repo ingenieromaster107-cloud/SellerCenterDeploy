@@ -29,7 +29,9 @@ export const GET_CUSTOMER = gql`
           region_id
           region_code
         }
+        country_code
         telephone
+        postcode
         default_billing
         default_shipping
       }

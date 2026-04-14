@@ -1,4 +1,4 @@
-export interface IAttributesResponse {
+export interface AttributesResponse {
   customAttributeMetadataV2: {
     items: {
       code: string;

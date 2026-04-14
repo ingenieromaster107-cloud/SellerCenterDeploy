@@ -1,4 +1,4 @@
-export interface IAttributes {
+export interface Attributes {
   items: {
     code: string;
     label: string;

@@ -1,11 +1,11 @@
 
-import type { ICustomer } from 'src/interfaces/customer/customer.interface';
-import type { IcustomerResponse } from 'src/interfaces/customer/customer-response.interface';
+import type { Customer } from 'src/interfaces/customer/customer.interface';
+import type { CustomerResponse } from 'src/interfaces/customer/customer-response.interface';
 
-export function CustomerAdapter(data: IcustomerResponse): ICustomer {
+export function CustomerAdapter(data: CustomerResponse): Customer {
   if (!data || !('customer' in data)) {
     console.warn('No found customer info');
-    return {} as ICustomer;
+    return {} as Customer;
   }
 
   const addresses = data.customer.addresses ?? [];

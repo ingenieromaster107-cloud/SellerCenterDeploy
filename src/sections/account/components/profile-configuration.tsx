@@ -1,9 +1,9 @@
-import type { ICustomer } from 'src/interfaces/customer/customer.interface';
+import type { Customer } from 'src/interfaces/customer/customer.interface';
 
 import * as z from 'zod';
-import { useMemo } from 'react';
-import { useForm } from 'react-hook-form';
+import { useEffect, useMemo, useState } from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useForm, useFormContext, useWatch } from 'react-hook-form';
 import { isValidPhoneNumber } from 'react-phone-number-input/input';
 
 import Box from '@mui/material/Box';
@@ -14,7 +14,10 @@ import Button from '@mui/material/Button';
 
 import { FieldsetLegend } from 'src/components';
 import { useTranslate } from 'src/locales/langs/i18n';
+import { useGetCities } from 'src/actions/cities/use-cities';
+import { useGetRegions } from 'src/actions/regions/use-regions';
 import { EntityType } from 'src/shared/constants/graphql-entity-type';
+import { useGetCountries } from 'src/actions/countries/use-countries';
 import { useGetAttributes } from 'src/actions/attributes/use-attributes';
 import { AttributeCode } from 'src/shared/constants/graphql-attribute-code';
 
@@ -59,18 +62,20 @@ export type FormAddressDataValues = z.infer<ReturnType<typeof UserAddressDataSch
 
 export const UserAddressDataSchema = (t: (key: string) => string) =>
   z.object({
-    phoneNumber: z
-      .string()
-      .min(10, { error: t('formErrorRequired.phoneNumberRequired') }),
-    country: schemaUtils.nullableInput(
-      z.string().min(1, { error: t('formErrorRequired.countryRequired') }),
-      {
-        error: t('formErrorRequired.countryRequired'),
-      }
-    ),
+    phoneNumber: z.string().min(10, { error: t('formErrorRequired.phoneNumberRequired') }),
+    country: z.object({
+      label: z.string().min(1, { error: t('formErrorRequired.countryRequired') }),
+      value: z.string().min(1, { error: t('formErrorRequired.countryRequired') }),
+    }),
     address: z.string().min(1, { error: t('formErrorRequired.addressRequired') }),
-    state: z.string().min(1, { error: t('formErrorRequired.stateRequired') }),
-    city: z.string().min(1, { error: t('formErrorRequired.cityRequired') }),
+    state: z.object({
+      label: z.string().min(1, { error: t('formErrorRequired.stateRequired') }),
+      value: z.string().min(1, { error: t('formErrorRequired.stateRequired') }),
+    }),
+    city: z.object({
+      label: z.string().min(1, { error: t('formErrorRequired.cityRequired') }),
+      value: z.string().min(1, { error: t('formErrorRequired.cityRequired') }),
+    }),
     zipCode: z.string().min(1, { error: t('formErrorRequired.zipCodeRequired') }),
   });
 
@@ -78,19 +83,29 @@ export const updateUserAddressSchema = UserAddressDataSchema((key) => key);
 
 const defaultAddresslDataValues: FormAddressDataValues = {
   phoneNumber: '',
-  country: null,
+  country: {
+    label: '',
+    value: '',
+  },
   address: '',
-  state: '',
-  city: '',
+  state: {
+    label: '',
+    value: '',
+  },
+  city: {
+    label: '',
+    value: '',
+  },
   zipCode: '',
 };
 //---- Define the validation schema for user address data using Zod
 
 type ProfileConfigurationProps = {
-  customer: ICustomer;
+  customer: Customer;
 };
 
 export function ProfileConfiguration({ customer }: ProfileConfigurationProps) {
+  //---- Load necessary data for the profile configuration form
   const { translate } = useTranslate();
 
   const {
@@ -101,6 +116,30 @@ export function ProfileConfiguration({ customer }: ProfileConfigurationProps) {
     attributeCode: AttributeCode.TipoIdentificacionUsuario,
     entityType: EntityType.Customer,
   });
+
+  const { countries, isLoading: isLoadingCountries, isError: isErrorCountries } = useGetCountries();
+  const {
+    regions,
+    isLoading: isLoadingRegions,
+    isError: isErrorRegions,
+  } = useGetRegions(customer.addresss?.country_code || undefined);
+
+  const [regionId, setRegionId] = useState<number>(
+    customer.addresss?.region?.region_id ? Number(customer.addresss.region.region_id) : 0
+  );
+
+  const { cities, isLoading: isLoadingCities, isError: isErrorCities } = useGetCities(regionId);
+
+  const handleChangeState = (event: React.SyntheticEvent<Element, Event>, value: any) => {
+    if (value == null) {
+      setRegionId(0);
+      // methodAddressData.setValue('state', { label: '', value: '' });
+      // methodAddressData.setValue('city', { label: '', value: '' });
+    } else {
+      setRegionId(Number(value.value));
+    }
+  };
+  //---- Load necessary data for the profile configuration form
 
   //---- Validation schema for user personal data and methods for handling the personal data form
   const schemaUserPersonalData = useMemo(() => UserPersonalDataSchema(translate), [translate]);
@@ -145,18 +184,33 @@ export function ProfileConfiguration({ customer }: ProfileConfigurationProps) {
   const schemaUserAddressData = useMemo(() => UserAddressDataSchema(translate), [translate]);
   const currentUserAddressData: FormAddressDataValues = useMemo(() => {
     const address = customer?.addresss || null;
-
+    //country
+    const countryObj = countries?.find((c) => c.id === address?.country_code);
+    const country = countryObj
+      ? { label: countryObj.full_name_locale, value: countryObj.id }
+      : { label: '', value: '' };
+    //country
+    //region
+    const regionObj = regions?.find((r) => r.id === address?.region?.region_id);
+    const state = regionObj
+      ? { label: regionObj.name, value: String(regionObj.id) }
+      : { label: '', value: '' };
+    //region
+    //city
+    const cityObj = cities?.find((c) => c.name === address?.city);
+    const city = cityObj
+      ? { label: cityObj.name, value: String(cityObj.id) }
+      : { label: '', value: '' };
+    //city
     return {
       phoneNumber: address?.telephone || '',
-      country: address?.country_code || '',
+      country,
       address: address?.street?.join(' ') || '',
-      state: address?.region?.region_id
-        ? String(address?.region?.region_id)
-        : address?.region?.region_code || '',
-      city: address?.city || '',
+      state,
+      city,
       zipCode: address?.postcode || '',
     };
-  }, [customer]);
+  }, [customer, countries, regions, cities]);
 
   const methodAddressData = useForm({
     mode: 'all',
@@ -182,11 +236,16 @@ export function ProfileConfiguration({ customer }: ProfileConfigurationProps) {
   });
   //---- Validation schema for user personal data and methods for handling the personal data form
 
-  if (isLoadingAttributes) {
+  // const selectedState = useWatch({
+  //   control: methodAddressData.control,
+  //   name: 'state',
+  // });
+
+  if (isLoadingAttributes || isLoadingCountries) {
     return <LoadingScreen />;
   }
 
-  if (isErrorAttributes) {
+  if (isErrorAttributes || isErrorCountries) {
     return (
       <ErrorContent title={translate('noResultsFound')} description={translate('noDataFound')} />
     );
@@ -258,7 +317,7 @@ export function ProfileConfiguration({ customer }: ProfileConfigurationProps) {
                     gridTemplateColumns: { xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)' },
                   }}
                 >
-                  <Field.Text name="phoneNumber"  label={translate('formPlaceholder.phoneNumber')} />
+                  <Field.Text name="phoneNumber" label={translate('formPlaceholder.phoneNumber')} />
                   {/* <Field.Phone
                     name="phoneNumber"
                     label={translate('formPlaceholder.phoneNumber')}
@@ -270,8 +329,52 @@ export function ProfileConfiguration({ customer }: ProfileConfigurationProps) {
                     placeholder={translate('formPlaceholder.country')}
                     displayValue="code"
                   />*/}
-                  <Field.Text name="state" label={translate('formPlaceholder.state')} />
-                  <Field.Text name="city" label={translate('formPlaceholder.city')} />
+                  <Field.Autocomplete
+                    name="country"
+                    label={translate('formPlaceholder.country')}
+                    options={
+                      Array.isArray(countries)
+                        ? countries.map((country: { full_name_locale: any; id: any }) => ({
+                            label: country.full_name_locale,
+                            value: country.id,
+                          }))
+                        : []
+                    }
+                    getOptionLabel={(option) => option.label ?? ''}
+                    isOptionEqualToValue={(option, value) => option.value === value?.value}
+                    loading={isLoadingCountries}
+                  />
+                  <Field.Autocomplete
+                    name="state"
+                    label={translate('formPlaceholder.state')}
+                    options={
+                      Array.isArray(regions)
+                        ? regions.map((region: { id: any; name: any }) => ({
+                            label: region.name,
+                            value: region.id,
+                          }))
+                        : []
+                    }
+                    getOptionLabel={(option) => option.label ?? ''}
+                    isOptionEqualToValue={(option, value) => option.value === value?.value}
+                    loading={isLoadingRegions}
+                    onCustomChange={handleChangeState}
+                  />
+                  <Field.Autocomplete
+                    name="city"
+                    label={translate('formPlaceholder.city')}
+                    options={
+                      Array.isArray(cities)
+                        ? cities.map((city: { id: any; name: any }) => ({
+                            label: city.name,
+                            value: city.id,
+                          }))
+                        : []
+                    }
+                    getOptionLabel={(option) => option.label ?? ''}
+                    isOptionEqualToValue={(option, value) => option.value === value?.value}
+                    loading={isLoadingCities}
+                  />
                   <Field.Text name="zipCode" label={translate('formPlaceholder.zipCode')} />
                 </Box>
 

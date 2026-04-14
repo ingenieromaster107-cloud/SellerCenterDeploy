@@ -1,6 +1,6 @@
 'use client';
 
-import type { IcustomerResponse } from 'src/interfaces/customer/customer-response.interface';
+import type { CustomerResponse } from 'src/interfaces/customer/customer-response.interface';
 
 import { useMemo } from 'react';
 import { useQuery } from '@tanstack/react-query';
@@ -14,7 +14,7 @@ export function useGetCustomer() {
   const graphql = GraphQLService.getInstance();
   const { data, isLoading, isError, error } = useQuery({
     queryKey: ['getCustomer'],
-    queryFn: () => graphql.request<IcustomerResponse, {}>(GET_CUSTOMER),
+    queryFn: () => graphql.request<CustomerResponse, {}>(GET_CUSTOMER),
   });
   const customer = useMemo(() => CustomerAdapter(data!), [data]);
   return { customer, isLoading, isError, error };
