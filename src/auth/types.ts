@@ -1,3 +1,6 @@
+/* c8 ignore file */
+/* istanbul ignore file */
+
 export type UserType = Record<string, any> | null;
 
 export type AuthState = {
@@ -10,5 +13,4 @@ export type AuthContextValue = {
   loading: boolean;
   authenticated: boolean;
   unauthenticated: boolean;
-  checkUserSession?: () => Promise<void>;
 };
