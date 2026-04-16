@@ -2,7 +2,7 @@ import { sellerSummaryDashboardAdapter } from './seller-summary-dashboard-adapte
 
 describe('sellerSummaryDashboardAdapter', () => {
   it('returns empty summary payload when source data is undefined', () => {
-    const result = sellerSummaryDashboardAdapter(undefined);
+    const result = sellerSummaryDashboardAdapter();
 
     expect(result).toMatchObject({
       success: false,
