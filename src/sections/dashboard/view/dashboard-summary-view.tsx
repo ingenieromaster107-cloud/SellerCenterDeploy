@@ -116,6 +116,11 @@ export function DashboardSummaryView() {
 
   const showPlaceholder = isLoading || !hasLiveData;
   const summaryData = summary.data ?? fallbackSummaryData;
+  const selectedDays = Math.max(
+    dayjs(appliedDateRange.toDate).diff(dayjs(appliedDateRange.fromDate), 'day') + 1,
+    1
+  );
+  const selectedDaysLabel = `Últimos ${selectedDays} ${selectedDays === 1 ? 'día' : 'días'}`;
 
   const summaryCards = [
     {
@@ -154,7 +159,7 @@ export function DashboardSummaryView() {
     {
       title: translate('dashboardModule.summary.metrics.grossSales.title'),
       value: showPlaceholder ? '$ 0' : fCurrency(summaryData.sales_account.total_sales),
-      subtitle: translate('dashboardModule.summary.metrics.grossSales.subtitle'),
+      subtitle: selectedDaysLabel,
       icon: 'solar:tag-horizontal-bold-duotone',
     },
     {
