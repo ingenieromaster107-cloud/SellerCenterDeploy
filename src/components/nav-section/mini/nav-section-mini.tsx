@@ -18,7 +18,6 @@ export function NavSectionMini({
   render,
   className,
   slotProps,
-  checkPermissions,
   enabledRootRedirect,
   cssVars: overridesVars,
   ...other
@@ -41,7 +40,6 @@ export function NavSectionMini({
             cssVars={cssVars}
             items={group.items}
             slotProps={slotProps}
-            checkPermissions={checkPermissions}
             enabledRootRedirect={enabledRootRedirect}
           />
         ))}
@@ -57,7 +55,6 @@ function Group({
   render,
   cssVars,
   slotProps,
-  checkPermissions,
   enabledRootRedirect,
 }: NavGroupProps) {
   return (
@@ -71,7 +68,6 @@ function Group({
             render={render}
             cssVars={cssVars}
             slotProps={slotProps}
-            checkPermissions={checkPermissions}
             enabledRootRedirect={enabledRootRedirect}
           />
         ))}

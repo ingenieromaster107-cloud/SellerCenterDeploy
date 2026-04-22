@@ -13,12 +13,6 @@ import { varBounce, MotionContainer } from 'src/components/animate';
 
 // ----------------------------------------------------------------------
 
-/**
- * NOTE:
- * This component is for reference only.
- * You can customize the logic and conditions to better suit your application's requirements.
- */
-
 export type RoleBasedGuardProp = {
   sx?: SxProps<Theme>;
   currentRole: string;

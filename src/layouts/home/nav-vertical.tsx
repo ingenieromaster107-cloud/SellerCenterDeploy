@@ -42,7 +42,6 @@ export function NavVertical({
   className,
   isNavMini,
   onToggleNav,
-  checkPermissions,
   layoutQuery = 'md',
   ...other
 }: NavVerticalProps) {
@@ -78,7 +77,6 @@ export function NavVertical({
         <NavSectionVertical
           data={data}
           cssVars={cssVars}
-          checkPermissions={checkPermissions}
           sx={{ px: 2, flex: '1 1 auto' }}
         />
 
@@ -99,7 +97,6 @@ export function NavVertical({
       <NavSectionMini
         data={data}
         cssVars={cssVars}
-        checkPermissions={checkPermissions}
         sx={[
           (theme) => ({
             ...theme.mixins.hideScrollY,

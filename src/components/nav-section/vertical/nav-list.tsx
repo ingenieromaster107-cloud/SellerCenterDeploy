@@ -19,7 +19,6 @@ export function NavList({
   depth,
   render,
   slotProps,
-  checkPermissions,
   enabledRootRedirect,
 }: NavListProps) {
   const pathname = usePathname();
@@ -76,16 +75,10 @@ export function NavList({
           render={render}
           depth={depth}
           slotProps={slotProps}
-          checkPermissions={checkPermissions}
           enabledRootRedirect={enabledRootRedirect}
         />
       </NavCollapse>
     );
-
-  // Hidden item by role
-  if (data.allowedRoles && checkPermissions && checkPermissions(data.allowedRoles)) {
-    return null;
-  }
 
   return (
     <NavLi
@@ -111,7 +104,6 @@ function NavSubList({
   render,
   depth = 0,
   slotProps,
-  checkPermissions,
   enabledRootRedirect,
 }: NavSubListProps) {
   return (
@@ -123,7 +115,6 @@ function NavSubList({
           render={render}
           depth={depth + 1}
           slotProps={slotProps}
-          checkPermissions={checkPermissions}
           enabledRootRedirect={enabledRootRedirect}
         />
       ))}

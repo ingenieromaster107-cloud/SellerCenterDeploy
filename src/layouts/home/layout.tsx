@@ -52,8 +52,6 @@ export function HomeLayout({
 }: HomeLayoutProps) {
   const theme = useTheme();
 
-  const { user } = useAuthContext();
-
   const settings = useSettingsContext();
 
   const navVars = dashboardNavColorVars(theme, settings.state.navColor, settings.state.navLayout);
@@ -67,9 +65,6 @@ export function HomeLayout({
   const isNavMini = settings.state.navLayout === 'mini';
   const isNavHorizontal = settings.state.navLayout === 'horizontal';
   const isNavVertical = isNavMini || settings.state.navLayout === 'vertical';
-
-  const canDisplayItemByRole = (allowedRoles: NavItemProps['allowedRoles']): boolean =>
-    !allowedRoles?.includes(user?.role ?? '');
 
   const renderHeader = () => {
     const headerSlotProps: HeaderSectionProps['slotProps'] = {
@@ -97,7 +92,6 @@ export function HomeLayout({
           data={navData}
           layoutQuery={layoutQuery}
           cssVars={navVars.section}
-          checkPermissions={canDisplayItemByRole}
         />
       ) : null,
       leftArea: (
@@ -112,7 +106,6 @@ export function HomeLayout({
             open={open}
             onClose={onClose}
             cssVars={navVars.section}
-            checkPermissions={canDisplayItemByRole}
           />
 
           {/** @slot Logo */}
@@ -166,7 +159,6 @@ export function HomeLayout({
       isNavMini={isNavMini}
       layoutQuery={layoutQuery}
       cssVars={navVars.section}
-      checkPermissions={canDisplayItemByRole}
       onToggleNav={() =>
         settings.setField(
           'navLayout',

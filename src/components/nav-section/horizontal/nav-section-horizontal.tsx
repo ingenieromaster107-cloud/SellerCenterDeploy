@@ -19,7 +19,6 @@ export function NavSectionHorizontal({
   render,
   className,
   slotProps,
-  checkPermissions,
   enabledRootRedirect,
   cssVars: overridesVars,
   ...other
@@ -56,7 +55,6 @@ export function NavSectionHorizontal({
               cssVars={cssVars}
               items={group.items}
               slotProps={slotProps}
-              checkPermissions={checkPermissions}
               enabledRootRedirect={enabledRootRedirect}
             />
           ))}
@@ -73,7 +71,6 @@ function Group({
   render,
   cssVars,
   slotProps,
-  checkPermissions,
   enabledRootRedirect,
 }: NavGroupProps) {
   return (
@@ -87,7 +84,6 @@ function Group({
             render={render}
             cssVars={cssVars}
             slotProps={slotProps}
-            checkPermissions={checkPermissions}
             enabledRootRedirect={enabledRootRedirect}
           />
         ))}

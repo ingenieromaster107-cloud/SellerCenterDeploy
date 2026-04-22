@@ -20,7 +20,6 @@ export function NavHorizontal({
   sx,
   data,
   className,
-  checkPermissions,
   layoutQuery = 'md',
   ...other
 }: NavHorizontalProps) {
@@ -58,7 +57,10 @@ export function NavHorizontal({
           WebkitBackdropFilter: `blur(var(--layout-header-blur))`,
         }}
       >
-        <NavSectionHorizontal data={data} checkPermissions={checkPermissions} {...other} />
+        <NavSectionHorizontal
+          data={data}
+          {...other}
+        />
       </Box>
     </Box>
   );
