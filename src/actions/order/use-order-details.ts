@@ -4,7 +4,7 @@ import { useQuery } from '@tanstack/react-query';
 
 import { GraphQLService } from 'src/lib/graphql-client';
 
-import { GET_ORDER_DETAIL } from './queries/get-order-data';
+import { GET_ORDER_DETAIL } from './queries/get-order-detail';
 
 export function useGetOrderDetail(incrementId: string) {
   const variables = { increment_id: incrementId };
@@ -12,6 +12,7 @@ export function useGetOrderDetail(incrementId: string) {
 
   return useQuery({
     queryKey: ['graphql:getOrderDetail', variables],
-    queryFn: async () => graphql.request<DataDetail, { increment_id: string }>(GET_ORDER_DETAIL, variables),
+    queryFn: async () =>
+      graphql.request<DataDetail, { increment_id: string }>(GET_ORDER_DETAIL, variables),
   });
 }

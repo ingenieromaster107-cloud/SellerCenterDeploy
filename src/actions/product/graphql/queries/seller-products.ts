@@ -3,8 +3,8 @@
 import { gql } from 'graphql-request';
 
 export const SELLER_PRODUCTS_QUERY = gql`
-  query SellerProducts {
-    sellerProducts(filter: {}) {
+  query SellerProducts($pageSize: Int, $currentPage: Int) {
+    sellerProducts(filter: {}, pageSize: $pageSize, currentPage: $currentPage) {
       items {
         name
         sku

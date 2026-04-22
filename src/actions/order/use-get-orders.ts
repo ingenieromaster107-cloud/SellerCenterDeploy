@@ -1,4 +1,5 @@
 import type { DataList } from 'src/interfaces/order';
+import type { PageListInfo } from 'src/interfaces/graphql/graphql-shared.interfaces';
 
 import { useQuery } from '@tanstack/react-query';
 
@@ -6,13 +7,16 @@ import { GraphQLService } from 'src/lib/graphql-client';
 
 import { GET_ORDERS } from './queries/get-order-data';
 
-export function useGetOrders(pageSize: number, currentPage: number) {
-  const variables = { page_size: pageSize, current_page: currentPage };
+export function useGetOrders(productsPerPage: PageListInfo) {
   const graphql = GraphQLService.getInstance();
 
-  return useQuery({
-    queryKey: ['graphql:getOrders', variables],
-    queryFn: async () =>
-      graphql.request<DataList, { page_size: number; current_page: number }>(GET_ORDERS, variables),
+  const { data, isLoading, isError } = useQuery({
+    queryKey: ['graphql:getOrders', productsPerPage],
+    queryFn: async () => graphql.request<DataList, PageListInfo>(GET_ORDERS, productsPerPage),
   });
+
+  const totalCount: number = data?.sellerOrders?.total_count || 0;
+  const pageInfo: PageListInfo | undefined = data?.sellerOrders?.page_info;
+
+  return { data, isLoading, isError, pageInfo, totalCount };
 }

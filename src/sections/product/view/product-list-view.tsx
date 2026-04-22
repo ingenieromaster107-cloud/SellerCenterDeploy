@@ -1,6 +1,7 @@
 ﻿'use client';
 
 import type { GridColDef } from '@mui/x-data-grid';
+import type { LangCode } from 'src/locales/langs/i18n';
 import type { ProductListInterface } from 'src/interfaces';
 
 import { useMemo, useState, useEffect, useCallback } from 'react';
@@ -8,6 +9,7 @@ import { useMemo, useState, useEffect, useCallback } from 'react';
 import Card from '@mui/material/Card';
 import Button from '@mui/material/Button';
 import { useTheme } from '@mui/material/styles';
+import { esES } from '@mui/x-data-grid/locales';
 import { DataGrid, gridClasses } from '@mui/x-data-grid';
 
 import { paths } from 'src/routes/paths';
@@ -34,19 +36,39 @@ import {
   RenderCellProduct,
 } from '../components/product-table-row';
 
-// ----------------------------------------------------------------------
-
 export function ProductListView() {
   const router = useRouter();
   const { translate } = useTranslate();
+
+  const legnuageStored = localStorage.getItem('i18n_lang') as LangCode | null;
+
   const toolbarOptions = useToolbarSettings();
-  const { products, isLoading, isError } = useGetProducts();
-  const [tableData, setTableData] = useState<ProductListInterface[]>(products);
-  const [openTypeSelector, setOpenTypeSelector] = useState(false);
+
+  const [totalCounts, setTotalCounts] = useState(0);
+
+  const [paginationModel, setPaginationModel] = useState({ pageSize: 10, page: 0 });
+
+  const productsPerPage = useMemo(
+    () => ({
+      pageSize:
+        paginationModel.pageSize === -1 && totalCounts > 0 ? totalCounts : paginationModel.pageSize,
+      currentPage: paginationModel.pageSize === -1 ? 1 : paginationModel.page + 1,
+    }),
+    [paginationModel.pageSize, paginationModel.page, totalCounts]
+  );
+
+  const { products, isError, totalCount, isFetching } = useGetProducts(productsPerPage);
+
+  const [tableData, setTableData] = useState<ProductListInterface[]>([]);
+
+   const [openTypeSelector, setOpenTypeSelector] = useState(false);
 
   useEffect(() => {
     setTableData(products);
-  }, [products]);
+    if (totalCount !== totalCounts && totalCount > 0) {
+      setTotalCounts(totalCount);
+    }
+  }, [products, totalCount, totalCounts]);
 
   const handleDeleteRow = useCallback((id: number) => {
     setTableData((prev) => prev.filter((row) => row.id !== id));
@@ -88,7 +110,6 @@ export function ProductListView() {
         }
         sx={{ mb: { xs: 3, md: 5 } }}
       />
-
       <Card
         sx={{
           minHeight: 640,
@@ -103,28 +124,34 @@ export function ProductListView() {
             title={translate('productsNotAvailable')}
             description={translate('productsLoadError')}
           />
-          ) : (
-            <DataGrid
-              {...toolbarOptions.settings}
-              rows={tableData}
-              columns={columns}
-              loading={isLoading}
-              getRowHeight={() => 'auto'}
-              pageSizeOptions={[5, 10, 20, { value: -1, label: translate('mui.common.all') }]}
-              initialState={{ pagination: { paginationModel: { pageSize: 10 } } }}
-              slots={{
-                noRowsOverlay: () => <EmptyContent />,
-                noResultsOverlay: () => <EmptyContent title={translate('noResultsFound')} />,
-              }}
-              sx={{
-                [`& .${gridClasses.cell}`]: {
-                  display: 'flex',
-                  alignItems: 'center',
-                },
-              }}
-            />
-          )
-        }
+        ) : (
+          <DataGrid
+            {...toolbarOptions.settings}
+            {...(legnuageStored === 'es'
+              ? { localeText: esES.components.MuiDataGrid.defaultProps.localeText }
+              : {})}
+            rows={tableData}
+            columns={columns}
+            loading={isFetching}
+            getRowHeight={() => 'auto'}
+            pageSizeOptions={[5, 10, 20, { value: -1, label: translate('mui.common.all') }]}
+            pagination
+            paginationMode="server"
+            rowCount={totalCount}
+            paginationModel={paginationModel}
+            onPaginationModelChange={setPaginationModel}
+            slots={{
+              noRowsOverlay: () => <EmptyContent />,
+              noResultsOverlay: () => <EmptyContent title={translate('noResultsFound')} />,
+            }}
+            sx={{
+              [`& .${gridClasses.cell}`]: {
+                display: 'flex',
+                alignItems: 'center',
+              },
+            }}
+          />
+        )}
       </Card>
 
       <ProductTypeSelectorDialog
@@ -155,10 +182,7 @@ const useGetColumns = ({ onDeleteRow, translate }: UseGetColumnsProps) => {
         minWidth: 300,
         hideable: false,
         renderCell: (params) => (
-          <RenderCellProduct
-            params={params}
-            href={paths.product.details(params.row.id)}
-          />
+          <RenderCellProduct params={params} href={paths.product.details(params.row.id)} />
         ),
       },
       {
