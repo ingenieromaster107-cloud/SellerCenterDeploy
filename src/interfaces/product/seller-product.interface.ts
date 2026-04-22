@@ -1,4 +1,5 @@
-import type { PageListInfo } from './graphql/graphql-shared.interfaces';
+import type { PageListInfo } from "../graphql/graphql-shared.interfaces";
+
 
 export interface SellerProductsResponseInterface {
   sellerProducts: {
