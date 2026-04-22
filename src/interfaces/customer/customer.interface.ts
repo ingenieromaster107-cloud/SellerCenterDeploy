@@ -25,4 +25,5 @@ export interface Customer {
     default_billing: boolean;
     default_shipping: boolean;
   };
+  role?: string;
 }
