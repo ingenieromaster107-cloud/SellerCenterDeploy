@@ -2,6 +2,7 @@
 
 import type { Dayjs } from 'dayjs';
 import type { Prices, TotalDetail } from './order-detail';
+import type { PageListInfo } from '../graphql/graphql-shared.interfaces';
 
 // Response returned by the GraphQL API.
 export interface OrderListResponse {
@@ -16,7 +17,7 @@ export interface SellerOrdersList {
   total_count: number;
   user_message: any;
   items: ItemList[];
-  page_info: PageInfoList;
+  page_info: PageListInfo;
 }
 
 export interface ItemList {
@@ -62,12 +63,6 @@ export interface PaymentMethodList {
 export interface CustomerInfoList {
   firstname: string;
   lastname: string;
-}
-
-export interface PageInfoList {
-  current_page: number;
-  page_size: number;
-  total_pages: number;
 }
 
 // Types for adapted data
