@@ -378,7 +378,8 @@
     "personalData": "Datos personales"
   },
   "formErrorRequired": {
-    "nameRequired": "Nombre es requerido",
+    "firstNameRequired": "Nombre es requerido",
+    "lastNameRequired": "Apellido es requerido",
     "identificationTypeRequired": "Tipo de identificación es requerido",
     "identificationNumberRequired": "Número de identificación es requerido",
     "avatarRequired": "Avatar es requerido",
@@ -399,7 +400,7 @@
     "acceptTyC": "Debes aceptar los términos y condiciones"
   },
   "formPlaceholder": {
-    "name": "Nombre",
+    "firstName": "Nombre",
     "lastName": "Apellido",
     "email": "Correo electrónico",
     "identificationType": "Tipo de identificación",
@@ -412,6 +413,7 @@
     "zipCode": "Código postal",
     "oldPassword": "Contraseña antigua",
     "newPassword": "Nueva contraseña",
+    "personalInformation": "Información personal",
     "confirmNewPassword": "Confirmar nueva contraseña",
     "btnSave": "Guardar",
     "btnLoad": "Cargar",

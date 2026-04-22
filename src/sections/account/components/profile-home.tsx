@@ -1,7 +1,7 @@
 'use client';
 
 import type { Theme, SxProps } from '@mui/material/styles';
-import type { ICustomer } from 'src/interfaces/customer/customer.interface';
+import type { Customer } from 'src/interfaces/customer/customer.interface';
 
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
@@ -15,7 +15,7 @@ import { Iconify } from 'src/components/iconify';
 
 type ProfileHomeProps = {
   sx?: SxProps<Theme>;
-  customer: ICustomer;
+  customer: Customer;
 };
 
 export function ProfileHome({ sx, customer }: ProfileHomeProps) {
@@ -27,8 +27,8 @@ export function ProfileHome({ sx, customer }: ProfileHomeProps) {
     [firstName, lastName].filter(Boolean).join(' ') || customer?.email || translate('customerProfileView.user');
   const email = customer?.email || '';
 
-  const identificationType = customer?.identificationType?.[0]?.code ?? '-';
-  const identificationNumber = customer?.identificationNumber?.[0]?.value ?? '-';
+  const identificationType = customer?.identificationType?.label ?? '-';
+  const identificationNumber = customer?.identificationNumber?.value ?? '-';
 
   const renderPostCard = () => (
     <Card sx={{ p: 3 }}>

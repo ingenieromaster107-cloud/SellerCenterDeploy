@@ -1,7 +1,7 @@
-import type { ICustomer } from "src/interfaces/customer/customer.interface";
+import type { Customer } from "src/interfaces/customer/customer.interface";
 
 
-export const getInitials = (user: Readonly<ICustomer>) => {
+export const getInitials = (user: Readonly<Customer>) => {
   const firstName = user?.firstname ?? '';
   const lastName = user?.lastname ?? '';
   const email = user?.email ?? '';

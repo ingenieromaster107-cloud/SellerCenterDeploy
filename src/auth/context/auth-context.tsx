@@ -1,6 +1,6 @@
 'use client';
 
-import type { ICustomer } from 'src/interfaces/customer/customer.interface';
+import type { Customer } from 'src/interfaces/customer/customer.interface';
 
 import { createContext } from 'react';
 
@@ -9,7 +9,7 @@ import { createContext } from 'react';
 export type AuthStatus = 'checking' | 'authenticated' | 'not-authenticated';
 
 interface AuthContextProps {
-  user: ICustomer | null | undefined;
+  user: Customer | null | undefined;
   authStatus: AuthStatus;
   loading: boolean;
   authenticated: boolean;

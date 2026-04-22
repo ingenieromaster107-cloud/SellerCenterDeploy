@@ -1,4 +1,4 @@
-import type { ICustomer } from 'src/interfaces/customer/customer.interface';
+ import type { CustomerResponse as Customer } from 'src/interfaces/customer/customer-response.interface';
 
 import { jwtDecode } from 'jwt-decode';
 
@@ -45,7 +45,7 @@ export function setSession(accessToken: string | null) {
 }
 
 
-export async function setCustomerStorage(customer: ICustomer | null) {
+export async function setCustomerStorage(customer: Customer | null) {
   try {
     if (customer) {
       localStorage.setItem(CUSTOMER_KEY, JSON.stringify(customer));

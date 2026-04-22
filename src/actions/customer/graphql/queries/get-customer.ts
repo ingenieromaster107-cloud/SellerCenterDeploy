@@ -7,15 +7,16 @@ export const GET_CUSTOMER = gql`
       lastname
       email
       identificationNumber: custom_attributes(attributeCodes: "numero_identificacion_usuario") {
-        code
         ... on AttributeValue {
           value
         }
       }
       identificationType: custom_attributes(attributeCodes: "tipo_identificacion_usuario") {
-        code
-        ... on AttributeValue {
-          value
+        ... on AttributeSelectedOptions {
+          selected_options {
+            label
+            value
+          }
         }
       }
       addresses {
@@ -28,7 +29,9 @@ export const GET_CUSTOMER = gql`
           region_id
           region_code
         }
+        country_code
         telephone
+        postcode
         default_billing
         default_shipping
       }

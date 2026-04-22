@@ -1,6 +1,6 @@
 'use client';
 
-import type { ICustomer } from 'src/interfaces/customer/customer.interface';
+import type { Customer } from 'src/interfaces/customer/customer.interface';
 
 import * as z from 'zod';
 import { useMemo, useState } from 'react';
@@ -51,7 +51,7 @@ const defaultValues: FormPassValue = {
 };
 
 type ProfileChangePasswordProps = {
-  customer: ICustomer;
+  customer: Customer;
 };
 
 export function ProfileChangePassword({ customer }: ProfileChangePasswordProps) {
