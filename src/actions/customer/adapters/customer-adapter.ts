@@ -22,6 +22,6 @@ export function CustomerAdapter(data: CustomerResponse): Customer {
       label: data.customer.identificationType[0]?.selected_options[0]?.label || '', 
       value: data.customer.identificationType[0]?.selected_options[0]?.value || '' 
     },
-    addresss: defaultShipping,
+    address: defaultShipping,
   };
 }

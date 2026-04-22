@@ -9,7 +9,7 @@ export interface Customer {
     label: string;
     value: string;
   };
-  addresss: {
+  address: {
     id: number;
     firstname: string;
     lastname: string;

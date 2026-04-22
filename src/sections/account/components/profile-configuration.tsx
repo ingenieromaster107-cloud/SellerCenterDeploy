@@ -120,10 +120,10 @@ export function ProfileConfiguration({ customer }: ProfileConfigurationProps) {
   const {
     regions,
     isLoading: isLoadingRegions,
-  } = useGetRegions(customer.addresss?.country_code || undefined);
+  } = useGetRegions(customer.address?.country_code || undefined);
 
   const [regionId, setRegionId] = useState<number>(
-    customer.addresss?.region?.region_id ? Number(customer.addresss.region.region_id) : 0
+    customer.address?.region?.region_id ? Number(customer.address.region.region_id) : 0
   );
 
   const { cities, isLoading: isLoadingCities } = useGetCities(regionId);
@@ -131,8 +131,6 @@ export function ProfileConfiguration({ customer }: ProfileConfigurationProps) {
   const handleChangeState = (event: React.SyntheticEvent<Element, Event>, value: any) => {
     if (value == null) {
       setRegionId(0);
-      // methodAddressData.setValue('state', { label: '', value: '' });
-      // methodAddressData.setValue('city', { label: '', value: '' });
     } else {
       setRegionId(Number(value.value));
     }
@@ -181,7 +179,7 @@ export function ProfileConfiguration({ customer }: ProfileConfigurationProps) {
   //---- Validation schema for user address data and methods for handling the personal data form
   const schemaUserAddressData = useMemo(() => UserAddressDataSchema(translate), [translate]);
   const currentUserAddressData: FormAddressDataValues = useMemo(() => {
-    const address = customer?.addresss || null;
+    const address = customer?.address || null;
     //country
     const countryObj = countries?.find((c) => c.id === address?.country_code);
     const country = countryObj
@@ -234,11 +232,6 @@ export function ProfileConfiguration({ customer }: ProfileConfigurationProps) {
   });
   //---- Validation schema for user personal data and methods for handling the personal data form
 
-  // const selectedState = useWatch({
-  //   control: methodAddressData.control,
-  //   name: 'state',
-  // });
-
   if (isLoadingAttributes || isLoadingCountries) {
     return <LoadingScreen />;
   }
@@ -256,7 +249,7 @@ export function ProfileConfiguration({ customer }: ProfileConfigurationProps) {
           <Grid container spacing={3}>
             <Grid size={{ xs: 12 }}>
               <Card sx={{ p: 3, border: '1px solid', borderColor: 'divider' }} component="fieldset">
-                <FieldsetLegend>informacion personal</FieldsetLegend>
+                <FieldsetLegend>{translate('formPlaceholder.personalInformation')}</FieldsetLegend>
                 <Box
                   sx={{
                     rowGap: 3,
@@ -306,7 +299,7 @@ export function ProfileConfiguration({ customer }: ProfileConfigurationProps) {
           <Grid container spacing={3}>
             <Grid size={{ xs: 12 }}>
               <Card sx={{ p: 3, border: '1px solid', borderColor: 'divider' }} component="fieldset">
-                <FieldsetLegend>Direccion</FieldsetLegend>
+                <FieldsetLegend>{translate('formPlaceholder.address')}</FieldsetLegend>
                 <Box
                   sx={{
                     rowGap: 3,
@@ -316,17 +309,7 @@ export function ProfileConfiguration({ customer }: ProfileConfigurationProps) {
                   }}
                 >
                   <Field.Text name="phoneNumber" label={translate('formPlaceholder.phoneNumber')} />
-                  {/* <Field.Phone
-                    name="phoneNumber"
-                    label={translate('formPlaceholder.phoneNumber')}
-                  /> */}
                   <Field.Text name="address" label={translate('formPlaceholder.address')} />
-                  {/*<Field.CountrySelect
-                    name="country"
-                    label={translate('formPlaceholder.country')}
-                    placeholder={translate('formPlaceholder.country')}
-                    displayValue="code"
-                  />*/}
                   <Field.Autocomplete
                     name="country"
                     label={translate('formPlaceholder.country')}

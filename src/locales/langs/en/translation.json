@@ -412,6 +412,7 @@
     "zipCode": "Zip Code",
     "oldPassword": "Old Password",
     "newPassword": "New Password",
+    "personalInformation": "Personal Information",
     "confirmNewPassword": "Confirm New Password",
     "btnSave": "Save",
     "btnLoad": "Load",

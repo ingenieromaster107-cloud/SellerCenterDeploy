@@ -413,6 +413,7 @@
     "zipCode": "Código postal",
     "oldPassword": "Contraseña antigua",
     "newPassword": "Nueva contraseña",
+    "personalInformation": "Información personal",
     "confirmNewPassword": "Confirmar nueva contraseña",
     "btnSave": "Guardar",
     "btnLoad": "Cargar",
