@@ -40,6 +40,7 @@ export const StoreIdentity = ({ user, isNavMini = false, onSettingsClick }: Prop
         p: '6px',
         width: 50,
         height: 50,
+        flexShrink: 0,
         borderRadius: '50%',
       }}
       slotProps={{
@@ -78,13 +79,17 @@ export const StoreIdentity = ({ user, isNavMini = false, onSettingsClick }: Prop
       {renderAvatar()}
 
       <Box flexGrow={1} minWidth={0}>
-        <Typography variant="subtitle2" fontWeight={600} noWrap>
-          {`${user.firstname} ${user.lastname}`}
-        </Typography>
+        <Tooltip title={`${user.firstname} ${user.lastname}`} placement="auto" arrow>
+          <Typography variant="subtitle2" fontWeight={600} noWrap>
+            {`${user.firstname} ${user.lastname}`}
+          </Typography>
+        </Tooltip>
 
-        <Typography variant="caption" color="text.secondary" noWrap>
-          {user.email}
-        </Typography>
+        <Tooltip title={user.email} placement="auto" arrow>
+          <Typography color="text.secondary" noWrap variant="body2">
+            {user.email}
+          </Typography>
+        </Tooltip>
       </Box>
 
       <IconButton
