@@ -1,4 +1,4 @@
-import type { ICustomer } from "src/interfaces/customer/customer.interface";
+import type { Customer } from "src/interfaces/customer/customer.interface";
 
 type InitialsUser = Partial<ICustomer> & {
   firstName?: string;

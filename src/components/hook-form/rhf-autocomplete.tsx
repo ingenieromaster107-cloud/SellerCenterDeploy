@@ -27,6 +27,7 @@ export type RHFAutocompleteProps = AutocompleteBaseProps & {
   slotProps?: AutocompleteBaseProps['slotProps'] & {
     textField?: Partial<TextFieldProps>;
   };
+  onCustomChange?: (event: React.SyntheticEvent, value: any) => void;
 };
 
 export function RHFAutocomplete({
@@ -35,6 +36,7 @@ export function RHFAutocomplete({
   slotProps,
   helperText,
   placeholder,
+  onCustomChange,
   ...other
 }: RHFAutocompleteProps) {
   const { control, setValue } = useFormContext();
@@ -49,7 +51,12 @@ export function RHFAutocomplete({
         <Autocomplete
           {...field}
           id={`${name}-rhf-autocomplete`}
-          onChange={(event, newValue) => setValue(name, newValue, { shouldValidate: true })}
+          onChange={(event, newValue) => {
+            setValue(name, newValue, { shouldValidate: true });
+            if (onCustomChange) {
+              onCustomChange(event, newValue);
+            }
+          }}
           renderInput={(params) => (
             <TextField
               {...params}

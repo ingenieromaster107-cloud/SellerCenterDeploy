@@ -1,6 +1,6 @@
 'use client';
 
-import type { ICustomer } from 'src/interfaces/customer/customer.interface';
+import type { Customer } from 'src/interfaces/customer/customer.interface';
 
 import { useQuery } from '@tanstack/react-query';
 
@@ -15,7 +15,7 @@ export const AUTH_USER_KEY = ['current-user'] as const;
 
 
 export interface CurrentUserGQLResponse {
-  customer: ICustomer;
+  customer: Customer;
 }
 
 export function useCurrentUser() {

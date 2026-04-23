@@ -5,7 +5,7 @@ import type { FilterModelList, DataFormatedList, ResponseFormatedList } from 'sr
 import { varAlpha } from 'minimal-shared/utils';
 import { useSetState } from 'minimal-shared/hooks';
 import Tab from 'node_modules/@mui/material/esm/Tab/Tab';
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useMemo, useState, useEffect, useCallback } from 'react';
 
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
@@ -40,24 +40,31 @@ import {
   TablePaginationCustom,
 } from 'src/components/table';
 
-import {
-  STATUS_COLORS,
-  STATUS_WITHOUT_GUIDES,
-} from 'src/sections/order/resources/constants';
+import { STATUS_COLORS, STATUS_WITHOUT_GUIDES } from 'src/sections/order/resources/constants';
 
 import { OrderTableRow } from '../components/order-table-row';
 import { OrderTableToolbar } from '../components/order-table-toolbar';
 import { OrderTableFiltersResult } from '../components/order-table-filters-results';
 
 export function OrderListView() {
-  const {TABLE_ORDER_HEAD} =useOrders();
+  const { TABLE_ORDER_HEAD } = useOrders();
   const { translate } = useTranslate();
   const [tableData, setTableData] = useState<ResponseFormatedList>([]);
-  const [countItems, setCountItems] = useState<number>(10);
-  const rowsPerPage = 10;
-  const [paginatedControl, setPaginatedControl] = useState<number>(0);
-  const { data, isLoading, isError } = useGetOrders(rowsPerPage, paginatedControl);
+
+  const [paginationModel, setPaginationModel] = useState({ pageSize: 10, page: 0 });
+
+  const productsPerPage = useMemo(
+    () => ({
+      pageSize: paginationModel.pageSize,
+      currentPage: paginationModel.page + 1,
+    }),
+    [paginationModel.pageSize, paginationModel.page]
+  );
+
+  const { data, isLoading, isError, totalCount } = useGetOrders(productsPerPage);
+
   const [dataStatus, setDataStatus] = useState<string[]>([]);
+
   const filters = useSetState<FilterModelList>({
     name: '',
     status: 'all',
@@ -69,7 +76,6 @@ export function OrderListView() {
   const table = useTable({
     defaultOrderBy: 'createdAt',
     defaultOrder: 'desc',
-    defaultRowsPerPage: rowsPerPage,
   });
   const dateError = fIsAfter(currentFilters.startDate, currentFilters.endDate);
 
@@ -80,10 +86,19 @@ export function OrderListView() {
     dateError,
   });
 
-  const handleChangePagination = (event: React.MouseEvent<HTMLButtonElement> | null, newPage: number) => {
-    setPaginatedControl(newPage);
+  const handleChangePagination = (
+    event: React.MouseEvent<HTMLButtonElement> | null,
+    newPage: number
+  ) => {
+    setPaginationModel((prev) => ({ ...prev, page: newPage }));
   };
 
+  const handleChangeRowsPerPage = (
+    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    const newSize = parseInt(event.target.value, 10);
+    setPaginationModel({ page: 0, pageSize: newSize });
+  };
 
   const ordersWithGuides = (dataFiltered ?? [])
     .filter((row: { status: string }) => !STATUS_WITHOUT_GUIDES.includes(row.status))
@@ -91,9 +106,11 @@ export function OrderListView() {
 
   useEffect(() => {
     if (data) {
-      setCountItems(data.sellerOrders.total_count);
       const adaptedData = adaptOrderListResponse(data);
-      setDataStatus(['all', ...Array.from(new Set(adaptedData.map((order: DataFormatedList) => order.status)))]);
+      setDataStatus([
+        'all',
+        ...Array.from(new Set(adaptedData.map((order: DataFormatedList) => order.status))),
+      ]);
       setTableData(adaptedData);
     }
   }, [data]);
@@ -108,7 +125,7 @@ export function OrderListView() {
       table.onResetPage();
       updateFilters({ status: newValue });
     },
-    [updateFilters, table],
+    [updateFilters, table]
   );
   const notFound = (!dataFiltered.length && canReset) || !dataFiltered.length;
 
@@ -117,7 +134,10 @@ export function OrderListView() {
       <Box>
         <CustomBreadcrumbs
           heading={translate('breadcrumbs.orders.list')}
-          links={[{ name: translate('breadcrumbs.home'), href: '/' }, { name: translate('breadcrumbs.orders.list') }]}
+          links={[
+            { name: translate('breadcrumbs.home'), href: '/' },
+            { name: translate('breadcrumbs.orders.list') },
+          ]}
         />
       </Box>
       {isError ? (
@@ -143,7 +163,9 @@ export function OrderListView() {
             {dataStatus.map((orderStatus) => (
               <Tab
                 key={orderStatus}
-                label={orderStatus === 'all' ? translate('ordersModule.table.tabs.all') : orderStatus}
+                label={
+                  orderStatus === 'all' ? translate('ordersModule.table.tabs.all') : orderStatus
+                }
                 value={orderStatus}
                 iconPosition="end"
                 icon={
@@ -196,7 +218,7 @@ export function OrderListView() {
                   checked,
                   tableData
                     .filter((row) => !STATUS_WITHOUT_GUIDES.includes(row.status))
-                    .map((row) => row.orderNumber),
+                    .map((row) => row.orderNumber)
                 )
               }
             />
@@ -222,21 +244,16 @@ export function OrderListView() {
                       sx={{ height: 69 }}
                     />
                   ) : (
-                    dataFiltered
-                      .slice(
-                        table.page * table.rowsPerPage,
-                        table.page * table.rowsPerPage + table.rowsPerPage,
-                      )
-                      .map((row: DataFormatedList) => (
-                        <OrderTableRow
-                          key={row.orderNumber}
-                          row={row}
-                          detailsHref={paths.order.details(row.orderNumber)}
-                          selected={table.selected.includes(row.orderNumber)}
-                          onSelectRow={() => table.onSelectRow(row.orderNumber)}
-                          // userRole={userRole}
-                        />
-                      ))
+                    dataFiltered.map((row: DataFormatedList) => (
+                      <OrderTableRow
+                        key={row.orderNumber}
+                        row={row}
+                        detailsHref={paths.order.details(row.orderNumber)}
+                        selected={table.selected.includes(row.orderNumber)}
+                        onSelectRow={() => table.onSelectRow(row.orderNumber)}
+                        // userRole={userRole}
+                      />
+                    ))
                   )}
 
                   {!isLoading && (
@@ -255,14 +272,13 @@ export function OrderListView() {
           {/* Pagination section */}
           <TablePaginationCustom
             sx={{}}
-            page={paginatedControl}
+            page={paginationModel.page}
             dense={table.dense}
-            // showDense={false}
-            count={countItems}
-            rowsPerPage={table.rowsPerPage}
+            count={totalCount}
+            rowsPerPage={paginationModel.pageSize}
             onPageChange={handleChangePagination}
             onChangeDense={table.onChangeDense}
-            onRowsPerPageChange={table.onChangeRowsPerPage}
+            onRowsPerPageChange={handleChangeRowsPerPage}
           />
         </Card>
       )}
@@ -299,8 +315,8 @@ function applyFilter({
   if (name) {
     inputData = inputData.filter(({ orderNumber, customer }) =>
       [orderNumber, customer.name, customer.email].some((field) =>
-        field?.toLowerCase().includes(name.toLowerCase()),
-      ),
+        field?.toLowerCase().includes(name.toLowerCase())
+      )
     );
   }
 

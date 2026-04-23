@@ -1,4 +1,4 @@
-export interface Customer {
+export interface SellerCustomer {
   customer_since: string;
   email: string;
   full_name: string;
@@ -9,7 +9,7 @@ export interface SellerCustomersResponse {
   message: string;
   success: boolean;
   total_count: number;
-  data: Customer[];
+  data: SellerCustomer[];
 }
 
 export interface ClientListData {

@@ -1,39 +1,29 @@
-export interface ICustomerGraphQLResponse {
-  customer: ICustomer;
-}
-
-export interface ICustomer {
+export interface Customer {
   firstname: string;
   lastname: string;
   email: string;
-  identificationNumber: INumeroIdentificacion[];
-  identificationType: ITipoIdentificacion[];
-  addresses: IAddress[];
+  identificationNumber: {
+    value: string;
+  };
+  identificationType: {
+    label: string;
+    value: string;
+  };
+  address: {
+    id: number;
+    firstname: string;
+    lastname: string;
+    street: string[];
+    city: string;
+    region: {
+      region_id: number;
+      region_code: string;
+    };
+    country_code: string;
+    telephone: string;
+    postcode: string;
+    default_billing: boolean;
+    default_shipping: boolean;
+  };
   role?: string;
-}
-
-export interface IAddress {
-  id: number;
-  firstname: string;
-  lastname: string;
-  street: string[];
-  city: string;
-  region: IRegion;
-  telephone: string;
-  default_billing: boolean;
-  default_shipping: boolean;
-}
-
-export interface IRegion {
-  region_id: number;
-  region_code: string;
-}
-
-export interface INumeroIdentificacion {
-  code: string;
-  value: string;
-}
-
-export interface ITipoIdentificacion {
-  code: string;
 }
