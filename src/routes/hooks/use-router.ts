@@ -1,7 +1,8 @@
-import NProgress from 'nprogress';
-import { useMemo, useCallback } from 'react';
-import { useNavigate } from 'react-router';
 import type { NavigateOptions } from 'react-router';
+
+import NProgress from 'nprogress';
+import { useNavigate } from 'react-router';
+import { useMemo, useCallback } from 'react';
 import { isEqualPath } from 'minimal-shared/utils';
 
 // ----------------------------------------------------------------------

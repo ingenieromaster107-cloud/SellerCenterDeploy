@@ -190,6 +190,7 @@ export const useProductUploadDialog = ({ onClose }: { onClose: () => void }) => 
     } finally {
       setUploading(false);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [csvFile, disabledUpload]);
 
   const handleCancelUpload = () => {

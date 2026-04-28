@@ -1,15 +1,16 @@
-import { lazy, Suspense } from 'react';
-import { Navigate, Outlet } from 'react-router';
 import type { RouteObject } from 'react-router';
 
-import { useParams } from 'src/routes/hooks';
-import { CONFIG } from 'src/global-config';
+import { lazy, Suspense } from 'react';
+import { Outlet, Navigate } from 'react-router';
 
+import { useParams } from 'src/routes/hooks';
+
+import { CONFIG } from 'src/global-config';
 import { HomeLayout } from 'src/layouts/home';
-import { AuthGuard } from 'src/auth/guard';
-import { GuestGuard } from 'src/auth/guard';
 
 import { SplashScreen } from 'src/components/loading-screen';
+
+import { AuthGuard , GuestGuard } from 'src/auth/guard';
 
 // ---------------------------------------------------------------------- Views (lazy)
 
