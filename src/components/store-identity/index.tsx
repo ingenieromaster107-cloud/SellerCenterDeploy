@@ -2,6 +2,7 @@ import type { Customer } from 'src/interfaces/customer/customer.interface';
 
 import Box from '@mui/material/Box';
 import Avatar from '@mui/material/Avatar';
+import Tooltip from '@mui/material/Tooltip';
 import { alpha } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
@@ -18,10 +19,11 @@ import { SvgColor } from '../svg-color';
 
 interface Props {
   user: Customer;
+  isNavMini?: boolean;
   onSettingsClick?: () => void;
 }
 
-export const StoreIdentity = ({ user, onSettingsClick }: Props) => {
+export const StoreIdentity = ({ user, isNavMini = false, onSettingsClick }: Props) => {
   const router = useRouter();
 
   const handleSettingsClick = () => {
@@ -38,6 +40,7 @@ export const StoreIdentity = ({ user, onSettingsClick }: Props) => {
         p: '6px',
         width: 50,
         height: 50,
+        flexShrink: 0,
         borderRadius: '50%',
       }}
       slotProps={{
@@ -49,6 +52,16 @@ export const StoreIdentity = ({ user, onSettingsClick }: Props) => {
       </Avatar>
     </AnimateBorder>
   );
+
+  if (isNavMini) {
+    return (
+      <Tooltip title={`${user.firstname} ${user.lastname}`} placement="right" arrow>
+        <Box onClick={handleSettingsClick} sx={{ cursor: 'pointer' }}>
+          {renderAvatar()}
+        </Box>
+      </Tooltip>
+    );
+  }
 
   return (
     <Box
@@ -66,13 +79,17 @@ export const StoreIdentity = ({ user, onSettingsClick }: Props) => {
       {renderAvatar()}
 
       <Box flexGrow={1} minWidth={0}>
-        <Typography variant="subtitle2" fontWeight={600} noWrap>
-          {`${user.firstname} ${user.lastname}`}
-        </Typography>
+        <Tooltip title={`${user.firstname} ${user.lastname}`} placement="auto" arrow>
+          <Typography variant="subtitle2" fontWeight={600} noWrap>
+            {`${user.firstname} ${user.lastname}`}
+          </Typography>
+        </Tooltip>
 
-        <Typography variant="caption" color="text.secondary" noWrap>
-          {user.email}
-        </Typography>
+        <Tooltip title={user.email} placement="auto" arrow>
+          <Typography color="text.secondary" noWrap variant="body2">
+            {user.email}
+          </Typography>
+        </Tooltip>
       </Box>
 
       <IconButton

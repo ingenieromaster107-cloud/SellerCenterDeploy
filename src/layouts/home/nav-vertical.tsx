@@ -42,17 +42,14 @@ export function NavVertical({
   className,
   isNavMini,
   onToggleNav,
-  checkPermissions,
   layoutQuery = 'md',
   ...other
 }: NavVerticalProps) {
 
-  //go to account page
   const router = useRouter();
   const handleAccount = () => {
     router.push(paths.account.root);
   };
-  //go to account page
 
   const { user } = useAuthContext();
 
@@ -78,7 +75,6 @@ export function NavVertical({
         <NavSectionVertical
           data={data}
           cssVars={cssVars}
-          checkPermissions={checkPermissions}
           sx={{ px: 2, flex: '1 1 auto' }}
         />
 
@@ -96,10 +92,13 @@ export function NavVertical({
         </Box>
       )}
 
+      <Box sx={{ py: 2, display: 'flex', justifyContent: 'center' }}>
+        {user && <StoreIdentity user={user} isNavMini onSettingsClick={handleAccount} />}
+      </Box>
+
       <NavSectionMini
         data={data}
         cssVars={cssVars}
-        checkPermissions={checkPermissions}
         sx={[
           (theme) => ({
             ...theme.mixins.hideScrollY,
@@ -111,7 +110,7 @@ export function NavVertical({
         ]}
       />
 
-      {slots?.bottomArea}
+      {slots?.bottomArea ?? <SignOutButton isNavMini />}
     </>
   );
 

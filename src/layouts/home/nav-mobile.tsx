@@ -33,7 +33,6 @@ export function NavMobile({
   slots,
   onClose,
   className,
-  checkPermissions,
   ...other
 }: NavMobileProps) {
   const pathname = usePathname();
@@ -72,7 +71,6 @@ export function NavMobile({
       <Scrollbar fillContent>
         <NavSectionVertical
           data={data}
-          checkPermissions={checkPermissions}
           sx={{ px: 2, flex: '1 1 auto' }}
           {...other}
         />

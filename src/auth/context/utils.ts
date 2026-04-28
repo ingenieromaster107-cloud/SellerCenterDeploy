@@ -1,4 +1,5 @@
- import type { CustomerResponse as Customer } from 'src/interfaces/customer/customer-response.interface';
+
+import type { Customer } from 'src/interfaces/customer/customer.interface';
 
 import { jwtDecode } from 'jwt-decode';
 
