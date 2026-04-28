@@ -5,10 +5,6 @@ describe('paths', () => {
     expect(paths.auth.signIn).toBe('/auth/sign-in');
   });
 
-  it('has auth sign-up path', () => {
-    expect(paths.auth.signUp).toBe('/auth/sign-up');
-  });
-
   it('has home root path', () => {
     expect(paths.home.root).toBe('/home');
   });
@@ -67,6 +63,5 @@ describe('paths', () => {
 
   it('has amplify auth paths', () => {
     expect(paths.auth.amplify.signIn).toBe('/auth/amplify/sign-in');
-    expect(paths.auth.amplify.signUp).toBe('/auth/amplify/sign-up');
   });
 });

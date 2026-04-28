@@ -55,7 +55,6 @@ export type NavItemDataProps = Pick<NavItemStateProps, 'disabled'> & {
   info?: string[] | React.ReactNode;
   caption?: string;
   deepMatch?: boolean;
-  allowedRoles?: string | string[];
   children?: NavItemDataProps[];
 };
 
@@ -71,7 +70,6 @@ export type NavListProps = Pick<NavItemProps, 'render' | 'depth' | 'enabledRootR
   cssVars?: CSSObject;
   data: NavItemDataProps;
   slotProps?: NavSlotProps;
-  checkPermissions?: (allowedRoles?: NavItemProps['allowedRoles']) => boolean;
 };
 
 export type NavSubListProps = Omit<NavListProps, 'data'> & {

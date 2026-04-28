@@ -22,7 +22,6 @@ export function NavList({
   render,
   cssVars,
   slotProps,
-  checkPermissions,
   enabledRootRedirect,
 }: NavListProps) {
   const theme = useTheme();
@@ -43,7 +42,6 @@ export function NavList({
   const id = open ? `${data.title}-popover` : undefined;
 
   useEffect(() => {
-    // If the pathname changes, close the menu
     if (open) {
       onClose();
     }
@@ -113,17 +111,11 @@ export function NavList({
             render={render}
             cssVars={cssVars}
             slotProps={slotProps}
-            checkPermissions={checkPermissions}
             enabledRootRedirect={enabledRootRedirect}
           />
         </NavDropdownPaper>
       </NavDropdown>
     );
-
-  // Hidden item by role
-  if (data.allowedRoles && checkPermissions && checkPermissions(data.allowedRoles)) {
-    return null;
-  }
 
   return (
     <NavLi disabled={data.disabled}>
@@ -141,7 +133,6 @@ function NavSubList({
   cssVars,
   depth = 0,
   slotProps,
-  checkPermissions,
   enabledRootRedirect,
 }: NavSubListProps) {
   return (
@@ -154,7 +145,6 @@ function NavSubList({
           depth={depth + 1}
           cssVars={cssVars}
           slotProps={slotProps}
-          checkPermissions={checkPermissions}
           enabledRootRedirect={enabledRootRedirect}
         />
       ))}
