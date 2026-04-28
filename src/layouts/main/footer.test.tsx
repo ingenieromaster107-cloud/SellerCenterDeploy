@@ -6,8 +6,8 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { Footer, HomeFooter } from './footer';
 
 jest.mock('src/routes/components', () => ({
-  RouterLink: ({ children, href }: { children: React.ReactNode; href: string }) => (
-    <a href={href}>{children}</a>
+  RouterLink: ({ children, href, to }: { children: React.ReactNode; href?: string; to?: string }) => (
+    <a href={href ?? to}>{children}</a>
   ),
 }));
 

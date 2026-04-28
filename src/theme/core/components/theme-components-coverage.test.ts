@@ -1,13 +1,8 @@
 import fs from 'node:fs';
 import path from 'node:path';
-import { fileURLToPath } from 'node:url';
-import { createRequire } from 'node:module';
 import { TextDecoder, TextEncoder } from 'node:util';
 
 type AnyRecord = Record<string, any>;
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
 
 jest.mock('minimal-shared/utils', () => ({
   __esModule: true,
@@ -378,7 +373,6 @@ afterAll(() => {
 
 describe('theme core components coverage harness', () => {
   it('executes exported factories, variants, and style callbacks across theme components', () => {
-    const nodeRequire = createRequire(import.meta.url);
     const directory = __dirname;
     const files = fs
       .readdirSync(directory)
@@ -394,7 +388,7 @@ describe('theme core components coverage harness', () => {
 
     files.forEach((fileName: string) => {
       const modulePath = path.join(directory, fileName);
-      const mod = nodeRequire(modulePath) as AnyRecord;
+      const mod = require(modulePath) as AnyRecord;
 
       Object.values(mod).forEach((exportedValue) => {
         walkNode(exportedValue);
