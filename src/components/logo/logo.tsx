@@ -30,12 +30,12 @@ export function Logo({
   href = '/',
   isNavMini = true,
   ...other
-}: LogoProps) {
+}: Readonly<LogoProps>) {
 
   return (
     <LogoRoot
       component={RouterLink}
-      href={href}
+      to={href}
       aria-label="Logo"
       underline="none"
       className={mergeClasses([logoClasses.root, className])}
@@ -57,7 +57,7 @@ export function Logo({
 
 // ----------------------------------------------------------------------
 
-const LogoRoot = styled(Link)<LinkProps>(() => ({
+const LogoRoot = styled(Link)<LinkProps & { to?: string }>(() => ({
   flexShrink: 0,
   color: 'transparent',
   display: 'inline-flex',

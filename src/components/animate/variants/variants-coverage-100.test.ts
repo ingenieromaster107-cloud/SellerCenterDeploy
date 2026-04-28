@@ -20,7 +20,7 @@ describe('animate variants 100 coverage harness', () => {
     expect(transitionHover({ duration: 1 }).duration).toBe(1);
 
     expect(varFade('in').animate).toBeDefined();
-    expect(varFade('in', { transition: { duration: 1 } }).animate).toBeDefined();
+    expect(varFade('in', { transitionIn: { duration: 1 } }).animate).toBeDefined();
     expect(varFade('inUp').animate).toBeDefined();
     expect(varFade('inDown').animate).toBeDefined();
     expect(varFade('inLeft').animate).toBeDefined();

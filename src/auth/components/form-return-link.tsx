@@ -8,17 +8,20 @@ import { Iconify } from 'src/components/iconify';
 
 // ----------------------------------------------------------------------
 
-type FormReturnLinkProps = LinkProps & {
-  href: string;
+type FormReturnLinkProps = Omit<LinkProps, 'href'> & {
+  href?: string;
+  to?: string;
   icon?: React.ReactNode;
   label?: React.ReactNode;
 };
 
-export function FormReturnLink({ sx, href, label, icon, children, ...other }: FormReturnLinkProps) {
+export function FormReturnLink({ sx, href, to, label, icon, children, ...other }: FormReturnLinkProps) {
+  const resolvedTo = to ?? href ?? '#';
+
   return (
     <Link
       component={RouterLink}
-      href={href}
+      to={resolvedTo}
       color="inherit"
       variant="subtitle2"
       sx={[

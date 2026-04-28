@@ -19,7 +19,7 @@ const wrapper = ({ children }: { children: React.ReactNode }) => (
 
 describe('CarouselThumb', () => {
   it('renders an image with correct alt', () => {
-    render(<CarouselThumb index={2} src="/img/thumb.jpg" />, { wrapper });
+    render(<CarouselThumb index={2} src="/img/thumb.jpg" selected={false} />, { wrapper });
     expect(screen.getByAltText('carousel-thumb-2')).toBeInTheDocument();
   });
 

@@ -10,7 +10,7 @@ jest.mock('src/components/snackbar', () => ({
   toast: { success: jest.fn(), error: jest.fn() },
 }));
 
-global.fetch = jest.fn();
+globalThis.fetch = jest.fn();
 
 const theme = createTheme({ cssVariables: true });
 const renderWithTheme = (ui: React.ReactElement) =>
@@ -84,7 +84,7 @@ describe('Hero', () => {
   });
 
   it('shows toast.success and resets form on successful submission', async () => {
-    (global.fetch as jest.Mock).mockResolvedValueOnce({ ok: true });
+    (globalThis.fetch as jest.Mock).mockResolvedValueOnce({ ok: true });
 
     renderWithTheme(<Hero />);
     const inputs = screen.getAllByRole('textbox');
@@ -100,7 +100,7 @@ describe('Hero', () => {
   });
 
   it('shows toast.error when fetch returns not ok', async () => {
-    (global.fetch as jest.Mock).mockResolvedValueOnce({ ok: false });
+    (globalThis.fetch as jest.Mock).mockResolvedValueOnce({ ok: false });
 
     renderWithTheme(<Hero />);
     const inputs = screen.getAllByRole('textbox');
@@ -116,7 +116,7 @@ describe('Hero', () => {
 
   it('shows fallback error message when fetch throws without a message', async () => {
     // Throwing null means err?.message is undefined → triggers the ?? branch
-    (global.fetch as jest.Mock).mockRejectedValueOnce(null);
+    (globalThis.fetch as jest.Mock).mockRejectedValueOnce(null);
 
     renderWithTheme(<Hero />);
     const inputs = screen.getAllByRole('textbox');

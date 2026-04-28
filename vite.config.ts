@@ -15,18 +15,22 @@ export default defineConfig(({ mode }) => {
     plugins: [
       react(),
       svgr(),
-      checker({
-        typescript: true,
-        eslint: {
-          useFlatConfig: true,
-          lintCommand: 'eslint "./src/**/*.{js,jsx,ts,tsx}"',
-          dev: { logLevel: ['error'] },
-        },
-        overlay: {
-          position: 'tl',
-          initialIsOpen: false,
-        },
-      }),
+      ...(mode !== 'test'
+        ? [
+            checker({
+              typescript: { tsconfigPath: './tsconfig.json' },
+              eslint: {
+                useFlatConfig: true,
+                lintCommand: 'eslint "./src/**/*.{js,jsx,ts,tsx}"',
+                dev: { logLevel: ['error'] },
+              },
+              overlay: {
+                position: 'tl',
+                initialIsOpen: false,
+              },
+            }),
+          ]
+        : []),
     ],
     resolve: {
       alias: [
@@ -59,5 +63,19 @@ export default defineConfig(({ mode }) => {
       },
     },
     preview: { port: PORT, host: true },
+    optimizeDeps: {
+      include: [
+        'react',
+        'react-dom',
+        'react-router',
+        '@mui/material',
+        '@mui/material/styles',
+        '@tanstack/react-query',
+        'dayjs',
+        'framer-motion',
+        'minimal-shared/utils',
+        'minimal-shared/hooks',
+      ],
+    },
   };
 });

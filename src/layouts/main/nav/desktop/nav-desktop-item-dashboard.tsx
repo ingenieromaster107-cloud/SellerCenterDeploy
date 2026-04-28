@@ -20,7 +20,7 @@ type NavItemDashboardProps = BoxProps & {
 
 export function NavItemDashboard({ path, sx, ...other }: NavItemDashboardProps) {
   return (
-    <Link component={RouterLink} href={path}>
+    <Link component={RouterLink} to={path}>
       <Box
         sx={[
           (theme) => ({

@@ -1,15 +1,11 @@
-import type { NavigateOptions } from 'react-router';
-
 import NProgress from 'nprogress';
 import { useNavigate } from 'react-router';
 import { useMemo, useCallback } from 'react';
 import { isEqualPath } from 'minimal-shared/utils';
 
-// ----------------------------------------------------------------------
+type NavigateOptions = NonNullable<Parameters<ReturnType<typeof useNavigate>>[1]>;
 
-/**
- * Customized useRouter hook with NProgress integration.
- */
+// ----------------------------------------------------------------------
 
 export function useRouter() {
   const navigate = useNavigate();

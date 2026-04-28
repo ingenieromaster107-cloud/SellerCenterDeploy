@@ -297,7 +297,7 @@ export function DashboardSummaryView() {
           >
               <CardActionArea
                 component={RouterLink}
-                href={card.path}
+                to={card.path}
                 sx={{
                   px: { xs: 2.25, md: 2.5 },
                   py: { xs: 2, md: 2.25 },

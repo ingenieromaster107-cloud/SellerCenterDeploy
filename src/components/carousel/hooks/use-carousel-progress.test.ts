@@ -2,11 +2,16 @@ import { renderHook } from '@testing-library/react';
 
 import { useCarouselProgress } from './use-carousel-progress';
 
-function makeMockApi(progress = 0.5) {
-  const listeners: Record<string, ((api: any) => void)[]> = {};
-  const api = {
+type MockApi = {
+  scrollProgress: jest.Mock<number, []>;
+  on: jest.Mock<MockApi, [string, (api: MockApi) => void]>;
+};
+
+function makeMockApi(progress = 0.5): MockApi {
+  const listeners: Record<string, Array<(api: MockApi) => void>> = {};
+  const api: MockApi = {
     scrollProgress: jest.fn(() => progress),
-    on: jest.fn((event: string, handler: (api: any) => void) => {
+    on: jest.fn((event: string, handler: (api: MockApi) => void) => {
       if (!listeners[event]) listeners[event] = [];
       listeners[event].push(handler);
       return api;
@@ -17,7 +22,7 @@ function makeMockApi(progress = 0.5) {
 
 describe('useCarouselProgress', () => {
   it('returns 0 when no api', () => {
-    const { result } = renderHook(() => useCarouselProgress(undefined));
+    const { result } = renderHook(() => useCarouselProgress());
     expect(result.current.value).toBe(0);
   });
 

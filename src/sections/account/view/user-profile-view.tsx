@@ -18,7 +18,6 @@ import { ErrorContent } from 'src/components/error-content';
 import { LoadingScreen } from 'src/components/loading-screen/loading-screen';
 import { CustomBreadcrumbs } from 'src/components/custom-breadcrumbs/custom-breadcrumbs';
 
-//import { useAuthContext } from "src/auth/hooks";
 import { ProfileCover } from '../components/profile-cover';
 import {
   ProfileHome,
@@ -117,7 +116,7 @@ export function UserProfileView() {
                 value={tab.value}
                 icon={tab.icon}
                 label={tab.label}
-                href={createRedirectPath(pathname, tab.value)}
+                to={createRedirectPath(pathname, tab.value)}
               />
             ))}
           </Tabs>

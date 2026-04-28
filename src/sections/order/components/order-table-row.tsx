@@ -2,7 +2,6 @@ import type { DataFormatedList, OrderRowItemList } from 'src/interfaces/order';
 
 import { useBoolean } from 'minimal-shared/hooks';
 
-// import PropTypes from 'prop-types';
 import Box from '@mui/material/Box';
 import Link from '@mui/material/Link';
 import Paper from '@mui/material/Paper';
@@ -36,7 +35,13 @@ interface OrderTableRowProps {
 
 // ----------------------------------------------------------------------
 
-export function OrderTableRow({ row, detailsHref, selected, onSelectRow, userRole }: OrderTableRowProps) {
+export function OrderTableRow({
+  row,
+  detailsHref,
+  selected,
+  onSelectRow,
+  userRole,
+}: Readonly<OrderTableRowProps>) {
   const collapseRow = useBoolean();
   const displayName = row.customer?.name;
   const displayEmail = row.customer?.email;
@@ -67,7 +72,7 @@ export function OrderTableRow({ row, detailsHref, selected, onSelectRow, userRol
       )}
 
       <TableCell>
-        <Link component={RouterLink} href={detailsHref} color="inherit" underline="always">
+        <Link component={RouterLink} to={detailsHref} color="inherit" underline="always">
           {row.orderNumber}
         </Link>
       </TableCell>
@@ -87,9 +92,8 @@ export function OrderTableRow({ row, detailsHref, selected, onSelectRow, userRol
             {displayName
               .split(' ')
               .filter(Boolean)
-              .map((word: string) => word[0]!.toUpperCase())
-              .join('')
-            }
+              .map((word: string) => (word[0] ? word[0].toUpperCase() : ''))
+              .join('')}
           </Avatar>
           <ListItemText
             primary={displayName}
@@ -178,7 +182,7 @@ export function OrderTableRow({ row, detailsHref, selected, onSelectRow, userRol
                   },
                 })}
               >
-                <Link component={RouterLink} href={paths.product.details(item.sku)} underline='none'>
+                <Link component={RouterLink} to={paths.product.details(item.sku)} underline='none'>
                   <Avatar
                     {...(item.coverUrl ? { src: item.coverUrl } : {})}
                     variant="rounded"
@@ -188,7 +192,7 @@ export function OrderTableRow({ row, detailsHref, selected, onSelectRow, userRol
 
                 <ListItemText
                   primary={
-                    <Link component={RouterLink} href={paths.product.details(item.sku)} color="inherit" underline='none'>
+                    <Link component={RouterLink} to={paths.product.details(item.sku)} color="inherit" underline='none'>
                       {item.name}
                     </Link>
                   }

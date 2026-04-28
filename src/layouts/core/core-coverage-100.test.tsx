@@ -141,7 +141,10 @@ describe('layouts core coverage harness', () => {
           rightArea: <div>right</div>,
           bottomArea: <div>bottom</div>,
         }}
-        slotProps={{ container: { 'data-testid': 'header-container' }, centerArea: { id: 'center-area' } }}
+        slotProps={{
+          container: { 'data-testid': 'header-container' } as React.HTMLAttributes<HTMLDivElement>,
+          centerArea: { id: 'center-area' },
+        }}
       />
     );
 

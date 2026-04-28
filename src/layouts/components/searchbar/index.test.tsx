@@ -74,8 +74,8 @@ jest.mock('./result-item', () => ({
 }));
 
 jest.mock('./utils', () => ({
-  flattenNavSections: (...args: any[]) => flattenNavSections(...args),
-  applyFilter: (...args: any[]) => applyFilter(...args),
+  flattenNavSections: (...args: Parameters<typeof flattenNavSections>) => flattenNavSections(...args),
+  applyFilter: (...args: Parameters<typeof applyFilter>) => applyFilter(...args),
 }));
 
 describe('Searchbar', () => {
@@ -116,7 +116,7 @@ describe('Searchbar', () => {
     fireEvent.change(screen.getByPlaceholderText('search'), { target: { value: 'missing' } });
     expect(screen.getByText('No results for missing')).toBeInTheDocument();
 
-    fireEvent.keyDown(window, { key: 'k', metaKey: true });
+    fireEvent.keyDown(globalThis.window, { key: 'k', metaKey: true });
     expect(onToggle).toHaveBeenCalled();
   });
 });

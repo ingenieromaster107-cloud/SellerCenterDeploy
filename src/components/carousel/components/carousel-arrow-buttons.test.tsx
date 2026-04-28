@@ -45,7 +45,12 @@ describe('ArrowButton', () => {
 describe('CarouselArrowBasicButtons', () => {
   it('renders prev and next buttons', () => {
     render(
-      <CarouselArrowBasicButtons onClickPrev={jest.fn()} onClickNext={jest.fn()} />,
+      <CarouselArrowBasicButtons
+        onClickPrev={jest.fn()}
+        onClickNext={jest.fn()}
+        disablePrev={false}
+        disableNext={false}
+      />,
       { wrapper }
     );
     expect(screen.getByLabelText('Prev button')).toBeInTheDocument();
@@ -55,7 +60,12 @@ describe('CarouselArrowBasicButtons', () => {
   it('calls onClickPrev when prev is clicked', () => {
     const onClickPrev = jest.fn();
     render(
-      <CarouselArrowBasicButtons onClickPrev={onClickPrev} onClickNext={jest.fn()} />,
+      <CarouselArrowBasicButtons
+        onClickPrev={onClickPrev}
+        onClickNext={jest.fn()}
+        disablePrev={false}
+        disableNext={false}
+      />,
       { wrapper }
     );
     fireEvent.click(screen.getByLabelText('Prev button'));
@@ -66,7 +76,12 @@ describe('CarouselArrowBasicButtons', () => {
 describe('CarouselArrowFloatButtons', () => {
   it('renders without crashing', () => {
     const { container } = render(
-      <CarouselArrowFloatButtons onClickPrev={jest.fn()} onClickNext={jest.fn()} />,
+      <CarouselArrowFloatButtons
+        onClickPrev={jest.fn()}
+        onClickNext={jest.fn()}
+        disablePrev={false}
+        disableNext={false}
+      />,
       { wrapper }
     );
     expect(container).toBeTruthy();
@@ -79,6 +94,8 @@ describe('CarouselArrowNumberButtons', () => {
       <CarouselArrowNumberButtons
         onClickPrev={jest.fn()}
         onClickNext={jest.fn()}
+        disablePrev={false}
+        disableNext={false}
         selectedIndex={2}
         totalSlides={5}
       />,

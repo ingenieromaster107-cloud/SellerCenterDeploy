@@ -33,8 +33,8 @@ jest.mock('src/components/iconify', () => ({
 }));
 
 jest.mock('src/routes/components', () => ({
-  RouterLink: ({ children, href }: { children: React.ReactNode; href: string }) => (
-    <a href={href}>{children}</a>
+  RouterLink: ({ children, href, to }: { children: React.ReactNode; href?: string; to?: string }) => (
+    <a href={to ?? href}>{children}</a>
   ),
 }));
 
@@ -49,7 +49,9 @@ jest.mock('@mui/material/Tabs', () => ({
 
 jest.mock('@mui/material/Tab', () => ({
   __esModule: true,
-  default: ({ label, href }: { label: string; href: string }) => <a href={href}>{label}</a>,
+  default: ({ label, href, to }: { label: string; href?: string; to?: string }) => (
+    <a href={to ?? href}>{label}</a>
+  ),
 }));
 
 

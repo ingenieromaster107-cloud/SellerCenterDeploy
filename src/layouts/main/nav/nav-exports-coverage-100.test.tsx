@@ -26,11 +26,11 @@ jest.mock('src/routes/hooks', () => ({
 }));
 
 jest.mock('minimal-shared/utils', () => ({
-  isActiveLink: (...args: unknown[]) => mockedIsActiveLink(...args),
-  isEqualPath: (...args: unknown[]) => mockedIsEqualPath(...args),
-  isExternalLink: (...args: unknown[]) => mockedIsExternalLink(...args),
+  isActiveLink: (...args: Parameters<typeof mockedIsActiveLink>) => mockedIsActiveLink(...args),
+  isEqualPath: (...args: Parameters<typeof mockedIsEqualPath>) => mockedIsEqualPath(...args),
+  isExternalLink: (...args: Parameters<typeof mockedIsExternalLink>) => mockedIsExternalLink(...args),
   mergeClasses: (...classes: any[]) => classes.flat().filter(Boolean).join(' '),
-  varAlpha: (...args: unknown[]) => mockedVarAlpha(...args),
+  varAlpha: (...args: Parameters<typeof mockedVarAlpha>) => mockedVarAlpha(...args),
 }));
 
 jest.mock('src/components/iconify', () => ({
@@ -92,8 +92,8 @@ jest.mock('@mui/material/Drawer', () => ({
 }));
 
 jest.mock('src/routes/components', () => ({
-  RouterLink: ({ children, href }: { children: React.ReactNode; href: string }) => (
-    <a href={href}>{children}</a>
+  RouterLink: ({ children, href, to }: { children: React.ReactNode; href?: string; to?: string }) => (
+    <a href={to ?? href}>{children}</a>
   ),
 }));
 

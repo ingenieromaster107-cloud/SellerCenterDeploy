@@ -39,7 +39,7 @@ describe('createNavItem', () => {
 
   it('hasChild with enabledRootRedirect uses link', () => {
     const result = createNavItem({ path: '/parent', depth: 1, hasChild: true, enabledRootRedirect: true });
-    expect(result.baseProps.href).toBe('/parent');
+    expect(result.baseProps.to).toBe('/parent');
   });
 
   it('renders icon directly when icon is not a string', () => {

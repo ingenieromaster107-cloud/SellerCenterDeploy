@@ -28,7 +28,9 @@ jest.mock('src/routes/hooks', () => ({
 }));
 
 jest.mock('src/routes/components', () => ({
-  RouterLink: ({ href = '#', children }: { href?: string; children: React.ReactNode }) => <a href={href}>{children}</a>,
+  RouterLink: ({ href = '#', to, children }: { href?: string; to?: string; children: React.ReactNode }) => (
+    <a href={to ?? href}>{children}</a>
+  ),
 }));
 
 jest.mock('src/locales/langs/i18n', () => ({

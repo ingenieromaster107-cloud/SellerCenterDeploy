@@ -19,15 +19,15 @@ type ParamsProps = {
   params: GridCellParams<ProductListInterface>;
 };
 
-export function RenderCellPrice({ params }: ParamsProps) {
+export function RenderCellPrice({ params }: Readonly<ParamsProps>) {
   return fCurrency(params.row.finalPrice);
 }
 
-export function RenderCellSku({ params }: ParamsProps) {
+export function RenderCellSku({ params }: Readonly<ParamsProps>) {
   return params.row.sku;
 }
 
-export function RenderCellStock({ params }: ParamsProps) {
+export function RenderCellStock({ params }: Readonly<ParamsProps>) {
   const { translate } = useTranslate();
   let color: LinearProgressProps['color'];
   let stockLabel: string;
@@ -56,7 +56,7 @@ export function RenderCellStock({ params }: ParamsProps) {
   );
 }
 
-export function RenderCellProduct({ params, href }: ParamsProps & { href: string }) {
+export function RenderCellProduct({ params, href }: Readonly<ParamsProps & { href: string }>) {
   const productName = params.row.productName;
 
   return (
@@ -70,7 +70,7 @@ export function RenderCellProduct({ params, href }: ParamsProps & { href: string
 
       <ListItemText
         primary={
-          <Link component={RouterLink} href={href} color="inherit">
+          <Link component={RouterLink} to={href} color="inherit">
             {productName}
           </Link>
         }

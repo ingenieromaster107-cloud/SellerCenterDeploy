@@ -33,7 +33,7 @@ export function createNavItem({
 
   const linkProps = externalLink
     ? { href: path, target: '_blank', rel: 'noopener noreferrer' }
-    : { component: RouterLink, href: path };
+    : { component: RouterLink, to: path };
 
   const baseProps = hasChild && !enabledRootRedirect ? { component: 'div' } : linkProps;
 

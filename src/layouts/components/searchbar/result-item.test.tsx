@@ -4,8 +4,8 @@ jest.mock('minimal-shared/utils', () => ({
 }));
 
 jest.mock('src/routes/components', () => ({
-  RouterLink: ({ children, href }: { children: React.ReactNode; href: string }) => (
-    <a href={href}>{children}</a>
+  RouterLink: ({ children, href, to }: { children: React.ReactNode; href?: string; to?: string }) => (
+    <a href={to ?? href}>{children}</a>
   ),
 }));
 

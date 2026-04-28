@@ -33,7 +33,7 @@ type Props = {
   onSelectRow: () => void;
 };
 
-export function OrderTableRow({ row, selected, onSelectRow, detailsHref }: Props) {
+export function OrderTableRow({ row, selected, onSelectRow, detailsHref }: Readonly<Props>) {
   const collapseRow = useBoolean();
   const returnStatus = useReturnStatus();
 
@@ -44,7 +44,7 @@ export function OrderTableRow({ row, selected, onSelectRow, detailsHref }: Props
       </TableCell>
 
       <TableCell>
-        <Link component={RouterLink} href={detailsHref} color="inherit" underline="always">
+        <Link component={RouterLink} to={detailsHref} color="inherit" underline="always">
           {row.order.orderNumber}
         </Link>
       </TableCell>

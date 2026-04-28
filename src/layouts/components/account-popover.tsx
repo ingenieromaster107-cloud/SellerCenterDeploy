@@ -67,7 +67,7 @@ export function AccountPopover({ data = [], sx, ...other }: AccountPopoverProps)
             <MenuItem key={option.label}>
               <Link
                 component={RouterLink}
-                href={option.label === 'Home' ? rootHref : option.href}
+                to={option.label === 'Home' ? rootHref : option.href}
                 color="inherit"
                 underline="none"
                 onClick={onClose}

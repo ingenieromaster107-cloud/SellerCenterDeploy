@@ -26,8 +26,8 @@ jest.mock('src/routes/hooks', () => ({
 }));
 
 jest.mock('src/routes/components', () => ({
-  RouterLink: ({ href, children, onClick }: any) => (
-    <a href={href} onClick={onClick}>
+  RouterLink: ({ href, to, children, onClick }: any) => (
+    <a href={to ?? href} onClick={onClick}>
       {children}
     </a>
   ),

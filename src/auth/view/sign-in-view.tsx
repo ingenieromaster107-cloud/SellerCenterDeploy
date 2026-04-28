@@ -146,7 +146,7 @@ export function SignInView() {
 
       <Link
         component={RouterLink}
-        href="#"
+        to="#"
         variant="body2"
         color="inherit"
         sx={{ alignSelf: 'flex-start' }}
@@ -167,7 +167,7 @@ export function SignInView() {
           {translate("loginPage.noAccount")}
           <Link
             component={RouterLink}
-            href=""
+            to=""
             variant="subtitle2"
           >
             {translate("loginPage.getStarted")}

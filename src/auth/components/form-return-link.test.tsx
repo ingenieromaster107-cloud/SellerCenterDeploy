@@ -4,7 +4,7 @@ import { render, screen } from '@testing-library/react';
 import { FormReturnLink } from './form-return-link';
 
 jest.mock('src/routes/components', () => ({
-  RouterLink: ({ href, children }: any) => <a href={href}>{children}</a>,
+  RouterLink: ({ href, to, children }: any) => <a href={to ?? href}>{children}</a>,
 }));
 
 jest.mock('src/components/iconify', () => ({

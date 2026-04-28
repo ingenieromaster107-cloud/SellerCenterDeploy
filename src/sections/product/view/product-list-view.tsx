@@ -36,6 +36,13 @@ import {
   RenderCellProduct,
 } from '../components/product-table-row';
 
+type NoResultsOverlayProps = {
+  title?: string;
+};
+
+const NoRowsOverlay = () => <EmptyContent />;
+const NoResultsOverlay = ({ title }: NoResultsOverlayProps) => <EmptyContent title={title} />;
+
 export function ProductListView() {
   const router = useRouter();
   const { translate } = useTranslate();
@@ -127,9 +134,11 @@ export function ProductListView() {
         ) : (
           <DataGrid
             {...toolbarOptions.settings}
-            {...(legnuageStored === 'es'
-              ? { localeText: esES.components.MuiDataGrid.defaultProps.localeText }
-              : {})}
+            localeText={
+              legnuageStored === 'es'
+                ? esES.components.MuiDataGrid.defaultProps.localeText
+                : undefined
+            }
             rows={tableData}
             columns={columns}
             loading={isFetching}
@@ -141,8 +150,11 @@ export function ProductListView() {
             paginationModel={paginationModel}
             onPaginationModelChange={setPaginationModel}
             slots={{
-              noRowsOverlay: () => <EmptyContent />,
-              noResultsOverlay: () => <EmptyContent title={translate('noResultsFound')} />,
+              noRowsOverlay: NoRowsOverlay,
+              noResultsOverlay: NoResultsOverlay,
+            }}
+            slotProps={{
+              noResultsOverlay: { title: translate('noResultsFound') },
             }}
             sx={{
               [`& .${gridClasses.cell}`]: {

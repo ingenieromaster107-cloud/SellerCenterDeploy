@@ -91,9 +91,11 @@ describe('theme mixins coverage harness', () => {
     expect(filledStyles(theme, 'white').backgroundColor).toBe(theme.vars.palette.common.white);
     expect(filledStyles(theme, 'black').backgroundColor).toBe(theme.vars.palette.common.black);
     expect(filledStyles(theme, 'primary').backgroundColor).toBe(theme.vars.palette.primary.main);
-    expect(filledStyles(theme, 'primary', { hover: { outline: '1px solid red' } })['&:hover'].outline).toBe(
-      '1px solid red'
-    );
+    const filledHover = filledStyles(theme, 'primary', { hover: { outline: '1px solid red' } }) as Record<
+      string,
+      { outline?: string }
+    >;
+    expect(filledHover['&:hover']?.outline).toBe('1px solid red');
     expect(filledStyles(theme, undefined as any)).toEqual({});
 
     expect(softStyles(theme, 'default').boxShadow).toBe('none');
@@ -110,7 +112,11 @@ describe('theme mixins coverage harness', () => {
 
     expect(mixins.hideScrollX).toBeDefined();
     expect(mixins.hideScrollY).toBeDefined();
-    expect(mixins.scrollbarStyles?.(theme as any).scrollbarWidth).toBe('thin');
+    const scrollbarStyles = mixins.scrollbarStyles?.(theme);
+    expect(scrollbarStyles).toBeDefined();
+    if (scrollbarStyles) {
+      expect(scrollbarStyles.scrollbarWidth).toBe('thin');
+    }
     expect(mixins.bgBlur).toBe(bgBlur);
     expect(mixins.maxLine).toBe(maxLine);
     expect(mixins.bgGradient).toBe(bgGradient);

@@ -1,7 +1,8 @@
-import type { RouteObject } from 'react-router';
-
 import { lazy, Suspense } from 'react';
 import { Outlet, Navigate } from 'react-router';
+
+import Box from '@mui/material/Box';
+import Paper from '@mui/material/Paper';
 
 import { useParams } from 'src/routes/hooks';
 
@@ -104,21 +105,21 @@ const NotFoundView = lazy(() =>
 // ---------------------------------------------------------------------- Param wrappers
 
 function ProductDetailsPage() {
-  const { id } = useParams<{ id: string }>();
+  const { id } = useParams() as { id?: string };
   const productId = id ? Number(id) : Number.NaN;
   if (!Number.isFinite(productId)) return <Navigate to="/404" replace />;
   return <ProductDetailsView id={productId} />;
 }
 
 function SubAccountDetailsPage() {
-  const { id } = useParams<{ id: string }>();
+  const { id } = useParams() as { id?: string };
   const subAccountId = id ? Number(id) : Number.NaN;
   if (!Number.isFinite(subAccountId)) return <Navigate to="/404" replace />;
   return <SubAccountDetailsView id={subAccountId} />;
 }
 
 function OrderDetailsPage() {
-  const { id } = useParams<{ id: string }>();
+  const { id } = useParams() as { id?: string };
   if (!id) return <Navigate to="/404" replace />;
   return <OrderDetailsClient orderId={id} />;
 }
@@ -146,16 +147,60 @@ function ProtectedLayout() {
 function AuthSignInLayout() {
   return (
     <GuestGuard>
-      <Suspense fallback={<SplashScreen />}>
-        <SignInView />
-      </Suspense>
+      <Box
+        sx={{
+          minHeight: '100vh',
+          bgcolor: 'common.black',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          p: 2,
+          position: 'relative',
+        }}
+      >
+        <Box
+          component="a"
+          href="/"
+          aria-label="Miti Miti"
+          sx={{
+            position: 'absolute',
+            top: { xs: 12, md: 20 },
+            left: { xs: 12, md: 20 },
+            display: 'flex',
+            alignItems: 'center',
+            textDecoration: 'none',
+            zIndex: 1500,
+          }}
+        >
+          <Box
+            component="img"
+            src="/assets/images/logo/logo-miti.svg"
+            alt="Miti Miti"
+            sx={{ width: { xs: 100, md: 120 }, height: 'auto', display: 'block' }}
+          />
+        </Box>
+        <Paper
+          elevation={1}
+          sx={{
+            width: '100%',
+            maxWidth: 520,
+            p: { xs: 3, md: 5 },
+            borderRadius: 2,
+            bgcolor: 'background.paper',
+          }}
+        >
+          <Suspense fallback={<SplashScreen />}>
+            <SignInView />
+          </Suspense>
+        </Paper>
+      </Box>
     </GuestGuard>
   );
 }
 
 // ---------------------------------------------------------------------- Route tree
 
-export const routesSection: RouteObject[] = [
+export const routesSection = [
   // Root redirect
   {
     index: true,

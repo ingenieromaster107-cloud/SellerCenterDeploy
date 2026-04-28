@@ -32,7 +32,7 @@ jest.mock('src/routes/hooks', () => ({
 }));
 
 jest.mock('src/routes/components', () => ({
-  RouterLink: ({ href, children }: any) => <a href={href}>{children}</a>,
+  RouterLink: ({ href, to, children }: any) => <a href={to ?? href}>{children}</a>,
 }));
 
 jest.mock('src/locales', () => ({
@@ -78,7 +78,7 @@ jest.mock('@mui/x-data-grid', () => ({
   DataGrid: ({ rows, loading, slots }: any) => (
     <div data-testid="data-grid">
       {loading && <div data-testid="grid-loading">Loading...</div>}
-      {rows?.length === 0 && slots?.noRowsOverlay && slots.noRowsOverlay()}
+      {rows?.length === 0 && slots?.noRowsOverlay?.()}
     </div>
   ),
   gridClasses: { cell: 'MuiDataGrid-cell' },
