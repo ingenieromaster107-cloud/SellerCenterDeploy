@@ -388,7 +388,7 @@ describe('theme core components coverage harness', () => {
 
     files.forEach((fileName: string) => {
       const modulePath = path.join(directory, fileName);
-      const mod = require(modulePath) as AnyRecord;
+      const mod = jest.requireActual<AnyRecord>(modulePath);
 
       Object.values(mod).forEach((exportedValue) => {
         walkNode(exportedValue);
