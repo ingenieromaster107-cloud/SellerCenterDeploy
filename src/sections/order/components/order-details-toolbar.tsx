@@ -31,7 +31,7 @@ export function OrderDetailsToolbar({
   orderUid,
   userRole,
   tracking,
-}: Props) {
+}: Readonly<Props>) {
 
   return (
     <Box
@@ -43,7 +43,7 @@ export function OrderDetailsToolbar({
       }}
     >
       <Box sx={{ gap: 1, display: 'flex', alignItems: 'flex-start' }}>
-        <IconButton component={RouterLink} href={backHref}>
+        <IconButton component={RouterLink} to={backHref}>
           <Iconify icon="eva:arrow-ios-back-fill" />
         </IconButton>
 

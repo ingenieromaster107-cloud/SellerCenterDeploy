@@ -1,6 +1,5 @@
 import fs from 'node:fs';
 import path from 'node:path';
-import { createRequire } from 'node:module';
 import { TextDecoder, TextEncoder } from 'node:util';
 
 type AnyRecord = Record<string, any>;
@@ -374,23 +373,22 @@ afterAll(() => {
 
 describe('theme core components coverage harness', () => {
   it('executes exported factories, variants, and style callbacks across theme components', () => {
-    const nodeRequire = createRequire(__filename);
     const directory = __dirname;
     const files = fs
       .readdirSync(directory)
       .filter(
-        (fileName) =>
+        (fileName: string) =>
           (fileName.endsWith('.tsx') || fileName.endsWith('.ts')) &&
           !fileName.endsWith('.test.ts') &&
           !fileName.endsWith('.test.tsx')
       )
-      .sort((a, b) => a.localeCompare(b));
+      .sort((a: string, b: string) => a.localeCompare(b));
 
     expect(files.length).toBeGreaterThan(0);
 
-    files.forEach((fileName) => {
+    files.forEach((fileName: string) => {
       const modulePath = path.join(directory, fileName);
-      const mod = nodeRequire(modulePath) as AnyRecord;
+      const mod = jest.requireActual<AnyRecord>(modulePath);
 
       Object.values(mod).forEach((exportedValue) => {
         walkNode(exportedValue);

@@ -9,7 +9,7 @@ jest.mock('src/components/nav-section', () => ({
 const mockVarAlpha = jest.fn((channel: string, opacity: number) => `rgba(${channel}/${opacity})`);
 
 jest.mock('minimal-shared/utils', () => ({
-  varAlpha: (...args: unknown[]) => mockVarAlpha(...args),
+  varAlpha: (...args: Parameters<typeof mockVarAlpha>) => mockVarAlpha(...args),
 }));
 
 const getDashboardNavColorVars = async () => {

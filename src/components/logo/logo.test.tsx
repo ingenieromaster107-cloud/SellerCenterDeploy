@@ -1,5 +1,9 @@
 jest.mock('src/routes/components', () => ({
-  RouterLink: 'a',
+  RouterLink: ({ href, to, children, ...other }: any) => (
+    <a href={to ?? href} {...other}>
+      {children}
+    </a>
+  ),
 }));
 jest.mock('minimal-shared/utils', () => ({
   mergeClasses: (...args: any[]) => args.flat().filter(Boolean).join(' '),

@@ -6,7 +6,7 @@ const isExternalLink = jest.fn((href: string) => href.startsWith('http'));
 
 jest.mock('minimal-shared/utils', () => ({
   mergeClasses: (...args: any[]) => args.flat().filter(Boolean).join(' '),
-  isExternalLink: (...args: any[]) => isExternalLink(...args),
+  isExternalLink: (...args: Parameters<typeof isExternalLink>) => isExternalLink(...args),
 }));
 
 const gridActionsCellItemMock = jest.fn();
@@ -67,7 +67,7 @@ describe('CustomGridActionsCellItem', () => {
     expect(button).toBeInTheDocument();
     expect(isExternalLink).toHaveBeenCalledWith('/product/1');
     const props = gridActionsCellItemMock.mock.calls.at(-1)?.[0];
-    expect(props.href).toBe('/product/1');
+    expect(props.to).toBe('/product/1');
     expect(props.target).toBeUndefined();
   });
 

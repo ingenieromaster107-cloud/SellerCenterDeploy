@@ -4,9 +4,9 @@ import type { FilterModelList, DataFormatedList, ResponseFormatedList } from 'sr
 
 import { varAlpha } from 'minimal-shared/utils';
 import { useSetState } from 'minimal-shared/hooks';
-import Tab from 'node_modules/@mui/material/esm/Tab/Tab';
 import React, { useMemo, useState, useEffect, useCallback } from 'react';
 
+import Tab from '@mui/material/Tab';
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import Tabs from '@mui/material/Tabs';

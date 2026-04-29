@@ -31,17 +31,19 @@ export function ProductLoadView() {
     flexDirection: 'column',
     height: '100%',
   });
-  const renderBullets = (items: string[]) => (
+  const renderBullets = (items: Array<{ id: string; text: string }>) => (
     <List dense disablePadding>
-      {items.map((text, idx) => (
-        <Fragment key={idx}>
+      {items.map((item) => (
+        <Fragment key={item.id}>
           <ListItem sx={{ py: 1, px: 0 }}>
             <ListItemText
-              primaryTypographyProps={{ variant: 'body2', sx: { color: 'text.secondary' } }}
-              primary={text}
+              primary={item.text}
+              slotProps={{
+                primary: { sx: { typography: 'body2', color: 'text.secondary' } },
+              }}
             />
           </ListItem>
-          {idx < items.length - 1 && <Divider component="li" />}
+          <Divider component="li" />
         </Fragment>
       ))}
     </List>
@@ -70,15 +72,15 @@ export function ProductLoadView() {
             <Typography variant="h6">Bulk loading</Typography>
             <Divider />
             {renderBullets([
-              'Save time by loading multiple products at once.',
-              'Sync your account with external files and integrations.',
-              'Sync your account with external files and integrations',
-              'Manage large volumes of products.',
+              { id: 'bulk-1', text: 'Save time by loading multiple products at once.' },
+              { id: 'bulk-2', text: 'Sync your account with external files and integrations.' },
+              { id: 'bulk-3', text: 'Sync your account with external files and integrations' },
+              { id: 'bulk-4', text: 'Manage large volumes of products.' },
             ])}
             <Box sx={{ flexGrow: 1 }} />
             <Button
               component={RouterLink}
-              href={paths.product.uploadList}
+              to={paths.product.uploadList}
               startIcon={<Iconify icon="solar:copy-bold" />}
               variant="contained"
             >

@@ -41,7 +41,7 @@ export function OrderDetailsItems({
   prices,
 
   ...other
-}: OrderDetailsItemsProps) {
+}: Readonly<OrderDetailsItemsProps>) {
   const renderDetailProduct = (label: string, value: string | number, sku: string) => (
     <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0.5 }}>
       <Box>SKU: {sku}</Box>
@@ -71,11 +71,7 @@ export function OrderDetailsItems({
               }),
             ]}
           >
-            <Link
-              component={RouterLink}
-              href={paths.product.details(item.sku)}
-              underline="none"
-            >
+              <Link component={RouterLink} to={paths.product.details(item.sku)} underline="none">
               {item.coverUrl && (
                 <Avatar
                   src={item.coverUrl}
@@ -89,7 +85,7 @@ export function OrderDetailsItems({
               primary={
                 <Link
                   component={RouterLink}
-                  href={paths.product.details(item.sku)}
+                  to={paths.product.details(item.sku)}
                   color="inherit"
                   underline="none"
                 >

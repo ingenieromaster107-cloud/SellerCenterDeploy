@@ -18,8 +18,8 @@ jest.mock('src/routes/paths', () => ({
 }));
 
 jest.mock('src/routes/components', () => ({
-  RouterLink: ({ href, children, onClick }: any) => (
-    <a href={href} onClick={onClick}>
+  RouterLink: ({ href, to, children, onClick }: any) => (
+    <a href={to ?? href} onClick={onClick}>
       {children}
     </a>
   ),
@@ -124,10 +124,10 @@ describe('SellerCenterSettings', () => {
 
   it('handles file input changes (banner/logo) and renders preview images', async () => {
     // ✅ jsdom puede no traer createObjectURL
-    if (!(URL as any).createObjectURL) {
-      (URL as any).createObjectURL = jest.fn(() => 'blob:preview-url');
-    } else {
+    if ((URL as any).createObjectURL) {
       jest.spyOn(URL, 'createObjectURL').mockImplementation(() => 'blob:preview-url');
+    } else {
+      (URL as any).createObjectURL = jest.fn(() => 'blob:preview-url');
     }
 
     const { container } = renderWithTheme(<SellerCenterSettings />);

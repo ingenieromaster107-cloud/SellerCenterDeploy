@@ -27,7 +27,7 @@ export function BreadcrumbsLink({ href, icon, name, disabled, ...other }: Breadc
     return (
       <Link
         component={RouterLink}
-        href={href}
+        to={href}
         color="inherit"
         sx={{
           display: 'inline-flex',

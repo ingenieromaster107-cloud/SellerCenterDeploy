@@ -1,50 +1,43 @@
 import NProgress from 'nprogress';
+import { useNavigate } from 'react-router';
 import { useMemo, useCallback } from 'react';
 import { isEqualPath } from 'minimal-shared/utils';
-import { useRouter as useNextRouter } from 'next/navigation';
+
+type NavigateOptions = NonNullable<Parameters<ReturnType<typeof useNavigate>>[1]>;
 
 // ----------------------------------------------------------------------
 
-/**
- * Customized useRouter hook with NProgress integration.
- */
-
 export function useRouter() {
-  const nextRouter = useNextRouter();
+  const navigate = useNavigate();
 
-  const push: ReturnType<typeof useNextRouter>['push'] = useCallback(
-    (href, options) => {
-      if (
-        typeof window !== 'undefined' &&
-        !isEqualPath(href, window.location.href, { deep: false })
-      ) {
+  const push = useCallback(
+    (href: string, options?: NavigateOptions) => {
+      if (!isEqualPath(href, window.location.href, { deep: false })) {
         NProgress.start();
       }
-      nextRouter.push(href, options);
+      navigate(href, options);
     },
-    [nextRouter]
+    [navigate]
   );
 
-  const replace: ReturnType<typeof useNextRouter>['replace'] = useCallback(
-    (href, options) => {
-      if (
-        typeof window !== 'undefined' &&
-        !isEqualPath(href, window.location.href, { deep: false })
-      ) {
-        NProgress.start();
-      }
-      nextRouter.replace(href, options);
+  const replace = useCallback(
+    (href: string, options?: NavigateOptions) => {
+      NProgress.start();
+      navigate(href, { ...options, replace: true });
     },
-    [nextRouter]
+    [navigate]
   );
 
   const router = useMemo(
     () => ({
-      ...nextRouter,
       push,
       replace,
+      back: () => navigate(-1),
+      forward: () => navigate(1),
+      refresh: () => navigate(0),
+      prefetch: (_href: string) => {},
     }),
-    [nextRouter, push, replace]
+    [navigate, push, replace]
   );
 
   return router;

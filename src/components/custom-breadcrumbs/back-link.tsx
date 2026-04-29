@@ -8,14 +8,19 @@ import { Iconify, iconifyClasses } from '../iconify';
 
 // ----------------------------------------------------------------------
 
-export type BackLinkProps = LinkProps & {
+export type BackLinkProps = Omit<LinkProps, 'href'> & {
+  href?: string;
+  to?: string;
   label?: string;
 };
 
-export function BackLink({ sx, label, ...other }: BackLinkProps) {
+export function BackLink({ sx, label, href, to, ...other }: BackLinkProps) {
+  const resolvedTo = to ?? href ?? '#';
+
   return (
     <Link
       component={RouterLink}
+      to={resolvedTo}
       color="inherit"
       underline="none"
       sx={[

@@ -3,8 +3,8 @@ import { render, screen } from '@testing-library/react';
 import { SignInButton } from './sign-in-button';
 
 jest.mock('src/routes/components', () => ({
-  RouterLink: ({ href, children }: { href?: string; children: React.ReactNode }) => (
-    <a href={href}>{children}</a>
+  RouterLink: ({ href, to, children }: { href?: string; to?: string; children: React.ReactNode }) => (
+    <a href={to ?? href}>{children}</a>
   ),
 }));
 

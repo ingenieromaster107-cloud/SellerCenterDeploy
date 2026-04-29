@@ -22,7 +22,7 @@ const getLinkProps = (href?: string) => {
 
   return isExternalLink(href)
     ? { component: Link, href, target: '_blank', rel: 'noopener noreferrer' }
-    : { component: RouterLink, href };
+    : { component: RouterLink, to: href };
 };
 
 export function CustomGridActionsCellItem({

@@ -22,7 +22,7 @@ type Props = Omit<ListItemButtonProps, 'title'> & {
 export function ResultItem({ title, path, labels, href, sx, ...other }: Props) {
   const linkProps = isExternalLink(href)
     ? { component: 'a', href, target: '_blank', rel: 'noopener noreferrer' }
-    : { component: RouterLink, href };
+    : { component: RouterLink, to: href };
 
   return (
     <ListItemButton
@@ -48,9 +48,9 @@ export function ResultItem({ title, path, labels, href, sx, ...other }: Props) {
       {...other}
     >
       <ListItemText
-        primary={title.map((part, index) => (
+        primary={title.map((part) => (
           <Box
-            key={index}
+            key={`${part.text}-${part.highlight ? '1' : '0'}`}
             component="span"
             sx={{
               ...(part.highlight && {
@@ -61,9 +61,9 @@ export function ResultItem({ title, path, labels, href, sx, ...other }: Props) {
             {part.text}
           </Box>
         ))}
-        secondary={path.map((part, index) => (
+        secondary={path.map((part) => (
           <Box
-            key={index}
+            key={`${part.text}-${part.highlight ? '1' : '0'}`}
             component="span"
             sx={{
               color: 'text.secondary',

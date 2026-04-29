@@ -56,7 +56,7 @@ export function AccountLayout({ children, ...other }: HomeContentProps) {
             label={tab.label}
             icon={tab.icon}
             value={tab.href}
-            href={tab.href}
+            to={tab.href}
           />
         ))}
       </Tabs>

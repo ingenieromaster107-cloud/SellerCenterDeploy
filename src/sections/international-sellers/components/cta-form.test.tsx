@@ -14,7 +14,7 @@ jest.mock('src/components/iconify', () => ({
   Iconify: ({ icon }: any) => <span data-testid={`icon-${icon}`} />,
 }));
 
-global.fetch = jest.fn();
+globalThis.fetch = jest.fn();
 
 const theme = createTheme({ cssVariables: true });
 const renderWithTheme = (ui: React.ReactElement) =>
@@ -69,7 +69,7 @@ describe('CTAForm', () => {
   });
 
   it('calls toast.success and resets form on successful fetch', async () => {
-    (global.fetch as jest.Mock).mockResolvedValueOnce({ ok: true });
+    (globalThis.fetch as jest.Mock).mockResolvedValueOnce({ ok: true });
 
     renderWithTheme(<CTAForm />);
     const inputs = screen.getAllByRole('textbox');
@@ -85,7 +85,7 @@ describe('CTAForm', () => {
   });
 
   it('calls toast.error when fetch returns not ok', async () => {
-    (global.fetch as jest.Mock).mockResolvedValueOnce({ ok: false });
+    (globalThis.fetch as jest.Mock).mockResolvedValueOnce({ ok: false });
 
     renderWithTheme(<CTAForm />);
     const inputs = screen.getAllByRole('textbox');
@@ -100,7 +100,7 @@ describe('CTAForm', () => {
   });
 
   it('calls fallback toast.error when fetch throws without a message', async () => {
-    (global.fetch as jest.Mock).mockRejectedValueOnce(null);
+    (globalThis.fetch as jest.Mock).mockRejectedValueOnce(null);
 
     renderWithTheme(<CTAForm />);
     const inputs = screen.getAllByRole('textbox');

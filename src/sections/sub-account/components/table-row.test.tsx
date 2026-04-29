@@ -74,8 +74,10 @@ jest.mock('@mui/material/MenuItem', () => ({
 }));
 
 jest.mock('src/routes/components', () => ({
-  RouterLink: ({ href, children }: { href: string; children: React.ReactNode }) => (
-    <div data-testid="router-link">{children}</div>
+  RouterLink: ({ href, to, children }: { href?: string; to?: string; children: React.ReactNode }) => (
+    <div data-testid="router-link" data-href={to ?? href}>
+      {children}
+    </div>
   ),
 }));
 
@@ -89,7 +91,7 @@ const localStorageMock = {
   removeItem: jest.fn(),
   clear: jest.fn(),
 };
-Object.defineProperty(window, 'localStorage', { value: localStorageMock });
+Object.defineProperty(globalThis, 'localStorage', { value: localStorageMock });
 
 jest.mock('./subaccount-edit-dialog-form', () => ({
   SubAccountEditDialogForm: ({ open }: { open: boolean }) => (

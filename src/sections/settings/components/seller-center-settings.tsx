@@ -405,9 +405,9 @@ export function SellerCenterSettings() {
                   <Stack direction="row" spacing={1}>
                     <Button
                       component={RouterLink}
-                      href="#"
+                      to="#"
                       variant="soft"
-                      onClick={(e) => {
+                      onClick={(e: React.MouseEvent) => {
                         e.preventDefault();
                         toast.info(translate('settings', 'shopUrl.actions.viewProfileMock'));
                       }}
@@ -417,9 +417,9 @@ export function SellerCenterSettings() {
 
                     <Button
                       component={RouterLink}
-                      href="#"
+                      to="#"
                       variant="soft"
-                      onClick={(e) => {
+                      onClick={(e: React.MouseEvent) => {
                         e.preventDefault();
                         toast.info(translate('settings', 'shopUrl.actions.viewCollectionMock'));
                       }}
@@ -431,7 +431,7 @@ export function SellerCenterSettings() {
                   <Stack direction="row" spacing={1}>
                     <Button
                       component={RouterLink}
-                      href={paths.home.root}
+                      to={paths.home.root}
                       color="inherit"
                       startIcon={<Iconify icon="eva:arrow-ios-back-fill" />}
                     >

@@ -160,7 +160,6 @@ describe('home layout 100 coverage harness', () => {
 
     renderWithTheme(
       <NavHorizontal
-        checkPermissions={jest.fn()}
         data={[{ path: '/a', title: 'a' }] as any}
         sx={[{ m: 1 }]}
       />
@@ -168,7 +167,6 @@ describe('home layout 100 coverage harness', () => {
 
     renderWithTheme(
       <NavVertical
-        checkPermissions={jest.fn()}
         data={[{ path: '/a', title: 'a' }] as any}
         isNavMini={false}
         onToggleNav={jest.fn()}
@@ -177,7 +175,6 @@ describe('home layout 100 coverage harness', () => {
 
     renderWithTheme(
       <NavVertical
-        checkPermissions={jest.fn()}
         data={[{ path: '/a', title: 'a' }] as any}
         isNavMini
         onToggleNav={jest.fn()}
@@ -187,7 +184,6 @@ describe('home layout 100 coverage harness', () => {
 
     renderWithTheme(
       <NavMobile
-        checkPermissions={jest.fn()}
         data={[{ path: '/a', title: 'a' }] as any}
         open
         onClose={mockedUseBooleanOnClose}
@@ -196,7 +192,6 @@ describe('home layout 100 coverage harness', () => {
     );
     renderWithTheme(
       <NavMobile
-        checkPermissions={jest.fn()}
         data={[{ path: '/a', title: 'a' }] as any}
         open
         onClose={mockedUseBooleanOnClose}

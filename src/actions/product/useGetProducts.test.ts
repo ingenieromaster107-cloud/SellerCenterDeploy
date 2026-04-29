@@ -52,16 +52,17 @@ const createWrapper = () => {
 
 describe('useGetProducts', () => {
   beforeEach(() => mockRequest.mockReset());
+  const productsPerPage = { pageSize: 10, currentPage: 1 };
 
   it('returns isLoading true initially', () => {
     mockRequest.mockReturnValue(new Promise(() => {}));
-    const { result } = renderHook(() => useGetProducts(), { wrapper: createWrapper() });
+    const { result } = renderHook(() => useGetProducts(productsPerPage), { wrapper: createWrapper() });
     expect(result.current.isLoading).toBe(true);
   });
 
   it('returns products after successful fetch', async () => {
     mockRequest.mockResolvedValue(mockProductsResponse);
-    const { result } = renderHook(() => useGetProducts(), { wrapper: createWrapper() });
+    const { result } = renderHook(() => useGetProducts(productsPerPage), { wrapper: createWrapper() });
     await waitFor(() => expect(result.current.isLoading).toBe(false));
     expect(result.current.products).toHaveLength(1);
     expect(result.current.products[0].sku).toBe('SKU-001');
@@ -70,7 +71,7 @@ describe('useGetProducts', () => {
 
   it('returns isError true on failure', async () => {
     mockRequest.mockRejectedValue(new Error('Network error'));
-    const { result } = renderHook(() => useGetProducts(), { wrapper: createWrapper() });
+    const { result } = renderHook(() => useGetProducts(productsPerPage), { wrapper: createWrapper() });
     await waitFor(() => expect(result.current.isError).toBe(true));
   });
 });

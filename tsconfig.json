@@ -1,7 +1,6 @@
 {
   "compilerOptions": {
     /* Bundler */
-    "ignoreDeprecations": "6.0",
     "baseUrl": ".",
     "paths": {
       "src/*": ["src/*"]
@@ -26,15 +25,8 @@
     "noEmit": true,
     "strictNullChecks": true,
 
-    /* Plugins */
-    "plugins": [{ "name": "next" }]
+    "types": ["vite/client", "jest", "@testing-library/jest-dom", "node"]
   },
-  "include": [
-    "next-env.d.ts",
-    "**/*.ts",
-    "**/*.tsx",
-    ".next/types/**/*.ts",
-    ".next/dev/types/**/*.ts"
-  ],
+  "include": ["src"],
   "exclude": ["node_modules"]
 }

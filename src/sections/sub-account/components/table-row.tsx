@@ -41,7 +41,7 @@ type Props = {
   onSelectRow: () => void;
 };
 
-export function SubAccountTableRow({ row, selected, onSelectRow, detailsHref }: Props) {
+export function SubAccountTableRow({ row, selected, onSelectRow, detailsHref }: Readonly<Props>) {
   const menuActions = usePopover();
   const quickEditForm = useBoolean();
   const deleteDialog = useBoolean();
@@ -147,7 +147,7 @@ export function SubAccountTableRow({ row, selected, onSelectRow, detailsHref }: 
 
             <ListItemText
               primary={
-                <Link component={RouterLink} href={detailsHref} color="inherit" underline="always">
+                <Link component={RouterLink} to={detailsHref} color="inherit" underline="always">
                   {row.firstname} {row.lastname}
                 </Link>
               }
@@ -165,26 +165,23 @@ export function SubAccountTableRow({ row, selected, onSelectRow, detailsHref }: 
         </TableCell>
 
         <TableCell align="left">
-          {
-            row.permissions.map((p, idx) => {
-              const key = Object.keys(p)[0];
-              const permission = PERMISSIONS.find((status) => status.value === key);
-              return (
-                <Label
-                  key={idx}
-                  variant="soft"
-                  color="info"
-                  sx={{
-                    marginX: '0.2em',
-                    marginY: '0.1em',
-                  }}
-                >
-                  {/* TODO: hay que definir los permisos  */}
-                  {permission?.label || translate('subAccountListView.unknownPermissions')}
-                </Label>
-              );
-            })
-          }
+          {row.permissions.map((permissionMap) => {
+            const permissionKey = Object.keys(permissionMap)[0];
+            const permission = PERMISSIONS.find((status) => status.value === permissionKey);
+            return (
+              <Label
+                key={permissionKey}
+                variant="soft"
+                color="info"
+                sx={{
+                  marginX: '0.2em',
+                  marginY: '0.1em',
+                }}
+              >
+                {permission?.label || translate('subAccountListView.unknownPermissions')}
+              </Label>
+            );
+          })}
         </TableCell>
 
 

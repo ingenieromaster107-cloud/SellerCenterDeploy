@@ -9,8 +9,8 @@ jest.mock('src/layouts/home', () => ({
 }));
 
 jest.mock('src/routes/components', () => ({
-  RouterLink: ({ href, children, ...props }: any) => (
-    <a href={href} {...props}>
+  RouterLink: ({ href, to, children, ...props }: any) => (
+    <a href={href ?? to} {...props}>
       {children}
     </a>
   ),

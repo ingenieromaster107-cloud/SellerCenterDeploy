@@ -136,7 +136,7 @@ export function Footer({
                     <Link
                       key={link.name}
                       component={RouterLink}
-                      href={link.href}
+                      to={link.href}
                       color="inherit"
                       variant="body2"
                     >

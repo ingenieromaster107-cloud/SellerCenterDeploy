@@ -2,6 +2,10 @@ import { render, screen } from '@testing-library/react';
 
 import { SimpleLayout } from './layout';
 
+jest.mock('src/routes/components', () => ({
+  RouterLink: ({ href, to, children }: any) => <a href={to ?? href}>{children}</a>,
+}));
+
 jest.mock('./content', () => ({
   SimpleCompactContent: ({ children, layoutQuery }: { children: React.ReactNode; layoutQuery: string }) => (
     <div data-testid="simple-compact-content" data-layout-query={layoutQuery}>
@@ -59,7 +63,7 @@ describe('SimpleLayout', () => {
   it('passes default css variables to layout section', () => {
     render(<SimpleLayout>Body</SimpleLayout>);
 
-    const cssVars = JSON.parse(screen.getByTestId('layout-section').getAttribute('data-css-vars') || '{}');
+    const cssVars = JSON.parse(screen.getByTestId('layout-section').dataset.cssVars || '{}');
 
     expect(cssVars['--layout-simple-content-compact-width']).toBe('448px');
   });

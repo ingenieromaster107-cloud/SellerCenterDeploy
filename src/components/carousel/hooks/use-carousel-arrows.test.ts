@@ -2,14 +2,23 @@ import { act, renderHook } from '@testing-library/react';
 
 import { useCarouselArrows } from './use-carousel-arrows';
 
-function makeMockApi(canScrollPrev = false, canScrollNext = true) {
-  const listeners: Record<string, ((api: any) => void)[]> = {};
-  const api = {
+type MockApi = {
+  canScrollPrev: jest.Mock<boolean, []>;
+  canScrollNext: jest.Mock<boolean, []>;
+  scrollPrev: jest.Mock<void, []>;
+  scrollNext: jest.Mock<void, []>;
+  on: jest.Mock<MockApi, [string, (api: MockApi) => void]>;
+  emit: (event: string) => void;
+};
+
+function makeMockApi(canScrollPrev = false, canScrollNext = true): MockApi {
+  const listeners: Record<string, Array<(api: MockApi) => void>> = {};
+  const api: MockApi = {
     canScrollPrev: jest.fn(() => canScrollPrev),
     canScrollNext: jest.fn(() => canScrollNext),
     scrollPrev: jest.fn(),
     scrollNext: jest.fn(),
-    on: jest.fn((event: string, handler: (api: any) => void) => {
+    on: jest.fn((event: string, handler: (api: MockApi) => void) => {
       if (!listeners[event]) listeners[event] = [];
       listeners[event].push(handler);
       return api;
@@ -21,7 +30,7 @@ function makeMockApi(canScrollPrev = false, canScrollNext = true) {
 
 describe('useCarouselArrows', () => {
   it('returns initial disabled state when no api', () => {
-    const { result } = renderHook(() => useCarouselArrows(undefined));
+    const { result } = renderHook(() => useCarouselArrows());
     expect(result.current.disablePrev).toBe(true);
     expect(result.current.disableNext).toBe(true);
   });
@@ -48,7 +57,7 @@ describe('useCarouselArrows', () => {
   });
 
   it('does nothing on click when no api', () => {
-    const { result } = renderHook(() => useCarouselArrows(undefined));
+    const { result } = renderHook(() => useCarouselArrows());
     expect(() => act(() => result.current.onClickPrev())).not.toThrow();
   });
 });

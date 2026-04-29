@@ -2,16 +2,29 @@ import { act, renderHook } from '@testing-library/react';
 
 import { useCarouselAutoplay } from './use-carousel-autoplay';
 
+type AutoplayMock = {
+  isPlaying: jest.Mock<boolean, []>;
+  play: jest.Mock<void, []>;
+  stop: jest.Mock<void, []>;
+  reset: jest.Mock<void, []>;
+  options: { stopOnInteraction: boolean };
+};
+
+type MockApi = {
+  plugins: jest.Mock<{ autoplay: AutoplayMock }, []>;
+  on: jest.Mock<MockApi, [string, () => void]>;
+};
+
 function makeMockApi(isPlayingNow = false) {
   const listeners: Record<string, (() => void)[]> = {};
-  const autoplay = {
+  const autoplay: AutoplayMock = {
     isPlaying: jest.fn(() => isPlayingNow),
     play: jest.fn(),
     stop: jest.fn(),
     reset: jest.fn(),
     options: { stopOnInteraction: true },
   };
-  const api = {
+  const api: MockApi = {
     plugins: jest.fn(() => ({ autoplay })),
     on: jest.fn((event: string, handler: () => void) => {
       if (!listeners[event]) listeners[event] = [];
@@ -24,7 +37,7 @@ function makeMockApi(isPlayingNow = false) {
 
 describe('useCarouselAutoplay', () => {
   it('returns isPlaying=false when no api', () => {
-    const { result } = renderHook(() => useCarouselAutoplay(undefined));
+    const { result } = renderHook(() => useCarouselAutoplay());
     expect(result.current.isPlaying).toBe(false);
   });
 
@@ -51,7 +64,7 @@ describe('useCarouselAutoplay', () => {
   });
 
   it('does nothing when no api on toggle', () => {
-    const { result } = renderHook(() => useCarouselAutoplay(undefined));
+    const { result } = renderHook(() => useCarouselAutoplay());
     expect(() => act(() => result.current.onTogglePlay())).not.toThrow();
   });
 });
