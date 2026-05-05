@@ -1,7 +1,15 @@
+import type { SellerStatus } from 'src/interfaces/seller/seller-status';
+
 export interface Customer {
   firstname: string;
   lastname: string;
   email: string;
+  /**
+   * Estado de vinculación del seller. Opcional porque el backend lo está
+   * incorporando a `GetCurrentUser`; mientras tanto el frontend asume
+   * `PENDING` como default a través de `useSellerStatus`.
+   */
+  sellerLinkingStatus?: SellerStatus;
   identificationNumber: {
     value: string;
   };
