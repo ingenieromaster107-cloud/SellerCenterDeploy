@@ -6,6 +6,12 @@ export const GET_CURRENT_USER_QUERY = `
       email
       firstname
       lastname
+      seller_profile {
+        seller_id
+        seller_status
+        seller_status_label
+        shop_url
+      }
     }
   }
 `;

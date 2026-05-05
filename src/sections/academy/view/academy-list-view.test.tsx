@@ -83,7 +83,7 @@ describe('AcademyListView', () => {
     expect(screen.getByText('academyModule.courses.advancedGrowth.title')).toBeInTheDocument();
   });
 
-  it.each(['PENDING', 'PROCESSING', 'DISAPPROVED'])(
+  it.each(['PENDING', 'PROCESSING', 'DISABLED', 'DENIED'])(
     'always shows the base courses for status %s',
     (status) => {
       mockStatus = { status };

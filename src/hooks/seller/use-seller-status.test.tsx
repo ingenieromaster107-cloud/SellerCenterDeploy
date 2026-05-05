@@ -10,10 +10,22 @@ jest.mock('src/auth/hooks', () => ({
 
 const mockedAuth = useAuthContext as jest.MockedFunction<typeof useAuthContext>;
 
-const buildAuth = (status?: string) =>
+const buildAuth = (sellerProfile?: {
+  status?: string;
+  statusLabel?: string;
+  statusCode?: number;
+}) =>
   ({
-    user: status
-      ? ({ sellerLinkingStatus: status } as unknown as ReturnType<typeof useAuthContext>['user'])
+    user: sellerProfile
+      ? ({
+          sellerProfile: {
+            sellerId: 1,
+            status: sellerProfile.status,
+            statusCode: sellerProfile.statusCode ?? 0,
+            statusLabel: sellerProfile.statusLabel ?? '',
+            shopUrl: 'shop',
+          },
+        } as unknown as ReturnType<typeof useAuthContext>['user'])
       : null,
   }) as unknown as ReturnType<typeof useAuthContext>;
 
@@ -25,22 +37,47 @@ describe('useSellerStatus', () => {
     expect(result.current.isPending).toBe(true);
   });
 
-  it('returns APPROVED when backend says so', () => {
-    mockedAuth.mockReturnValue(buildAuth('APPROVED'));
+  it('falls back to PENDING when sellerProfile is missing', () => {
+    mockedAuth.mockReturnValue({
+      user: { firstname: 'X' } as any,
+    } as any);
+    const { result } = renderHook(() => useSellerStatus());
+    expect(result.current.status).toBe('PENDING');
+  });
+
+  it('returns APPROVED with statusLabel from backend', () => {
+    mockedAuth.mockReturnValue(
+      buildAuth({ status: 'APPROVED', statusCode: 1, statusLabel: 'Aprobado' })
+    );
     const { result } = renderHook(() => useSellerStatus());
     expect(result.current.status).toBe('APPROVED');
+    expect(result.current.statusLabel).toBe('Aprobado');
     expect(result.current.isApproved).toBe(true);
     expect(result.current.isPending).toBe(false);
   });
 
-  it.each(['PROCESSING', 'DISAPPROVED'] as const)('handles %s', (status) => {
-    mockedAuth.mockReturnValue(buildAuth(status));
+  it.each([
+    ['PROCESSING', 2],
+    ['DISABLED', 3],
+    ['DENIED', 4],
+  ] as const)('handles %s', (status, code) => {
+    mockedAuth.mockReturnValue(buildAuth({ status, statusCode: code }));
     const { result } = renderHook(() => useSellerStatus());
     expect(result.current.status).toBe(status);
   });
 
-  it('falls back to PENDING when backend returns an unknown value', () => {
-    mockedAuth.mockReturnValue(buildAuth('SOMETHING_WEIRD'));
+  it('exposes per-status booleans matching the active status', () => {
+    mockedAuth.mockReturnValue(buildAuth({ status: 'DENIED', statusCode: 4 }));
+    const { result } = renderHook(() => useSellerStatus());
+    expect(result.current.isDenied).toBe(true);
+    expect(result.current.isApproved).toBe(false);
+    expect(result.current.isProcessing).toBe(false);
+    expect(result.current.isPending).toBe(false);
+    expect(result.current.isDisabled).toBe(false);
+  });
+
+  it('falls back to PENDING when sellerProfile.status is undefined (unknown code)', () => {
+    mockedAuth.mockReturnValue(buildAuth({ statusCode: 99 }));
     const { result } = renderHook(() => useSellerStatus());
     expect(result.current.status).toBe('PENDING');
   });

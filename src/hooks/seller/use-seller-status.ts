@@ -2,7 +2,7 @@
 
 import { useMemo } from 'react';
 
-import { SELLER_STATUS, isSellerStatus, type SellerStatus } from 'src/interfaces/seller/seller-status';
+import { SELLER_STATUS, type SellerStatus } from 'src/interfaces/seller/seller-status';
 
 import { useAuthContext } from 'src/auth/hooks';
 
@@ -11,31 +11,35 @@ import { useAuthContext } from 'src/auth/hooks';
 /**
  * Hook que expone el estado de vinculación del seller actual.
  *
- * Mientras el backend implementa el campo `sellerLinkingStatus` en la query
- * `GetCurrentUser`, este hook devuelve `PENDING` como default — esto es
- * intencional para que módulos como Academy (que deben funcionar en cualquier
- * estado) no rompan, y para que la UI condicional por estado se comporte de
- * forma predecible.
+ * Lee `customer.sellerProfile.status` (ya mapeado por el adapter desde el
+ * entero `seller_status` que devuelve el backend). Cuando el perfil aún no
+ * está disponible o el código es desconocido, devuelve `PENDING` como
+ * fallback para no romper módulos que deben seguir accesibles (Academy).
  */
 export const useSellerStatus = (): {
   status: SellerStatus;
+  statusLabel: string;
   isApproved: boolean;
   isPending: boolean;
   isProcessing: boolean;
-  isDisapproved: boolean;
+  isDisabled: boolean;
+  isDenied: boolean;
 } => {
   const { user } = useAuthContext();
 
   return useMemo(() => {
-    const raw = user?.sellerLinkingStatus;
-    const status: SellerStatus = isSellerStatus(raw) ? raw : SELLER_STATUS.PENDING;
+    const profile = user?.sellerProfile;
+    const status: SellerStatus = profile?.status ?? SELLER_STATUS.PENDING;
+    const statusLabel = profile?.statusLabel ?? '';
 
     return {
       status,
+      statusLabel,
       isApproved: status === SELLER_STATUS.APPROVED,
       isPending: status === SELLER_STATUS.PENDING,
       isProcessing: status === SELLER_STATUS.PROCESSING,
-      isDisapproved: status === SELLER_STATUS.DISAPPROVED,
+      isDisabled: status === SELLER_STATUS.DISABLED,
+      isDenied: status === SELLER_STATUS.DENIED,
     };
-  }, [user?.sellerLinkingStatus]);
+  }, [user?.sellerProfile]);
 };
