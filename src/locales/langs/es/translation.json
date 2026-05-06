@@ -654,5 +654,87 @@
       "suspendAccount": "Suspender Cuenta",
       "deleteAccount": "Eliminar Cuenta"
     }
+  },
+  "productLoad": {
+    "dialog": {
+      "title": "Carga masiva de productos",
+      "intro1": "Incluye las medidas correctas (peso, largo, ancho, alto) para asegurar costos de envío precisos.",
+      "intro2": "Recomendamos no exceder 3.600 filas por archivo.",
+      "intro3": "Formatos permitidos: CSV. Tamaño máximo: 1 MB."
+    },
+    "fileLabel": "Archivo",
+    "modeLabel": "Modo de importación",
+    "dropZone": {
+      "title": "Arrastra y suelta tu archivo aquí",
+      "maxSize": "máx. 1 MB"
+    },
+    "modes": {
+      "create": {
+        "title": "Crear",
+        "description": "Crea productos nuevos. Todas las columnas son obligatorias."
+      },
+      "update": {
+        "title": "Actualizar",
+        "description": "Actualiza productos existentes por SKU. Solo el SKU es obligatorio."
+      },
+      "replace": {
+        "title": "Reemplazar",
+        "description": "Reemplaza por completo los productos existentes. Todas las columnas son obligatorias."
+      }
+    },
+    "errors": {
+      "invalidType": "El archivo cargado no tiene un tipo válido.",
+      "tooBig": "El archivo cargado supera 1 MB."
+    },
+    "preview": {
+      "info": "Revisa las filas detectadas antes de confirmar el envío.",
+      "warningWithErrors": "Hay filas con errores de formato local. Corrígelas para poder continuar.",
+      "errorTooltipTitle": "Errores en esta fila",
+      "rows": "filas detectadas",
+      "errors": "filas con errores",
+      "emptyCell": "vacío"
+    },
+    "processing": {
+      "title": "Procesando importación…",
+      "description": "Estamos validando y aplicando los cambios en tu catálogo. No cierres esta ventana."
+    },
+    "summary": {
+      "total": "Total",
+      "processed": "Procesados",
+      "success": "Exitosos",
+      "failed": "Fallidos"
+    },
+    "results": {
+      "rowColumn": "Fila",
+      "productColumn": "Producto",
+      "statusColumn": "Estado",
+      "messageColumn": "Mensaje",
+      "fieldsColumn": "Errores por campo",
+      "statusSuccess": "Éxito",
+      "statusFailed": "Fallido",
+      "showOnlyFailed": "Ver solo fallidos",
+      "showAll": "Ver todos"
+    },
+    "steps": {
+      "upload": "Cargar archivo",
+      "preview": "Previsualizar",
+      "processing": "Procesando",
+      "results": "Resultados"
+    },
+    "actions": {
+      "clear": "Limpiar",
+      "cancel": "Cancelar",
+      "continue": "Continuar",
+      "back": "Volver",
+      "confirmAndSend": "Confirmar y enviar",
+      "processing": "Procesando…",
+      "downloadErrors": "Descargar errores",
+      "finish": "Finalizar"
+    },
+    "cancelDialog": {
+      "title": "Cancelar carga de productos",
+      "content": "¿Seguro que quieres cancelar la carga? Los archivos seleccionados se perderán.",
+      "continue": "Continuar"
+    }
   }
 }

@@ -1,38 +1,88 @@
+import type {
+  ImportMode,
+  MassUploadResultRowInterface,
+  StartMassUploadImportResponseInterface,
+} from 'src/interfaces/load/bulk-loading.interface';
+
 import { useRef, useMemo, useState, useCallback } from 'react';
 
 import { fileToBase64 } from 'src/utils/codificateFile';
-import { validateCsvFile } from 'src/utils/validate-csv';
+import { parseCsv, type ParsedCsv } from 'src/utils/parse-csv';
+import { downloadErrorsCsv } from 'src/utils/download-errors-csv';
+import { CSV_MAX_BYTES, validateCsvFile, validateCsvContent } from 'src/utils/validate-csv';
 
 import { useValidateMassUpload } from 'src/actions/product/useValidateMassUpload';
+import { useStartMassUploadImport } from 'src/actions/product/useStartMassUploadImport';
 
 import { toast } from 'src/components/snackbar';
 
-const MAX_SIZE = 5 * 1024 * 1024; // 5 MB
-const CSV_ACCEPTED = ['text/csv', 'application/vnd.ms-excel', 'text/xml'];
+// ----------------------------------------------------------------------
+
+const CSV_ACCEPTED = [
+  'text/csv',
+  'application/vnd.ms-excel',
+  'text/xml',
+  'application/csv',
+  'text/plain',
+];
 const IMG_ACCEPTED = ['image/jpeg', 'image/png'];
 const ZIP_ACCEPTED = ['application/zip', 'application/x-zip-compressed', 'multipart/x-zip'];
-interface Result {
+const MAX_IMG_BYTES = 5 * 1024 * 1024;
+
+interface ResultBanner {
   ok: boolean;
   message: string;
 }
 
+/**
+ * Wizard de carga masiva (4 pasos):
+ *  0 - Upload + selección de modo (CREATE/UPDATE/REPLACE) + validación local
+ *  1 - Preview tabulado con marcado de filas con error local
+ *  2 - Procesando (validateMassUpload → startMassUploadImport)
+ *  3 - Resultados (resumen + detalle + descarga de errores)
+ */
+export type UploadStep = 0 | 1 | 2 | 3;
+
+const isCsvByName = (name: string) => /\.csv$/i.test(name);
+
 export const useProductUploadDialog = ({ onClose }: { onClose: () => void }) => {
   const csvInputRef = useRef<HTMLInputElement>(null);
   const imgInputRef = useRef<HTMLInputElement>(null);
+
+  // Step
+  const [step, setStep] = useState<UploadStep>(0);
+
+  // Files
   const [csvFile, setCsvFile] = useState<File | null>(null);
   const [images, setImages] = useState<File[]>([]);
   const [imagesZip, setImagesZip] = useState<File | null>(null);
 
-  const [uploading, setUploading] = useState(false);
-  const [result, setResult] = useState<Result | null>(null);
-  const [showCancelDialog, setShowCancelDialog] = useState(false);
+  // Mode
+  const [importMode, setImportMode] = useState<ImportMode>('CREATE');
+
+  // CSV parse + validation
+  const [parsedCsv, setParsedCsv] = useState<ParsedCsv | null>(null);
   const [csvErrors, setCsvErrors] = useState<string[]>([]);
-  const { mutateAsync } = useValidateMassUpload();
+  const [rowErrorMap, setRowErrorMap] = useState<Map<number, string[]>>(new Map());
+
+  // Backend state
+  const [uploading, setUploading] = useState(false);
+  const [importResult, setImportResult] =
+    useState<StartMassUploadImportResponseInterface['startMassUploadImport'] | null>(null);
+
+  // UX
+  const [result, setResult] = useState<ResultBanner | null>(null);
+  const [showCancelDialog, setShowCancelDialog] = useState(false);
+
+  const { mutateAsync: validateMassUpload } = useValidateMassUpload();
+  const { mutateAsync: startMassUploadImport } = useStartMassUploadImport();
+
+  // -------------------- Validity flags --------------------
 
   const csvInvalid = useMemo(() => {
     if (!csvFile) return null;
-    const badType = !CSV_ACCEPTED.includes(csvFile.type);
-    const tooBig = csvFile.size > MAX_SIZE;
+    const badType = !CSV_ACCEPTED.includes(csvFile.type) && !isCsvByName(csvFile.name);
+    const tooBig = csvFile.size > CSV_MAX_BYTES;
     return { badType, tooBig };
   }, [csvFile]);
 
@@ -41,7 +91,7 @@ export const useProductUploadDialog = ({ onClose }: { onClose: () => void }) => 
     const tooBig: string[] = [];
     images.forEach((f) => {
       if (!IMG_ACCEPTED.includes(f.type)) badType.push(f.name);
-      if (f.size > MAX_SIZE) tooBig.push(f.name);
+      if (f.size > MAX_IMG_BYTES) tooBig.push(f.name);
     });
     return { badType, tooBig };
   }, [images]);
@@ -50,23 +100,30 @@ export const useProductUploadDialog = ({ onClose }: { onClose: () => void }) => 
     if (!imagesZip) return null;
     const badType =
       !ZIP_ACCEPTED.includes(imagesZip.type) && !imagesZip.name?.toLowerCase()?.endsWith('.zip');
-    const tooBig = imagesZip.size > MAX_SIZE;
+    const tooBig = imagesZip.size > MAX_IMG_BYTES;
     return { badType, tooBig };
   }, [imagesZip]);
+
+  // -------------------- File pickers --------------------
 
   const onPickCsv = () => csvInputRef.current?.click();
   const onPickImages = () => imgInputRef.current?.click();
 
-  const handleCsvFiles = useCallback(async (fileList: FileList | null) => {
-    const f = (fileList && fileList[0]) || null;
-    if (!f) return;
-    setCsvFile(f);
-    setResult(null);
+  const handleCsvFiles = useCallback(
+    async (fileList: FileList | null) => {
+      const f = (fileList && fileList[0]) || null;
+      if (!f) return;
+      setCsvFile(f);
+      setResult(null);
+      setParsedCsv(null);
+      setRowErrorMap(new Map());
+      setImportResult(null);
 
-    setCsvErrors([]);
-    const errors = await validateCsvFile(f);
-    setCsvErrors(errors);
-  }, []);
+      const errors = await validateCsvFile(f);
+      setCsvErrors(errors);
+    },
+    []
+  );
 
   const isZipFile = (f: File) =>
     ZIP_ACCEPTED.includes(f.type) ||
@@ -115,126 +172,219 @@ export const useProductUploadDialog = ({ onClose }: { onClose: () => void }) => 
     [handleImageFiles]
   );
 
-  const clearAll = () => {
+  // -------------------- Wizard transitions --------------------
+
+  /**
+   * Step 0 → 1: parsea el CSV en cliente, valida headers + filas según `mode`.
+   * Si hay errores de archivo no avanza.
+   */
+  const goToPreview = useCallback(async () => {
+    if (!csvFile) return;
+    setResult(null);
+
+    const text = await csvFile.text();
+    const parsed = parseCsv(text);
+
+    const fileErrors = await validateCsvFile(csvFile, { mode: importMode, parsed });
+    setCsvErrors(fileErrors);
+
+    if (fileErrors.length > 0) {
+      setParsedCsv(parsed);
+      setRowErrorMap(new Map());
+      return;
+    }
+
+    const validation = validateCsvContent(parsed, importMode);
+    setParsedCsv(parsed);
+    setRowErrorMap(validation.rowErrorMap);
+    setStep(1);
+  }, [csvFile, importMode]);
+
+  const goBackToUpload = useCallback(() => setStep(0), []);
+
+  /**
+   * Step 1 → 2 → 3: encadena las dos mutations del backend.
+   * - Step 2: spinner durante el procesamiento.
+   * - Step 3: resultados consolidados.
+   */
+  const confirmAndImport = useCallback(async () => {
+    if (!csvFile) return;
+    setStep(2);
+    setUploading(true);
+    setResult(null);
+    setImportResult(null);
+
+    try {
+      const base64 = await fileToBase64(csvFile);
+      const validation = await validateMassUpload({
+        attributeSetId: 10,
+        fileContentBase64: base64,
+        fileName: csvFile.name.replace(/\.[^.]+$/, ''),
+        fileType: csvFile.type.includes('xml')
+          ? 'xml'
+          : csvFile.type.includes('excel')
+            ? 'xls'
+            : 'csv',
+      });
+
+      if (!validation.validateMassUpload.success || !validation.validateMassUpload.profile_id) {
+        const message =
+          validation.validateMassUpload.message || 'No se pudo validar el archivo.';
+        toast.error(message);
+        setResult({ ok: false, message });
+        setStep(0);
+        return;
+      }
+
+      const importResp = await startMassUploadImport({
+        profileId: validation.validateMassUpload.profile_id,
+        importMode,
+      });
+
+      setImportResult(importResp.startMassUploadImport);
+      setStep(3);
+    } catch (err: any) {
+      const message = err?.message || 'Error en la carga.';
+      toast.error(message);
+      setResult({ ok: false, message });
+      setStep(0);
+    } finally {
+      setUploading(false);
+    }
+  }, [csvFile, importMode, validateMassUpload, startMassUploadImport]);
+
+  // -------------------- Errors download / retry --------------------
+
+  const handleDownloadErrors = useCallback(() => {
+    if (!parsedCsv || !importResult) return;
+    downloadErrorsCsv({
+      originalHeaders: parsedCsv.headers,
+      originalRows: parsedCsv.rows,
+      results: importResult.results,
+    });
+  }, [parsedCsv, importResult]);
+
+  const failedResults: MassUploadResultRowInterface[] = useMemo(
+    () => importResult?.results.filter((r) => r.status !== 'success') ?? [],
+    [importResult]
+  );
+
+  /**
+   * Genera un nuevo File con SOLO las filas fallidas para que el usuario
+   * pueda reintentar el lote acotado. El usuario aún tiene que abrir el
+   * archivo y corregir, pero arranca con un CSV pre-filtrado.
+   */
+  const retryFailed = useCallback(() => {
+    handleDownloadErrors();
+    toast.success('Descarga del CSV de errores iniciada. Corrígelo y vuelve a subirlo.');
+  }, [handleDownloadErrors]);
+
+  // -------------------- Reset / cancel --------------------
+
+  const clearAll = useCallback(() => {
     setCsvFile(null);
     setImages([]);
     setImagesZip(null);
     setResult(null);
-  };
+    setParsedCsv(null);
+    setRowErrorMap(new Map());
+    setCsvErrors([]);
+    setImportResult(null);
+    setStep(0);
+  }, []);
 
-  const hasValidImagesChoice = useMemo(() => {
-    if (imagesZip) return !(zipInvalid?.badType || zipInvalid?.tooBig);
-    if (images.length > 0)
-      return imgsInvalid.badType.length === 0 && imgsInvalid.tooBig.length === 0;
-    return false;
-  }, [imagesZip, zipInvalid, images, imgsInvalid]);
-
-  const disabledUpload =
-    uploading ||
-    !csvFile ||
-    (csvInvalid && (csvInvalid.badType || csvInvalid.tooBig)) ||
-    (csvErrors && csvErrors.length > 0);
-
-
-  const handleUpload = useCallback(async () => {
-    if (!csvFile) {
-      setResult({ ok: false, message: 'Debes seleccionar un archivo antes de continuar.' });
-      return;
-    }
-    const decodifiedContent = await fileToBase64(csvFile);
-
-    setUploading(true);
-    setResult(null);
-    try {
-      if (disabledUpload) {
-        setResult({ ok: false, message: 'Revisa los archivos seleccionados.' });
-        setUploading(false);
-        return;
-      }
-      const request = {
-        attributeSetId: 10,
-        fileContentBase64: decodifiedContent,
-        fileName: csvFile.name.split('.')[0],
-        fileType: csvFile.type.includes('csv')
-          ? 'csv'
-          : csvFile.type.includes('xml')
-            ? 'xml'
-            : csvFile.type.includes('excel')
-              ? 'xls'
-              : 'unknown',
-      };
-      const resp = await mutateAsync(request);
-      if (resp.validateMassUpload.success) {
-        handleCancelUpload();
-        toast.success(`Importación completada`);
-        setCsvFile(null);
-      } else if (resp.validateMassUpload.success === false) {
-        toast.error(resp.validateMassUpload.message || 'No se pudo iniciar la importación');
-        setResult({
-          ok: false,
-          message: resp.validateMassUpload.message || 'No se pudo completar la carga',
-        });
-      } else {
-        toast.error(resp.validateMassUpload.message || 'Error al iniciar la importación');
-        setResult({
-          ok: false,
-          message: resp.validateMassUpload.message || 'No se pudo completar la carga',
-        });
-      }
-    } catch (err: { message?: string } | any) {
-      toast.error(err?.message || 'Error en la carga');
-      setResult({
-        ok: false,
-        message: err?.message || 'No se pudo completar la carga',
-      });
-    } finally {
-      setUploading(false);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [csvFile, disabledUpload]);
-
-  const handleCancelUpload = () => {
+  const handleCancelUpload = useCallback(() => {
     clearAll();
     setShowCancelDialog(false);
     onClose();
-  };
+  }, [clearAll, onClose]);
 
-  const handleCancelBulkUpload = () => {
+  const handleCancelBulkUpload = useCallback(() => {
     if (!!csvFile || images.length > 0 || !!imagesZip) {
       setShowCancelDialog(true);
     } else {
       handleCancelUpload();
     }
-  };
+  }, [csvFile, images, imagesZip, handleCancelUpload]);
+
+  const hasValidImagesChoice = useMemo(() => {
+    if (imagesZip) return !(zipInvalid?.badType || zipInvalid?.tooBig);
+    if (images.length > 0) return imgsInvalid.badType.length === 0 && imgsInvalid.tooBig.length === 0;
+    return false;
+  }, [imagesZip, zipInvalid, images, imgsInvalid]);
+
+  // Botón principal del Step 0
+  const disabledNext =
+    uploading ||
+    !csvFile ||
+    !!(csvInvalid && (csvInvalid.badType || csvInvalid.tooBig)) ||
+    csvErrors.length > 0;
+
+  // Hay errores locales por fila → si TRUE, deshabilitamos confirmar
+  const hasLocalRowErrors = rowErrorMap.size > 0;
+
+  // Back-compat para el dialog antiguo: handleUpload tiene el nuevo flujo
+  // dependiendo del paso actual.
+  const handleUpload = useCallback(async () => {
+    if (step === 0) await goToPreview();
+    else if (step === 1) await confirmAndImport();
+  }, [step, goToPreview, confirmAndImport]);
 
   return {
+    // refs + files
     csvInputRef,
     imgInputRef,
     csvFile,
     images,
     imagesZip,
+    setCsvFile,
+    setImages,
+    setImagesZip,
+
+    // wizard
+    step,
+    setStep,
+    importMode,
+    setImportMode,
+    parsedCsv,
+    rowErrorMap,
+    hasLocalRowErrors,
+    importResult,
+    failedResults,
+
+    // backend status
     uploading,
     result,
-    showCancelDialog,
+
+    // validity
     csvInvalid,
     imgsInvalid,
     zipInvalid,
-    disabledUpload,
-    hasValidImagesChoice,
     csvErrors,
+    hasValidImagesChoice,
+    disabledUpload: disabledNext,
+
+    // pickers
     onPickCsv,
     onPickImages,
     handleCsvFiles,
     handleImageFiles,
     onDropCsv,
     onDropImages,
+
+    // wizard actions
+    goToPreview,
+    goBackToUpload,
+    confirmAndImport,
+    handleDownloadErrors,
+    retryFailed,
     clearAll,
+
+    // back-compat (dialog antiguo)
     handleUpload,
     handleCancelUpload,
     handleCancelBulkUpload,
-    setCsvFile,
-    setImages,
-    setImagesZip,
+    showCancelDialog,
     setShowCancelDialog,
   };
 };

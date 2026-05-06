@@ -653,5 +653,87 @@
       "suspendAccount": "Suspend Account",
       "deleteAccount": "Delete Account"
     }
+  },
+  "productLoad": {
+    "dialog": {
+      "title": "Bulk product upload",
+      "intro1": "Include accurate measurements (weight, length, width, height) to ensure correct shipping costs.",
+      "intro2": "We recommend not exceeding 3,600 rows per file.",
+      "intro3": "Allowed format: CSV. Maximum size: 1 MB."
+    },
+    "fileLabel": "File",
+    "modeLabel": "Import mode",
+    "dropZone": {
+      "title": "Drag and drop your file here",
+      "maxSize": "max 1 MB"
+    },
+    "modes": {
+      "create": {
+        "title": "Create",
+        "description": "Create new products. All columns are required."
+      },
+      "update": {
+        "title": "Update",
+        "description": "Update existing products by SKU. Only SKU is required."
+      },
+      "replace": {
+        "title": "Replace",
+        "description": "Fully replace existing products. All columns are required."
+      }
+    },
+    "errors": {
+      "invalidType": "The uploaded file is not a valid type.",
+      "tooBig": "The uploaded file exceeds 1 MB."
+    },
+    "preview": {
+      "info": "Review the detected rows before confirming.",
+      "warningWithErrors": "Some rows have local formatting errors. Fix them to continue.",
+      "errorTooltipTitle": "Errors in this row",
+      "rows": "rows detected",
+      "errors": "rows with errors",
+      "emptyCell": "empty"
+    },
+    "processing": {
+      "title": "Processing import…",
+      "description": "We are validating and applying changes to your catalog. Please do not close this window."
+    },
+    "summary": {
+      "total": "Total",
+      "processed": "Processed",
+      "success": "Successful",
+      "failed": "Failed"
+    },
+    "results": {
+      "rowColumn": "Row",
+      "productColumn": "Product",
+      "statusColumn": "Status",
+      "messageColumn": "Message",
+      "fieldsColumn": "Field errors",
+      "statusSuccess": "Success",
+      "statusFailed": "Failed",
+      "showOnlyFailed": "Show failed only",
+      "showAll": "Show all"
+    },
+    "steps": {
+      "upload": "Upload file",
+      "preview": "Preview",
+      "processing": "Processing",
+      "results": "Results"
+    },
+    "actions": {
+      "clear": "Clear",
+      "cancel": "Cancel",
+      "continue": "Continue",
+      "back": "Back",
+      "confirmAndSend": "Confirm and send",
+      "processing": "Processing…",
+      "downloadErrors": "Download errors",
+      "finish": "Finish"
+    },
+    "cancelDialog": {
+      "title": "Cancel product upload",
+      "content": "Are you sure you want to cancel? Selected files will be lost.",
+      "continue": "Continue"
+    }
   }
 }
