@@ -1,11 +1,11 @@
+import { parseCsv } from './parse-csv';
 import {
   CSV_MAX_BYTES,
   validateCsvFile,
+  EXPECTED_HEADERS,
   validateCsvContent,
   getRequiredHeaders,
-  EXPECTED_HEADERS,
 } from './validate-csv';
-import { parseCsv } from './parse-csv';
 
 const createFile = (size: number, type = 'text/csv', name = 'test.csv') => {
   const content = 'a'.repeat(size);
