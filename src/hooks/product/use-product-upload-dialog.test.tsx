@@ -6,11 +6,10 @@ const mockValidateCsvFile = jest.fn();
 const mockValidateCsvContent = jest.fn();
 const mockParseCsv = jest.fn();
 const mockValidateMutate = jest.fn();
-const mockImportMutate = jest.fn();
+const mockQueueMutate = jest.fn();
 const mockFileToBase64 = jest.fn();
 const mockToastSuccess = jest.fn();
 const mockToastError = jest.fn();
-const mockDownload = jest.fn();
 
 jest.mock('src/utils/validate-csv', () => ({
   CSV_MAX_BYTES: 1024 * 1024,
@@ -26,16 +25,12 @@ jest.mock('src/actions/product/useValidateMassUpload', () => ({
   useValidateMassUpload: () => ({ mutateAsync: mockValidateMutate }),
 }));
 
-jest.mock('src/actions/product/useStartMassUploadImport', () => ({
-  useStartMassUploadImport: () => ({ mutateAsync: mockImportMutate }),
+jest.mock('src/actions/product/useQueueMassUploadImport', () => ({
+  useQueueMassUploadImport: () => ({ mutateAsync: mockQueueMutate }),
 }));
 
 jest.mock('src/utils/codificateFile', () => ({
   fileToBase64: (...args: unknown[]) => mockFileToBase64(...args),
-}));
-
-jest.mock('src/utils/download-errors-csv', () => ({
-  downloadErrorsCsv: (...args: unknown[]) => mockDownload(...args),
 }));
 
 jest.mock('src/components/snackbar', () => ({
@@ -57,7 +52,6 @@ const toFileList = (files: File[]): FileList => {
   }) as unknown as FileList;
 };
 
-// jsdom no incluye File#text() en todas las versiones; polyfill mínimo.
 const makeCsvFile = (content: string, name = 'p.csv') => {
   const file = new File([content], name, { type: 'text/csv' });
   if (typeof (file as any).text !== 'function') {
@@ -65,6 +59,9 @@ const makeCsvFile = (content: string, name = 'p.csv') => {
   }
   return file;
 };
+
+const makeZipFile = (name = 'imgs.zip') =>
+  new File(['zip-bytes'], name, { type: 'application/zip' });
 
 const validParsedCsv = {
   headers: ['sku', 'name'],
@@ -75,6 +72,17 @@ const validParsedCsv = {
   rowErrors: [],
 };
 
+const validQueuePayload = {
+  queueMassUploadImport: {
+    success: true,
+    message: 'Import queued successfully.',
+    profile_id: 9,
+    job_id: 1,
+    status: 'pending',
+    import_mode: 'CREATE',
+  },
+};
+
 describe('useProductUploadDialog', () => {
   beforeEach(() => {
     [
@@ -82,11 +90,10 @@ describe('useProductUploadDialog', () => {
       mockValidateCsvContent,
       mockParseCsv,
       mockValidateMutate,
-      mockImportMutate,
+      mockQueueMutate,
       mockFileToBase64,
       mockToastSuccess,
       mockToastError,
-      mockDownload,
     ].forEach((m) => m.mockReset());
   });
 
@@ -95,10 +102,11 @@ describe('useProductUploadDialog', () => {
     expect(result.current.step).toBe(0);
     expect(result.current.importMode).toBe('CREATE');
     expect(result.current.csvFile).toBeNull();
+    expect(result.current.imagesZip).toBeNull();
     expect(result.current.disabledUpload).toBe(true);
   });
 
-  it('handleCsvFiles stores the file and runs validation', async () => {
+  it('handleCsvFiles stores the file and runs basic validation', async () => {
     mockValidateCsvFile.mockResolvedValue([]);
     const file = makeCsvFile('sku,name\nA,B');
 
@@ -110,6 +118,15 @@ describe('useProductUploadDialog', () => {
     expect(result.current.csvFile).toBe(file);
     expect(result.current.csvErrors).toEqual([]);
     expect(mockValidateCsvFile).toHaveBeenCalledWith(file);
+  });
+
+  it('handleImageFiles stores ZIP files via setImagesZip', () => {
+    const { result } = renderHook(() => useProductUploadDialog({ onClose: jest.fn() }));
+    const zip = makeZipFile();
+    act(() => {
+      result.current.handleImageFiles(toFileList([zip]));
+    });
+    expect(result.current.imagesZip).toBe(zip);
   });
 
   it('goToPreview parses CSV, validates, and advances to step 1 when clean', async () => {
@@ -135,36 +152,12 @@ describe('useProductUploadDialog', () => {
     expect(result.current.hasLocalRowErrors).toBe(false);
   });
 
-  it('goToPreview stays on step 0 when file-level errors exist', async () => {
-    mockValidateCsvFile.mockResolvedValue(['Faltan columnas obligatorias: sku.']);
-    mockParseCsv.mockReturnValue(validParsedCsv);
-
-    const file = makeCsvFile('name\nB');
-    const { result } = renderHook(() => useProductUploadDialog({ onClose: jest.fn() }));
-
-    act(() => result.current.setCsvFile(file));
-    await act(async () => {
-      await result.current.goToPreview();
-    });
-
-    expect(result.current.step).toBe(0);
-    expect(result.current.csvErrors.length).toBeGreaterThan(0);
-  });
-
-  it('confirmAndImport chains validateMassUpload + startMassUploadImport and lands on step 3', async () => {
+  it('confirmAndImport chains validateMassUpload + queueMassUploadImport and lands on step 3', async () => {
     mockFileToBase64.mockResolvedValue('YmFzZTY0');
     mockValidateMutate.mockResolvedValue({
-      validateMassUpload: { success: true, message: 'ok', profile_id: 128 },
+      validateMassUpload: { success: true, message: 'ok', profile_id: 9 },
     });
-    mockImportMutate.mockResolvedValue({
-      startMassUploadImport: {
-        success: true,
-        message: 'Done',
-        profile_id: 128,
-        summary: { total_rows: 2, processed_rows: 2, success_rows: 2, failed_rows: 0 },
-        results: [],
-      },
-    });
+    mockQueueMutate.mockResolvedValue(validQueuePayload);
 
     const file = makeCsvFile('sku,name\nA,B');
     const { result } = renderHook(() => useProductUploadDialog({ onClose: jest.fn() }));
@@ -182,9 +175,44 @@ describe('useProductUploadDialog', () => {
         fileType: 'csv',
       })
     );
-    expect(mockImportMutate).toHaveBeenCalledWith({ profileId: 128, importMode: 'CREATE' });
+    expect(mockQueueMutate).toHaveBeenCalledWith({
+      profileId: 9,
+      importMode: 'CREATE',
+      imagesZipPath: null,
+    });
     expect(result.current.step).toBe(3);
-    expect(result.current.importResult?.success).toBe(true);
+    expect(result.current.queueResult?.job_id).toBe(1);
+    expect(result.current.queueResult?.status).toBe('pending');
+  });
+
+  it('confirmAndImport sends imagesZipPath as base64 when ZIP is selected', async () => {
+    mockFileToBase64
+      .mockResolvedValueOnce('CSVbase64') // CSV
+      .mockResolvedValueOnce('data:application/zip;base64,ZIPbase64'); // ZIP — has dataURL prefix
+    mockValidateMutate.mockResolvedValue({
+      validateMassUpload: { success: true, message: 'ok', profile_id: 9 },
+    });
+    mockQueueMutate.mockResolvedValue(validQueuePayload);
+
+    const csv = makeCsvFile('sku,name\nA,B');
+    const zip = makeZipFile();
+    const { result } = renderHook(() => useProductUploadDialog({ onClose: jest.fn() }));
+
+    act(() => {
+      result.current.setCsvFile(csv);
+      result.current.setImagesZip(zip);
+    });
+
+    await act(async () => {
+      await result.current.confirmAndImport();
+    });
+
+    // The dataURL prefix must be stripped before sending to the backend.
+    expect(mockQueueMutate).toHaveBeenCalledWith({
+      profileId: 9,
+      importMode: 'CREATE',
+      imagesZipPath: 'ZIPbase64',
+    });
   });
 
   it('confirmAndImport falls back to step 0 if validateMassUpload fails', async () => {
@@ -203,7 +231,7 @@ describe('useProductUploadDialog', () => {
 
     expect(mockToastError).toHaveBeenCalledWith('Bad CSV');
     expect(result.current.step).toBe(0);
-    expect(mockImportMutate).not.toHaveBeenCalled();
+    expect(mockQueueMutate).not.toHaveBeenCalled();
   });
 
   it('confirmAndImport falls back to step 0 on network error', async () => {
@@ -222,100 +250,16 @@ describe('useProductUploadDialog', () => {
     expect(mockToastError).toHaveBeenCalledWith('Network down');
   });
 
-  it('retryFailed triggers download and toasts a hint', async () => {
-    mockValidateCsvFile.mockResolvedValue([]);
-    mockParseCsv.mockReturnValue(validParsedCsv);
-    mockValidateCsvContent.mockReturnValue({
-      errors: [],
-      parsed: validParsedCsv,
-      rowErrorIndexes: new Set(),
-      rowErrorMap: new Map(),
-    });
-    mockFileToBase64.mockResolvedValue('YmFzZTY0');
-    mockValidateMutate.mockResolvedValue({
-      validateMassUpload: { success: true, message: 'ok', profile_id: 1 },
-    });
-    mockImportMutate.mockResolvedValue({
-      startMassUploadImport: {
-        success: false,
-        message: 'partial',
-        profile_id: 1,
-        summary: { total_rows: 2, processed_rows: 2, success_rows: 1, failed_rows: 1 },
-        results: [
-          { row: 1, product_id: 1, status: 'success', message: 'OK', errors: [] },
-          { row: 2, product_id: null, status: 'failed', message: 'oops', errors: [] },
-        ],
-      },
-    });
-
-    const file = makeCsvFile('sku,name\nA,B\nC,D');
+  it('clearAll resets file, ZIP, parsed CSV, errors and step', async () => {
     const { result } = renderHook(() => useProductUploadDialog({ onClose: jest.fn() }));
-
-    act(() => result.current.setCsvFile(file));
-    // Step 0 -> 1 to populate parsedCsv
-    await act(async () => {
-      await result.current.goToPreview();
-    });
-    // Step 1 -> 3 (chains the two mutations)
-    await act(async () => {
-      await result.current.confirmAndImport();
-    });
-
     act(() => {
-      result.current.retryFailed();
+      result.current.setCsvFile(makeCsvFile('a'));
+      result.current.setImagesZip(makeZipFile());
     });
-
-    expect(mockDownload).toHaveBeenCalled();
-    expect(mockToastSuccess).toHaveBeenCalled();
-    expect(result.current.failedResults).toHaveLength(1);
-  });
-
-  it('handleUpload routes to goToPreview at step 0 and confirmAndImport at step 1', async () => {
-    mockValidateCsvFile.mockResolvedValue([]);
-    mockParseCsv.mockReturnValue(validParsedCsv);
-    mockValidateCsvContent.mockReturnValue({
-      errors: [],
-      parsed: validParsedCsv,
-      rowErrorIndexes: new Set(),
-      rowErrorMap: new Map(),
-    });
-    mockFileToBase64.mockResolvedValue('YmFzZTY0');
-    mockValidateMutate.mockResolvedValue({
-      validateMassUpload: { success: true, message: 'ok', profile_id: 9 },
-    });
-    mockImportMutate.mockResolvedValue({
-      startMassUploadImport: {
-        success: true,
-        message: 'Done',
-        profile_id: 9,
-        summary: { total_rows: 2, processed_rows: 2, success_rows: 2, failed_rows: 0 },
-        results: [],
-      },
-    });
-
-    const file = makeCsvFile('sku,name\nA,B');
-    const { result } = renderHook(() => useProductUploadDialog({ onClose: jest.fn() }));
-    act(() => result.current.setCsvFile(file));
-
-    // step 0 -> 1
-    await act(async () => {
-      await result.current.handleUpload();
-    });
-    expect(result.current.step).toBe(1);
-
-    // step 1 -> 3 (passes through 2)
-    await act(async () => {
-      await result.current.handleUpload();
-    });
-    expect(result.current.step).toBe(3);
-  });
-
-  it('clearAll resets file, parsed CSV, errors and step', async () => {
-    const { result } = renderHook(() => useProductUploadDialog({ onClose: jest.fn() }));
-    act(() => result.current.setCsvFile(new File(['a'], 'a.csv', { type: 'text/csv' })));
     act(() => result.current.clearAll());
 
     expect(result.current.csvFile).toBeNull();
+    expect(result.current.imagesZip).toBeNull();
     expect(result.current.parsedCsv).toBeNull();
     expect(result.current.step).toBe(0);
   });

@@ -2,6 +2,7 @@
 
 import Box from '@mui/material/Box';
 import Step from '@mui/material/Step';
+import Card from '@mui/material/Card';
 import Chip from '@mui/material/Chip';
 import Stack from '@mui/material/Stack';
 import Alert from '@mui/material/Alert';
@@ -24,11 +25,10 @@ import { ConfirmDialog } from 'src/components/custom-dialog';
 
 import { CsvErrorsAlert } from './csv-errors-alert';
 import { CsvPreviewTable } from './csv-preview-table';
-import { UploadResultsSummary } from './upload-results-summary';
-import { UploadResultsDetailTable } from './upload-results-detail-table';
 import { ImportModeSelector, type ImportModeOption } from './import-mode-selector';
 
-const CSV_ACCEPT_ATTR = '.csv,.xml,.xls';
+const CSV_ACCEPT_ATTR = '.csv';
+const IMAGES_ACCEPT_ATTR = '.zip,.jpg,.jpeg,.png';
 
 // ----------------------------------------------------------------------
 
@@ -43,28 +43,33 @@ export const ProductUploadDialog = ({
   const {
     step,
     csvInputRef,
+    imgInputRef,
     csvFile,
+    imagesZip,
     importMode,
     setImportMode,
     parsedCsv,
     rowErrorMap,
     hasLocalRowErrors,
     uploading,
-    importResult,
-    failedResults,
+    queueResult,
     result,
     showCancelDialog,
     csvInvalid,
+    zipInvalid,
     csvErrors,
     onPickCsv,
+    onPickImages,
     handleCsvFiles,
+    handleImageFiles,
     onDropCsv,
+    onDropImages,
     setCsvFile,
+    setImagesZip,
     disabledUpload,
     goToPreview,
     goBackToUpload,
     confirmAndImport,
-    retryFailed,
     clearAll,
     handleCancelUpload,
     handleCancelBulkUpload,
@@ -103,6 +108,7 @@ export const ProductUploadDialog = ({
     bgcolor: 'background.paper',
     textAlign: 'center',
     cursor: 'pointer',
+    minHeight: 220,
     '&:hover': {
       bgcolor: theme.vars
         ? `rgba(${theme.vars.palette.primary.mainChannel} / 0.04)`
@@ -125,7 +131,7 @@ export const ProductUploadDialog = ({
       </Box>
 
       <DialogContent dividers sx={{ pt: 1.5 }}>
-        {/* ------------------------------- STEP 0 ------------------------------ */}
+        {/* ---------------------------- STEP 0: Upload --------------------------- */}
         {step === 0 && (
           <Stack spacing={3}>
             <Stack spacing={1}>
@@ -148,7 +154,7 @@ export const ProductUploadDialog = ({
                 alignItems: 'start',
               }}
             >
-              {/* File picker */}
+              {/* CSV picker */}
               <Stack spacing={1}>
                 <Typography variant="subtitle2">{translate('productLoad.fileLabel')}</Typography>
                 <Box
@@ -158,12 +164,12 @@ export const ProductUploadDialog = ({
                   }}
                   onDrop={onDropCsv}
                   onClick={onPickCsv}
-                  sx={(theme) => ({ ...dropZoneSx(theme), minHeight: 220 })}
+                  sx={dropZoneSx}
                 >
                   <Stack spacing={1.5} alignItems="center">
                     <Iconify icon="solar:file-text-bold" color="primary.main" width={35} />
                     <Typography variant="subtitle2">
-                      {translate('productLoad.dropZone.title')}
+                      {translate('productLoad.dropZone.csvTitle')}
                     </Typography>
                     <Typography variant="caption" sx={{ color: 'text.secondary' }}>
                       {CSV_ACCEPT_ATTR.toUpperCase()} — {translate('productLoad.dropZone.maxSize')}
@@ -194,25 +200,82 @@ export const ProductUploadDialog = ({
 
                 {csvFile && (csvInvalid?.badType || csvInvalid?.tooBig) && (
                   <Alert severity="warning" variant="outlined">
-                    {csvInvalid.badType && (
-                      <div>{translate('productLoad.errors.invalidType')}</div>
-                    )}
+                    {csvInvalid.badType && <div>{translate('productLoad.errors.invalidType')}</div>}
                     {csvInvalid.tooBig && <div>{translate('productLoad.errors.tooBig')}</div>}
                   </Alert>
                 )}
               </Stack>
 
-              {/* Mode picker */}
+              {/* Images / ZIP picker */}
               <Stack spacing={1}>
-                <Typography variant="subtitle2">{translate('productLoad.modeLabel')}</Typography>
-                <ImportModeSelector
-                  value={importMode}
-                  onChange={setImportMode}
-                  options={modeOptions}
-                  disabled={uploading}
-                />
+                <Typography variant="subtitle2">{translate('productLoad.imagesLabel')}</Typography>
+                <Box
+                  onDragOver={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                  }}
+                  onDrop={onDropImages}
+                  onClick={onPickImages}
+                  sx={dropZoneSx}
+                >
+                  <Stack spacing={1.5} alignItems="center">
+                    <Iconify icon="solar:gallery-circle-outline" color="primary.main" width={35} />
+                    <Typography variant="subtitle2">
+                      {translate('productLoad.dropZone.imagesTitle')}
+                    </Typography>
+                    <Typography variant="caption" sx={{ color: 'text.secondary' }}>
+                      {IMAGES_ACCEPT_ATTR.toUpperCase()} — {translate('productLoad.dropZone.maxSizeImages')}
+                    </Typography>
+                    <input
+                      ref={imgInputRef}
+                      type="file"
+                      accept={IMAGES_ACCEPT_ATTR}
+                      multiple
+                      onChange={(e: any | null) => {
+                        handleImageFiles(e.target.files);
+                        e.target.value = null;
+                      }}
+                      style={{ display: 'none' }}
+                    />
+                  </Stack>
+                </Box>
+
+                {!!imagesZip && (
+                  <Chip
+                    sx={{ alignSelf: 'flex-start' }}
+                    label={`${
+                      imagesZip.name.length > 20
+                        ? `${imagesZip.name.slice(0, 17)}...`
+                        : imagesZip.name
+                    } (${Math.round(imagesZip.size / 1024)} KB)`}
+                    onDelete={() => setImagesZip(null)}
+                    size="small"
+                  />
+                )}
+
+                {imagesZip && (zipInvalid?.badType || zipInvalid?.tooBig) && (
+                  <Alert severity="warning" variant="outlined">
+                    {zipInvalid.badType && (
+                      <div>{translate('productLoad.errors.invalidZip')}</div>
+                    )}
+                    {zipInvalid.tooBig && (
+                      <div>{translate('productLoad.errors.tooBigImages')}</div>
+                    )}
+                  </Alert>
+                )}
               </Stack>
             </Box>
+
+            {/* Mode picker */}
+            <Stack spacing={1}>
+              <Typography variant="subtitle2">{translate('productLoad.modeLabel')}</Typography>
+              <ImportModeSelector
+                value={importMode}
+                onChange={setImportMode}
+                options={modeOptions}
+                disabled={uploading}
+              />
+            </Stack>
 
             <CsvErrorsAlert csvFile={csvFile} csvErrors={csvErrors} />
 
@@ -224,7 +287,7 @@ export const ProductUploadDialog = ({
           </Stack>
         )}
 
-        {/* ------------------------------- STEP 1 ------------------------------ */}
+        {/* ---------------------------- STEP 1: Preview -------------------------- */}
         {step === 1 && parsedCsv && (
           <Stack spacing={2}>
             <Alert severity={hasLocalRowErrors ? 'warning' : 'info'}>
@@ -244,7 +307,7 @@ export const ProductUploadDialog = ({
           </Stack>
         )}
 
-        {/* ------------------------------- STEP 2 ------------------------------ */}
+        {/* --------------------------- STEP 2: Processing ------------------------ */}
         {step === 2 && (
           <Stack spacing={2} alignItems="center" sx={{ py: 6 }}>
             <CircularProgress size={48} />
@@ -255,51 +318,93 @@ export const ProductUploadDialog = ({
           </Stack>
         )}
 
-        {/* ------------------------------- STEP 3 ------------------------------ */}
-        {step === 3 && importResult && (
-          <Stack spacing={2.5}>
-            <Alert
-              severity={importResult.success ? 'success' : 'error'}
-              icon={
-                <Iconify
-                  icon={importResult.success ? 'solar:check-circle-bold' : 'solar:close-circle-bold'}
-                  width={20}
-                />
-              }
+        {/* --------------------------- STEP 3: Queued ---------------------------- */}
+        {step === 3 && queueResult && (
+          <Stack spacing={2.5} alignItems="center" sx={{ py: 4 }}>
+            <Box
+              sx={{
+                width: 72,
+                height: 72,
+                borderRadius: '50%',
+                bgcolor: queueResult.success ? 'success.lighter' : 'error.lighter',
+                color: queueResult.success ? 'success.main' : 'error.main',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}
             >
-              {importResult.message}
-            </Alert>
+              <Iconify
+                icon={queueResult.success ? 'solar:check-circle-bold' : 'solar:close-circle-bold'}
+                width={40}
+              />
+            </Box>
 
-            <UploadResultsSummary
-              summary={importResult.summary}
-              labels={{
-                total: translate('productLoad.summary.total'),
-                processed: translate('productLoad.summary.processed'),
-                success: translate('productLoad.summary.success'),
-                failed: translate('productLoad.summary.failed'),
-              }}
-            />
+            <Stack spacing={0.5} alignItems="center">
+              <Typography variant="h6">
+                {queueResult.success
+                  ? translate('productLoad.queue.successTitle')
+                  : translate('productLoad.queue.failedTitle')}
+              </Typography>
+              <Typography variant="body2" sx={{ color: 'text.secondary', textAlign: 'center' }}>
+                {queueResult.message}
+              </Typography>
+            </Stack>
 
-            <UploadResultsDetailTable
-              results={importResult.results}
-              labels={{
-                rowColumn: translate('productLoad.results.rowColumn'),
-                productColumn: translate('productLoad.results.productColumn'),
-                statusColumn: translate('productLoad.results.statusColumn'),
-                messageColumn: translate('productLoad.results.messageColumn'),
-                fieldsColumn: translate('productLoad.results.fieldsColumn'),
-                statusSuccess: translate('productLoad.results.statusSuccess'),
-                statusFailed: translate('productLoad.results.statusFailed'),
-                showOnlyFailed: translate('productLoad.results.showOnlyFailed'),
-                showAll: translate('productLoad.results.showAll'),
-              }}
-            />
+            {queueResult.success && (
+              <Card sx={{ p: 2, width: '100%', maxWidth: 480 }}>
+                <Stack spacing={1.5}>
+                  <Stack direction="row" justifyContent="space-between">
+                    <Typography variant="caption" sx={{ color: 'text.secondary' }}>
+                      {translate('productLoad.queue.jobId')}
+                    </Typography>
+                    <Typography variant="body2" sx={{ fontWeight: 600 }}>
+                      {queueResult.job_id}
+                    </Typography>
+                  </Stack>
+                  <Stack direction="row" justifyContent="space-between">
+                    <Typography variant="caption" sx={{ color: 'text.secondary' }}>
+                      {translate('productLoad.queue.status')}
+                    </Typography>
+                    <Typography
+                      variant="body2"
+                      sx={{ fontWeight: 600, textTransform: 'capitalize' }}
+                    >
+                      {queueResult.status}
+                    </Typography>
+                  </Stack>
+                  <Stack direction="row" justifyContent="space-between">
+                    <Typography variant="caption" sx={{ color: 'text.secondary' }}>
+                      {translate('productLoad.queue.profileId')}
+                    </Typography>
+                    <Typography variant="body2" sx={{ fontWeight: 600 }}>
+                      {queueResult.profile_id}
+                    </Typography>
+                  </Stack>
+                  <Stack direction="row" justifyContent="space-between">
+                    <Typography variant="caption" sx={{ color: 'text.secondary' }}>
+                      {translate('productLoad.queue.importMode')}
+                    </Typography>
+                    <Typography variant="body2" sx={{ fontWeight: 600 }}>
+                      {queueResult.import_mode}
+                    </Typography>
+                  </Stack>
+                </Stack>
+              </Card>
+            )}
+
+            {queueResult.success && (
+              <Typography
+                variant="caption"
+                sx={{ color: 'text.secondary', textAlign: 'center', maxWidth: 480 }}
+              >
+                {translate('productLoad.queue.notifyNote')}
+              </Typography>
+            )}
           </Stack>
         )}
       </DialogContent>
 
       <DialogActions sx={{ px: 3, py: 2 }}>
-        {/* Botones por paso */}
         {step === 0 && (
           <>
             {!!csvFile && (
@@ -353,18 +458,8 @@ export const ProductUploadDialog = ({
           </Button>
         )}
 
-        {step === 3 && importResult && (
+        {step === 3 && queueResult && (
           <>
-            {failedResults.length > 0 && (
-              <Button
-                onClick={retryFailed}
-                variant="outlined"
-                color="error"
-                startIcon={<Iconify icon="solar:download-bold" width={18} />}
-              >
-                {translate('productLoad.actions.downloadErrors')}
-              </Button>
-            )}
             <Box sx={{ flexGrow: 1 }} />
             <Button
               variant="contained"
@@ -377,7 +472,7 @@ export const ProductUploadDialog = ({
         )}
       </DialogActions>
 
-      {csvFile ? (
+      {!!csvFile || !!imagesZip ? (
         <ConfirmDialog
           open={showCancelDialog}
           onClose={() => setShowCancelDialog(false)}

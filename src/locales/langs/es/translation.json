@@ -659,14 +659,17 @@
     "dialog": {
       "title": "Carga masiva de productos",
       "intro1": "Incluye las medidas correctas (peso, largo, ancho, alto) para asegurar costos de envío precisos.",
-      "intro2": "Recomendamos no exceder 3.600 filas por archivo.",
-      "intro3": "Formatos permitidos: CSV. Tamaño máximo: 1 MB."
+      "intro2": "Formatos: CSV para datos y JPG/JPEG/PNG para imágenes, o un ZIP con imágenes.",
+      "intro3": "Tamaño máximo: 1 MB para CSV, 5 MB para imágenes/ZIP."
     },
-    "fileLabel": "Archivo",
+    "fileLabel": "Archivo CSV",
+    "imagesLabel": "Imágenes o ZIP",
     "modeLabel": "Modo de importación",
     "dropZone": {
-      "title": "Arrastra y suelta tu archivo aquí",
-      "maxSize": "máx. 1 MB"
+      "csvTitle": "Haz clic o arrastra aquí tu archivo CSV",
+      "imagesTitle": "Haz clic o arrastra aquí tus imágenes (JPG/JPEG/PNG) o un archivo ZIP",
+      "maxSize": "máx. 1 MB",
+      "maxSizeImages": "máx. 5 MB"
     },
     "modes": {
       "create": {
@@ -683,8 +686,10 @@
       }
     },
     "errors": {
-      "invalidType": "El archivo cargado no tiene un tipo válido.",
-      "tooBig": "El archivo cargado supera 1 MB."
+      "invalidType": "El archivo CSV cargado no tiene un tipo válido.",
+      "invalidZip": "El archivo de imágenes debe ser ZIP, JPG, JPEG o PNG.",
+      "tooBig": "El archivo CSV supera 1 MB.",
+      "tooBigImages": "El archivo de imágenes supera 5 MB."
     },
     "preview": {
       "info": "Revisa las filas detectadas antes de confirmar el envío.",
@@ -696,24 +701,16 @@
     },
     "processing": {
       "title": "Procesando importación…",
-      "description": "Estamos validando y aplicando los cambios en tu catálogo. No cierres esta ventana."
+      "description": "Estamos validando y encolando los cambios. No cierres esta ventana."
     },
-    "summary": {
-      "total": "Total",
-      "processed": "Procesados",
-      "success": "Exitosos",
-      "failed": "Fallidos"
-    },
-    "results": {
-      "rowColumn": "Fila",
-      "productColumn": "Producto",
-      "statusColumn": "Estado",
-      "messageColumn": "Mensaje",
-      "fieldsColumn": "Errores por campo",
-      "statusSuccess": "Éxito",
-      "statusFailed": "Fallido",
-      "showOnlyFailed": "Ver solo fallidos",
-      "showAll": "Ver todos"
+    "queue": {
+      "successTitle": "Importación encolada",
+      "failedTitle": "No se pudo encolar la importación",
+      "jobId": "ID del trabajo",
+      "status": "Estado",
+      "profileId": "ID del perfil",
+      "importMode": "Modo de importación",
+      "notifyNote": "Tu importación está en cola y se procesará en segundo plano. Te notificaremos cuando termine."
     },
     "steps": {
       "upload": "Cargar archivo",
@@ -728,7 +725,6 @@
       "back": "Volver",
       "confirmAndSend": "Confirmar y enviar",
       "processing": "Procesando…",
-      "downloadErrors": "Descargar errores",
       "finish": "Finalizar"
     },
     "cancelDialog": {

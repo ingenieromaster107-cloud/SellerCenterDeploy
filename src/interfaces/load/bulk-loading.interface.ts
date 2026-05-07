@@ -24,49 +24,41 @@ export interface ValidateMassUploadResponseInterface {
 }
 
 // ----------------------------------------------------------------------
-// Step 2 — Importación efectiva (startMassUploadImport)
+// Step 2 — Encolado de la importación (queueMassUploadImport)
+//
+// La importación es ASÍNCRONA: el backend responde inmediatamente con un
+// `job_id` y `status: "pending"`. Los resultados detallados (resumen, errores
+// por fila) se obtendrán posteriormente con un endpoint de consulta de
+// status (a definir cuando exista).
 // ----------------------------------------------------------------------
 
 /**
- * Modo de importación que define cómo se interpretan las filas:
- * - CREATE: crea productos nuevos. Todas las columnas son obligatorias.
- * - UPDATE: actualiza productos existentes (mergea). Solo `sku` es obligatorio.
- * - REPLACE: reemplaza completamente el producto. Todas las columnas obligatorias.
+ * Modo de importación:
+ *  - CREATE: crea productos nuevos. Todas las columnas son obligatorias.
+ *  - UPDATE: actualiza productos existentes (mergea). Solo `sku` obligatorio.
+ *  - REPLACE: reemplaza completo. Todas las columnas obligatorias.
  */
 export type ImportMode = 'CREATE' | 'UPDATE' | 'REPLACE';
 
-export interface StartMassUploadImportRequestInterface {
+export interface QueueMassUploadImportRequestInterface {
   profileId: number;
   importMode: ImportMode;
+  /**
+   * ZIP de imágenes en base64 (sin prefijo `data:`). El backend lo decodifica
+   * y persiste antes de procesar la cola. Si no hay imágenes, enviar `null`.
+   * El parámetro de la mutation se llama `images_zip_path` por convención
+   * histórica del schema, pero su valor es la cadena base64.
+   */
+  imagesZipPath?: string | null;
 }
 
-export interface MassUploadFieldErrorInterface {
-  field: string;
-  message: string;
-}
-
-export interface MassUploadResultRowInterface {
-  row: number;
-  product_id: number | null;
-  status: 'success' | 'failed' | string;
-  message: string;
-  errors: MassUploadFieldErrorInterface[];
-  updatedFields?: string[] | null;
-}
-
-export interface MassUploadSummaryInterface {
-  total_rows: number;
-  processed_rows: number;
-  success_rows: number;
-  failed_rows: number;
-}
-
-export interface StartMassUploadImportResponseInterface {
-  startMassUploadImport: {
+export interface QueueMassUploadImportResponseInterface {
+  queueMassUploadImport: {
     success: boolean;
     message: string;
     profile_id: number;
-    summary: MassUploadSummaryInterface;
-    results: MassUploadResultRowInterface[];
+    job_id: number;
+    status: string;
+    import_mode: ImportMode | string;
   };
 }

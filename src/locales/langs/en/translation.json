@@ -658,14 +658,17 @@
     "dialog": {
       "title": "Bulk product upload",
       "intro1": "Include accurate measurements (weight, length, width, height) to ensure correct shipping costs.",
-      "intro2": "We recommend not exceeding 3,600 rows per file.",
-      "intro3": "Allowed format: CSV. Maximum size: 1 MB."
+      "intro2": "Formats: CSV for data and JPG/JPEG/PNG for images, or a ZIP with images.",
+      "intro3": "Maximum size: 1 MB for CSV, 5 MB for images/ZIP."
     },
-    "fileLabel": "File",
+    "fileLabel": "CSV file",
+    "imagesLabel": "Images or ZIP",
     "modeLabel": "Import mode",
     "dropZone": {
-      "title": "Drag and drop your file here",
-      "maxSize": "max 1 MB"
+      "csvTitle": "Click or drag your CSV file here",
+      "imagesTitle": "Click or drag your images (JPG/JPEG/PNG) or a ZIP file here",
+      "maxSize": "max 1 MB",
+      "maxSizeImages": "max 5 MB"
     },
     "modes": {
       "create": {
@@ -682,8 +685,10 @@
       }
     },
     "errors": {
-      "invalidType": "The uploaded file is not a valid type.",
-      "tooBig": "The uploaded file exceeds 1 MB."
+      "invalidType": "The uploaded CSV file is not a valid type.",
+      "invalidZip": "The images file must be ZIP, JPG, JPEG or PNG.",
+      "tooBig": "The CSV file exceeds 1 MB.",
+      "tooBigImages": "The images file exceeds 5 MB."
     },
     "preview": {
       "info": "Review the detected rows before confirming.",
@@ -695,24 +700,16 @@
     },
     "processing": {
       "title": "Processing import…",
-      "description": "We are validating and applying changes to your catalog. Please do not close this window."
+      "description": "We are validating and queuing the changes. Please do not close this window."
     },
-    "summary": {
-      "total": "Total",
-      "processed": "Processed",
-      "success": "Successful",
-      "failed": "Failed"
-    },
-    "results": {
-      "rowColumn": "Row",
-      "productColumn": "Product",
-      "statusColumn": "Status",
-      "messageColumn": "Message",
-      "fieldsColumn": "Field errors",
-      "statusSuccess": "Success",
-      "statusFailed": "Failed",
-      "showOnlyFailed": "Show failed only",
-      "showAll": "Show all"
+    "queue": {
+      "successTitle": "Import queued",
+      "failedTitle": "Could not queue the import",
+      "jobId": "Job ID",
+      "status": "Status",
+      "profileId": "Profile ID",
+      "importMode": "Import mode",
+      "notifyNote": "Your import is queued and will run in the background. We'll notify you when it finishes."
     },
     "steps": {
       "upload": "Upload file",
@@ -727,7 +724,6 @@
       "back": "Back",
       "confirmAndSend": "Confirm and send",
       "processing": "Processing…",
-      "downloadErrors": "Download errors",
       "finish": "Finish"
     },
     "cancelDialog": {

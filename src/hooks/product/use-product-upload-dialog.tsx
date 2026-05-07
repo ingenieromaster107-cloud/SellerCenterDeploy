@@ -1,18 +1,16 @@
 import type {
   ImportMode,
-  MassUploadResultRowInterface,
-  StartMassUploadImportResponseInterface,
+  QueueMassUploadImportResponseInterface,
 } from 'src/interfaces/load/bulk-loading.interface';
 
 import { useRef, useMemo, useState, useCallback } from 'react';
 
 import { fileToBase64 } from 'src/utils/codificateFile';
 import { parseCsv, type ParsedCsv } from 'src/utils/parse-csv';
-import { downloadErrorsCsv } from 'src/utils/download-errors-csv';
 import { CSV_MAX_BYTES, validateCsvFile, validateCsvContent } from 'src/utils/validate-csv';
 
 import { useValidateMassUpload } from 'src/actions/product/useValidateMassUpload';
-import { useStartMassUploadImport } from 'src/actions/product/useStartMassUploadImport';
+import { useQueueMassUploadImport } from 'src/actions/product/useQueueMassUploadImport';
 
 import { toast } from 'src/components/snackbar';
 
@@ -36,14 +34,24 @@ interface ResultBanner {
 
 /**
  * Wizard de carga masiva (4 pasos):
- *  0 - Upload + selección de modo (CREATE/UPDATE/REPLACE) + validación local
+ *  0 - Upload CSV + ZIP de imágenes (opcional) + selección de modo + validación local
  *  1 - Preview tabulado con marcado de filas con error local
- *  2 - Procesando (validateMassUpload → startMassUploadImport)
- *  3 - Resultados (resumen + detalle + descarga de errores)
+ *  2 - Procesando (validateMassUpload → queueMassUploadImport)
+ *  3 - Encolado (job_id, status: pending, mensaje del backend)
  */
 export type UploadStep = 0 | 1 | 2 | 3;
 
 const isCsvByName = (name: string) => /\.csv$/i.test(name);
+const isZipByName = (name: string) => /\.zip$/i.test(name);
+
+/**
+ * `fileToBase64` retorna un dataURL (`data:<mime>;base64,<payload>`). El
+ * backend espera solo el payload — strip del prefijo si está presente.
+ */
+const stripDataUrlPrefix = (b64: string): string => {
+  const idx = b64.indexOf(',');
+  return idx >= 0 ? b64.slice(idx + 1) : b64;
+};
 
 export const useProductUploadDialog = ({ onClose }: { onClose: () => void }) => {
   const csvInputRef = useRef<HTMLInputElement>(null);
@@ -54,8 +62,8 @@ export const useProductUploadDialog = ({ onClose }: { onClose: () => void }) => 
 
   // Files
   const [csvFile, setCsvFile] = useState<File | null>(null);
-  const [images, setImages] = useState<File[]>([]);
   const [imagesZip, setImagesZip] = useState<File | null>(null);
+  const [images, setImages] = useState<File[]>([]); // legacy back-compat
 
   // Mode
   const [importMode, setImportMode] = useState<ImportMode>('CREATE');
@@ -67,15 +75,15 @@ export const useProductUploadDialog = ({ onClose }: { onClose: () => void }) => 
 
   // Backend state
   const [uploading, setUploading] = useState(false);
-  const [importResult, setImportResult] =
-    useState<StartMassUploadImportResponseInterface['startMassUploadImport'] | null>(null);
+  const [queueResult, setQueueResult] =
+    useState<QueueMassUploadImportResponseInterface['queueMassUploadImport'] | null>(null);
 
   // UX
   const [result, setResult] = useState<ResultBanner | null>(null);
   const [showCancelDialog, setShowCancelDialog] = useState(false);
 
   const { mutateAsync: validateMassUpload } = useValidateMassUpload();
-  const { mutateAsync: startMassUploadImport } = useStartMassUploadImport();
+  const { mutateAsync: queueMassUploadImport } = useQueueMassUploadImport();
 
   // -------------------- Validity flags --------------------
 
@@ -99,7 +107,7 @@ export const useProductUploadDialog = ({ onClose }: { onClose: () => void }) => 
   const zipInvalid = useMemo(() => {
     if (!imagesZip) return null;
     const badType =
-      !ZIP_ACCEPTED.includes(imagesZip.type) && !imagesZip.name?.toLowerCase()?.endsWith('.zip');
+      !ZIP_ACCEPTED.includes(imagesZip.type) && !isZipByName(imagesZip.name);
     const tooBig = imagesZip.size > MAX_IMG_BYTES;
     return { badType, tooBig };
   }, [imagesZip]);
@@ -117,7 +125,7 @@ export const useProductUploadDialog = ({ onClose }: { onClose: () => void }) => 
       setResult(null);
       setParsedCsv(null);
       setRowErrorMap(new Map());
-      setImportResult(null);
+      setQueueResult(null);
 
       const errors = await validateCsvFile(f);
       setCsvErrors(errors);
@@ -125,9 +133,7 @@ export const useProductUploadDialog = ({ onClose }: { onClose: () => void }) => 
     []
   );
 
-  const isZipFile = (f: File) =>
-    ZIP_ACCEPTED.includes(f.type) ||
-    (typeof f.name === 'string' && f.name.toLowerCase().endsWith('.zip'));
+  const isZipFile = (f: File) => ZIP_ACCEPTED.includes(f.type) || isZipByName(f.name ?? '');
 
   const handleImageFiles = useCallback(
     (fileList: FileList | null) => {
@@ -203,22 +209,23 @@ export const useProductUploadDialog = ({ onClose }: { onClose: () => void }) => 
   const goBackToUpload = useCallback(() => setStep(0), []);
 
   /**
-   * Step 1 → 2 → 3: encadena las dos mutations del backend.
-   * - Step 2: spinner durante el procesamiento.
-   * - Step 3: resultados consolidados.
+   * Step 1 → 2 → 3:
+   *  1) validateMassUpload(csv base64) → profile_id
+   *  2) Si hay ZIP, lo encodea a base64 y lo manda en images_zip_path
+   *  3) queueMassUploadImport(profile_id, mode, imagesZipBase64) → job_id + status
    */
   const confirmAndImport = useCallback(async () => {
     if (!csvFile) return;
     setStep(2);
     setUploading(true);
     setResult(null);
-    setImportResult(null);
+    setQueueResult(null);
 
     try {
-      const base64 = await fileToBase64(csvFile);
+      const csvBase64 = stripDataUrlPrefix(await fileToBase64(csvFile));
       const validation = await validateMassUpload({
         attributeSetId: 10,
-        fileContentBase64: base64,
+        fileContentBase64: csvBase64,
         fileName: csvFile.name.replace(/\.[^.]+$/, ''),
         fileType: csvFile.type.includes('xml')
           ? 'xml'
@@ -236,12 +243,17 @@ export const useProductUploadDialog = ({ onClose }: { onClose: () => void }) => 
         return;
       }
 
-      const importResp = await startMassUploadImport({
+      const imagesZipBase64 = imagesZip
+        ? stripDataUrlPrefix(await fileToBase64(imagesZip))
+        : null;
+
+      const queue = await queueMassUploadImport({
         profileId: validation.validateMassUpload.profile_id,
         importMode,
+        imagesZipPath: imagesZipBase64,
       });
 
-      setImportResult(importResp.startMassUploadImport);
+      setQueueResult(queue.queueMassUploadImport);
       setStep(3);
     } catch (err: any) {
       const message = err?.message || 'Error en la carga.';
@@ -251,33 +263,7 @@ export const useProductUploadDialog = ({ onClose }: { onClose: () => void }) => 
     } finally {
       setUploading(false);
     }
-  }, [csvFile, importMode, validateMassUpload, startMassUploadImport]);
-
-  // -------------------- Errors download / retry --------------------
-
-  const handleDownloadErrors = useCallback(() => {
-    if (!parsedCsv || !importResult) return;
-    downloadErrorsCsv({
-      originalHeaders: parsedCsv.headers,
-      originalRows: parsedCsv.rows,
-      results: importResult.results,
-    });
-  }, [parsedCsv, importResult]);
-
-  const failedResults: MassUploadResultRowInterface[] = useMemo(
-    () => importResult?.results.filter((r) => r.status !== 'success') ?? [],
-    [importResult]
-  );
-
-  /**
-   * Genera un nuevo File con SOLO las filas fallidas para que el usuario
-   * pueda reintentar el lote acotado. El usuario aún tiene que abrir el
-   * archivo y corregir, pero arranca con un CSV pre-filtrado.
-   */
-  const retryFailed = useCallback(() => {
-    handleDownloadErrors();
-    toast.success('Descarga del CSV de errores iniciada. Corrígelo y vuelve a subirlo.');
-  }, [handleDownloadErrors]);
+  }, [csvFile, imagesZip, importMode, validateMassUpload, queueMassUploadImport]);
 
   // -------------------- Reset / cancel --------------------
 
@@ -289,7 +275,7 @@ export const useProductUploadDialog = ({ onClose }: { onClose: () => void }) => 
     setParsedCsv(null);
     setRowErrorMap(new Map());
     setCsvErrors([]);
-    setImportResult(null);
+    setQueueResult(null);
     setStep(0);
   }, []);
 
@@ -313,18 +299,16 @@ export const useProductUploadDialog = ({ onClose }: { onClose: () => void }) => 
     return false;
   }, [imagesZip, zipInvalid, images, imgsInvalid]);
 
-  // Botón principal del Step 0
+  // Step 0 main button
   const disabledNext =
     uploading ||
     !csvFile ||
     !!(csvInvalid && (csvInvalid.badType || csvInvalid.tooBig)) ||
-    csvErrors.length > 0;
+    csvErrors.length > 0 ||
+    !!(imagesZip && (zipInvalid?.badType || zipInvalid?.tooBig));
 
-  // Hay errores locales por fila → si TRUE, deshabilitamos confirmar
   const hasLocalRowErrors = rowErrorMap.size > 0;
 
-  // Back-compat para el dialog antiguo: handleUpload tiene el nuevo flujo
-  // dependiendo del paso actual.
   const handleUpload = useCallback(async () => {
     if (step === 0) await goToPreview();
     else if (step === 1) await confirmAndImport();
@@ -349,8 +333,7 @@ export const useProductUploadDialog = ({ onClose }: { onClose: () => void }) => 
     parsedCsv,
     rowErrorMap,
     hasLocalRowErrors,
-    importResult,
-    failedResults,
+    queueResult,
 
     // backend status
     uploading,
@@ -376,11 +359,9 @@ export const useProductUploadDialog = ({ onClose }: { onClose: () => void }) => 
     goToPreview,
     goBackToUpload,
     confirmAndImport,
-    handleDownloadErrors,
-    retryFailed,
     clearAll,
 
-    // back-compat (dialog antiguo)
+    // back-compat
     handleUpload,
     handleCancelUpload,
     handleCancelBulkUpload,
