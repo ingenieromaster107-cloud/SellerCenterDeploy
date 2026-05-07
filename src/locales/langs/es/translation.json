@@ -195,6 +195,15 @@
   "outOfStock": "Agotado",
   "inStock": "Disponible",
   "lowStock": "Bajo inventario",
+  "lowStockThresholdLabelPrefix": "Umbral:",
+  "lowStockThresholdType": {
+    "default": "Por defecto",
+    "custom": "Personalizado"
+  },
+  "productStockTabs": {
+    "all": "Todos",
+    "lowStock": "Stock crítico"
+  },
   "print": "Imprimir",
   "import": "Importar",
   "export": "Exportar",

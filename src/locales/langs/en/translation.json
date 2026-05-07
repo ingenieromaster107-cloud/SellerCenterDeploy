@@ -195,6 +195,15 @@
   "outOfStock": "Out of Stock",
   "inStock": "In Stock",
   "lowStock": "Low Stock",
+  "lowStockThresholdLabelPrefix": "Threshold:",
+  "lowStockThresholdType": {
+    "default": "Default",
+    "custom": "Custom"
+  },
+  "productStockTabs": {
+    "all": "All",
+    "lowStock": "Critical stock"
+  },
   "print": "Print",
   "import": "Import",
   "export": "Export",
