@@ -22,7 +22,6 @@ import { useGetReturns } from 'src/actions/return/useGetReturns';
 import { Iconify } from 'src/components/iconify';
 import { Scrollbar } from 'src/components/scrollbar';
 import { CustomBreadcrumbs } from 'src/components/custom-breadcrumbs';
-import { SectionLoadingOverlay } from 'src/components/loading-screen';
 import {
   useTable,
   TableNoData,
@@ -54,7 +53,7 @@ export function ReturnListView() {
 
   const confirmDialog = useBoolean();
 
-  const { returns, isLoading, isFetching } = useGetReturns({
+  const { returns, isFetching } = useGetReturns({
     currentPage: table.page + 1,
     pageSize: table.rowsPerPage,
   });
@@ -97,12 +96,7 @@ export function ReturnListView() {
         sx={{ mb: { xs: 3, md: 5 } }}
       />
 
-      <Card sx={{ position: 'relative' }}>
-        <SectionLoadingOverlay
-          open={isFetching && !isLoading}
-          message="Cargando devoluciones, por favor espere…"
-        />
-
+      <Card>
         <OrderTableToolbar
           filters={filters}
           onResetPage={table.onResetPage}
@@ -141,21 +135,23 @@ export function ReturnListView() {
               />
 
               <TableBody>
-                {dataFiltered.map((row) => (
-                  <OrderTableRow
-                    key={row.uid}
-                    row={row}
-                    selected={table.selected.includes(row.uid.toString())}
-                    onSelectRow={() => table.onSelectRow(row.uid.toString())}
-                    detailsHref={paths.return.details(+row.uid)}
-                  />
-                ))}
+                {isFetching ? (
+                  <TableSkeleton rowCount={table.rowsPerPage} cellCount={TABLE_HEAD.length} />
+                ) : (
+                  <>
+                    {dataFiltered.map((row) => (
+                      <OrderTableRow
+                        key={row.uid}
+                        row={row}
+                        selected={table.selected.includes(row.uid.toString())}
+                        onSelectRow={() => table.onSelectRow(row.uid.toString())}
+                        detailsHref={paths.return.details(+row.uid)}
+                      />
+                    ))}
 
-                {isLoading ? (
-                  <TableSkeleton rowCount={10} cellCount={TABLE_HEAD.length} />
-                ) : notFound ? (
-                  <TableNoData notFound={notFound} />
-                ) : null}
+                    {notFound && <TableNoData notFound={notFound} />}
+                  </>
+                )}
               </TableBody>
             </Table>
           </Scrollbar>
