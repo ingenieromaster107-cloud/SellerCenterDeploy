@@ -28,7 +28,17 @@ export const CreateSellersStep1Schema = (t: TranslateFn) =>
     mainCategory: z.string().min(1, { message: t('createSellers.step1.errors.mainCategory') }),
   });
 
-export type CreateSellersStep1Values = z.infer<ReturnType<typeof CreateSellersStep1Schema>>;
+type Step1FormValues = z.infer<ReturnType<typeof CreateSellersStep1Schema>>;
+
+/**
+ * El wizard recibe los valores del form + el nombre legible de la categoría
+ * principal (lo que persiste el backend en `seller.seller_category`). El form
+ * guarda el id para mantener la opción seleccionable; el name se resuelve al
+ * hacer submit cruzando contra el árbol de categorías.
+ */
+export type CreateSellersStep1Values = Step1FormValues & {
+  mainCategoryName: string;
+};
 
 const COUNTRY_OPTIONS = [
   { value: 'US', flag: 'us' },
@@ -40,7 +50,7 @@ const PERSON_TYPE_OPTIONS = [{ value: 'natural_person' }, { value: 'legal_person
 // ----------------------------------------------------------------------
 
 type Props = {
-  defaultValues: CreateSellersStep1Values;
+  defaultValues: Step1FormValues;
   step: number;
   total: number;
   onNext: (values: CreateSellersStep1Values) => void | Promise<void>;
@@ -69,7 +79,10 @@ export function CreateSellersStep1({ defaultValues, step, total, onNext }: Props
     formState: { isSubmitting },
   } = methods;
 
-  const onSubmit = handleSubmit((data) => onNext(data));
+  const onSubmit = handleSubmit((data) => {
+    const opt = mainCategoryOptions.find((o) => o.value === data.mainCategory);
+    return onNext({ ...data, mainCategoryName: opt?.label ?? '' });
+  });
 
   return (
     <Form methods={methods} onSubmit={onSubmit}>

@@ -11,6 +11,8 @@ import Typography from '@mui/material/Typography';
 import InputAdornment from '@mui/material/InputAdornment';
 
 import { useTranslate } from 'src/locales';
+import { useGetCities } from 'src/actions/cities/use-cities';
+import { useGetRegions } from 'src/actions/regions/use-regions';
 import { EntityType } from 'src/shared/constants/graphql-entity-type';
 import { useGetAttributes } from 'src/actions/attributes/use-attributes';
 import { AttributeCode } from 'src/shared/constants/graphql-attribute-code';
@@ -56,6 +58,9 @@ export const CreateSellersStep2Schema = (t: TranslateFn) =>
       .string()
       .min(7, { message: t('createSellers.step2.errors.phoneInvalid') })
       .regex(/^\d+$/, { message: t('createSellers.step2.errors.phoneDigits') }),
+    region: z.string().min(1, { message: t('createSellers.step2.errors.region') }),
+    city: z.string().min(1, { message: t('createSellers.step2.errors.city') }),
+    postcode: z.string().min(1, { message: t('createSellers.step2.errors.postcode') }),
     addressShop: z.string().min(1, { message: t('createSellers.step2.errors.addressShop') }),
     shopUrl: z.string().min(1, { message: t('createSellers.step2.errors.shopUrl') }),
   }).refine((data) => data.password === data.confirmPassword, {
@@ -66,12 +71,17 @@ export const CreateSellersStep2Schema = (t: TranslateFn) =>
 type Step2FormValues = z.infer<ReturnType<typeof CreateSellersStep2Schema>>;
 
 /**
- * El wizard recibe los valores del form + el label del documentType resuelto
- * desde las options del API (para enviar `selected_options[0].value` con el
- * texto humano y `value` con el código).
+ * El wizard recibe los valores del form + los labels resueltos:
+ *  - `documentTypeLabel`: del API de attributes.
+ *  - `regionName` / `cityName`: nombres legibles (lo que persiste el backend
+ *    en `address.region` / `address.city`).
+ *  - `phoneE164`: prefijo del país concatenado con los dígitos del usuario.
  */
 export type CreateSellersStep2Values = Step2FormValues & {
   documentTypeLabel: string;
+  regionName: string;
+  cityName: string;
+  phoneE164: string;
 };
 
 // ----------------------------------------------------------------------
@@ -80,7 +90,7 @@ type Props = {
   defaultValues: Step2FormValues;
   step: number;
   total: number;
-  /** Código de país elegido en step 1 — define la extensión del teléfono. */
+  /** Código de país elegido en step 1 — define la extensión del teléfono y filtra las regiones. */
   country: string;
   onBack: () => void;
   onNext: (values: CreateSellersStep2Values) => void | Promise<void>;
@@ -114,6 +124,8 @@ export function CreateSellersStep2({
     [attributes]
   );
 
+  const { regions, isLoading: isLoadingRegions } = useGetRegions(country);
+
   const schema = useMemo(() => CreateSellersStep2Schema(translate), [translate]);
 
   const methods = useForm({
@@ -124,12 +136,33 @@ export function CreateSellersStep2({
 
   const {
     handleSubmit,
+    watch,
+    setValue,
     formState: { isSubmitting },
   } = methods;
 
+  // El form guarda el id de la región (string) para poder consultar las ciudades.
+  // Al enviar, mapeamos id → name para `regionName`/`cityName`.
+  const selectedRegionId = watch('region');
+  const regionIdNum = Number(selectedRegionId);
+  const { cities, isLoading: isLoadingCities } = useGetCities(
+    Number.isFinite(regionIdNum) ? regionIdNum : 0
+  );
+
   const onSubmit = handleSubmit(async (data) => {
-    const opt = documentTypeOptions.find((o) => o.value === data.documentType);
-    await onNext({ ...data, documentTypeLabel: opt?.label ?? '' });
+    const docOpt = documentTypeOptions.find((o) => o.value === data.documentType);
+    const regionObj = regions?.find((r) => String(r.id) === data.region);
+    const cityObj = cities?.find((c) => String(c.id) === data.city);
+    const digits = data.phone ?? '';
+    const phoneE164 = phoneCode ? `${phoneCode}${digits}` : digits;
+
+    await onNext({
+      ...data,
+      documentTypeLabel: docOpt?.label ?? '',
+      regionName: regionObj?.name ?? '',
+      cityName: cityObj?.name ?? '',
+      phoneE164,
+    });
   });
 
   return (
@@ -191,6 +224,50 @@ export function CreateSellersStep2({
                 ) : undefined,
               },
             }}
+            sx={darkFieldSx}
+          />
+        </Box>
+
+        <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: '1fr 1fr' }, gap: 2 }}>
+          <Field.Select
+            name="region"
+            label={translate('createSellers.step2.region')}
+            disabled={isLoadingRegions || !country}
+            slotProps={{ inputLabel: { shrink: true } }}
+            sx={darkFieldSx}
+            onChange={(e) => {
+              // Cambiar de región invalida la ciudad previamente elegida.
+              setValue('region', e.target.value as string, { shouldValidate: true });
+              setValue('city', '', { shouldValidate: false });
+            }}
+          >
+            {(regions ?? []).map((r) => (
+              <MenuItem key={r.id} value={String(r.id)}>
+                {r.name}
+              </MenuItem>
+            ))}
+          </Field.Select>
+
+          <Field.Select
+            name="city"
+            label={translate('createSellers.step2.city')}
+            disabled={!selectedRegionId || isLoadingCities}
+            slotProps={{ inputLabel: { shrink: true } }}
+            sx={darkFieldSx}
+          >
+            {(cities ?? []).map((c) => (
+              <MenuItem key={c.id} value={String(c.id)}>
+                {c.name}
+              </MenuItem>
+            ))}
+          </Field.Select>
+        </Box>
+
+        <Box sx={{ display: 'grid', gridTemplateColumns: '1fr', gap: 2 }}>
+          <Field.Text
+            name="postcode"
+            label={translate('createSellers.step2.postcode')}
+            slotProps={{ inputLabel: { shrink: true } }}
             sx={darkFieldSx}
           />
         </Box>
