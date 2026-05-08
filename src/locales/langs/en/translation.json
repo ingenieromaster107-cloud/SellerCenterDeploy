@@ -757,6 +757,9 @@
       "documentType": "Type",
       "documentNumber": "Document number",
       "phone": "Phone number",
+      "region": "Region",
+      "city": "City",
+      "postcode": "Postal code",
       "addressShop": "Address",
       "shopUrl": "Shop URL",
       "email": "Email",
@@ -774,6 +777,9 @@
         "documentNumberDigits": "Only digits are allowed",
         "phoneInvalid": "Enter a valid number",
         "phoneDigits": "Only digits are allowed",
+        "region": "Select a region",
+        "city": "Select a city",
+        "postcode": "Enter the postal code",
         "addressShop": "Enter your address",
         "shopUrl": "Enter your shop URL"
       }

@@ -27,6 +27,18 @@ export type CreateSellerInput = {
   typePerson: string;
   shopUrl: string;
   nationalId: string;
+  /** Nombre de la categoría principal elegida en step 1 (no id). */
+  sellerCategory: string;
+  /** Calle / dirección de la tienda (se envía como `street: [street]`). */
+  street: string;
+  /** Nombre de ciudad (no id). El backend persiste el texto. */
+  city: string;
+  /** Nombre de región/estado (no id). */
+  region: string;
+  /** Código postal — opcional para el usuario, pero el backend exige String!, por eso default `''`. */
+  postcode: string;
+  /** Teléfono en E.164 (`+57…`). Se envía tanto a `address.telephone` como a `personal_telephone`. */
+  telephone: string;
   /** Documentos en base64. La key debe coincidir con el código que espera el backend. */
   documents: Record<string, SellerDocumentPayload>;
 };
@@ -59,10 +71,17 @@ export function useCreateSeller() {
         numeroIdentificacionUsuario: input.numeroIdentificacionUsuario,
         tipoIdentificacionUsuario: input.tipoIdentificacionUsuario,
         tipoIdentificacionUsuarioValue: input.tipoIdentificacionUsuarioValue,
+        personalTelephone: input.telephone,
         countryCode: input.countryCode,
         typePerson: input.typePerson,
         shopUrl: input.shopUrl,
         nationalId: input.nationalId,
+        sellerCategory: input.sellerCategory,
+        street: input.street,
+        city: input.city,
+        region: input.region,
+        postcode: input.postcode,
+        telephone: input.telephone,
       };
 
       for (const [code, doc] of Object.entries(input.documents)) {
