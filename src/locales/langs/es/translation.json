@@ -811,5 +811,91 @@
         "sales_tax_permit_document": "Permiso de impuesto sobre ventas"
       }
     }
+  },
+  "productLoad": {
+    "dialog": {
+      "title": "Carga masiva de productos",
+      "intro1": "Incluye las medidas correctas (peso, largo, ancho, alto) para asegurar costos de envío precisos.",
+      "intro2": "Formatos: CSV para datos y JPG/JPEG/PNG para imágenes, o un ZIP con imágenes.",
+      "intro3": "Tamaño máximo: 1 MB para CSV, 5 MB para imágenes/ZIP."
+    },
+    "fileLabel": "Archivo CSV",
+    "imagesLabel": "Imágenes o ZIP",
+    "modeLabel": "Modo de importación",
+    "dropZone": {
+      "csvTitle": "Haz clic o arrastra aquí tu archivo CSV",
+      "imagesTitle": "Haz clic o arrastra aquí tus imágenes (JPG/JPEG/PNG) o un archivo ZIP",
+      "maxSize": "máx. 1 MB",
+      "maxSizeImages": "máx. 5 MB"
+    },
+    "modes": {
+      "create": {
+        "title": "Crear",
+        "description": "Crea productos nuevos. Todas las columnas son obligatorias."
+      },
+      "update": {
+        "title": "Actualizar",
+        "description": "Actualiza productos existentes por SKU. Solo el SKU es obligatorio."
+      },
+      "replace": {
+        "title": "Reemplazar",
+        "description": "Reemplaza por completo los productos existentes. Todas las columnas son obligatorias."
+      }
+    },
+    "errors": {
+      "invalidType": "El archivo CSV cargado no tiene un tipo válido.",
+      "invalidZip": "El archivo de imágenes debe ser ZIP, JPG, JPEG o PNG.",
+      "tooBig": "El archivo CSV supera 1 MB.",
+      "tooBigImages": "El archivo de imágenes supera 5 MB.",
+      "fileRequired": "Debes seleccionar un archivo CSV.",
+      "readError": "No se pudo leer el archivo CSV.",
+      "empty": "El archivo CSV está vacío.",
+      "missingRequiredColumns": "Faltan columnas obligatorias.",
+      "noRows": "El archivo CSV no contiene filas de datos.",
+      "missingSku": "Falta valor en columna obligatoria: sku"
+    },
+    "preview": {
+      "info": "Revisa las filas detectadas antes de confirmar el envío.",
+      "warningWithErrors": "Hay filas con errores de formato local. Corrígelas para poder continuar.",
+      "errorTooltipTitle": "Errores en esta fila",
+      "rows": "filas detectadas",
+      "errors": "filas con errores",
+      "emptyCell": "vacío"
+    },
+    "processing": {
+      "title": "Procesando importación…",
+      "description": "Estamos validando y encolando los cambios. No cierres esta ventana."
+    },
+    "queue": {
+      "successTitle": "Importación encolada",
+      "failedTitle": "No se pudo encolar la importación",
+      "jobId": "ID del trabajo",
+      "status": "Estado",
+      "profileId": "ID del perfil",
+      "importMode": "Modo de importación",
+      "notifyNote": "Tu importación está en cola y se procesará en segundo plano. Te notificaremos cuando termine.",
+      "validationFailed": "No se pudo validar el archivo.",
+      "uploadError": "Error en la carga."
+    },
+    "steps": {
+      "upload": "Cargar archivo",
+      "preview": "Previsualizar",
+      "processing": "Procesando",
+      "results": "Resultados"
+    },
+    "actions": {
+      "clear": "Limpiar",
+      "cancel": "Cancelar",
+      "continue": "Continuar",
+      "back": "Volver",
+      "confirmAndSend": "Confirmar y enviar",
+      "processing": "Procesando…",
+      "finish": "Finalizar"
+    },
+    "cancelDialog": {
+      "title": "Cancelar carga de productos",
+      "content": "¿Seguro que quieres cancelar la carga? Los archivos seleccionados se perderán.",
+      "continue": "Continuar"
+    }
   }
 }

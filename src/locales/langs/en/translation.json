@@ -810,5 +810,91 @@
         "sales_tax_permit_document": "Sales tax permit"
       }
     }
+  },
+  "productLoad": {
+    "dialog": {
+      "title": "Bulk product upload",
+      "intro1": "Include accurate measurements (weight, length, width, height) to ensure correct shipping costs.",
+      "intro2": "Formats: CSV for data and JPG/JPEG/PNG for images, or a ZIP with images.",
+      "intro3": "Maximum size: 1 MB for CSV, 5 MB for images/ZIP."
+    },
+    "fileLabel": "CSV file",
+    "imagesLabel": "Images or ZIP",
+    "modeLabel": "Import mode",
+    "dropZone": {
+      "csvTitle": "Click or drag your CSV file here",
+      "imagesTitle": "Click or drag your images (JPG/JPEG/PNG) or a ZIP file here",
+      "maxSize": "max 1 MB",
+      "maxSizeImages": "max 5 MB"
+    },
+    "modes": {
+      "create": {
+        "title": "Create",
+        "description": "Create new products. All columns are required."
+      },
+      "update": {
+        "title": "Update",
+        "description": "Update existing products by SKU. Only SKU is required."
+      },
+      "replace": {
+        "title": "Replace",
+        "description": "Fully replace existing products. All columns are required."
+      }
+    },
+    "errors": {
+      "invalidType": "The uploaded CSV file is not a valid type.",
+      "invalidZip": "The images file must be ZIP, JPG, JPEG or PNG.",
+      "tooBig": "The CSV file exceeds 1 MB.",
+      "tooBigImages": "The images file exceeds 5 MB.",
+      "fileRequired": "You must select a CSV file.",
+      "readError": "Could not read the CSV file.",
+      "empty": "The CSV file is empty.",
+      "missingRequiredColumns": "Required columns are missing.",
+      "noRows": "The CSV file does not contain data rows.",
+      "missingSku": "Missing value in required column: sku"
+    },
+    "preview": {
+      "info": "Review the detected rows before confirming.",
+      "warningWithErrors": "Some rows have local formatting errors. Fix them to continue.",
+      "errorTooltipTitle": "Errors in this row",
+      "rows": "rows detected",
+      "errors": "rows with errors",
+      "emptyCell": "empty"
+    },
+    "processing": {
+      "title": "Processing import…",
+      "description": "We are validating and queuing the changes. Please do not close this window."
+    },
+    "queue": {
+      "successTitle": "Import queued",
+      "failedTitle": "Could not queue the import",
+      "jobId": "Job ID",
+      "status": "Status",
+      "profileId": "Profile ID",
+      "importMode": "Import mode",
+      "notifyNote": "Your import is queued and will run in the background. We'll notify you when it finishes.",
+      "validationFailed": "Could not validate the file.",
+      "uploadError": "Error uploading."
+    },
+    "steps": {
+      "upload": "Upload file",
+      "preview": "Preview",
+      "processing": "Processing",
+      "results": "Results"
+    },
+    "actions": {
+      "clear": "Clear",
+      "cancel": "Cancel",
+      "continue": "Continue",
+      "back": "Back",
+      "confirmAndSend": "Confirm and send",
+      "processing": "Processing…",
+      "finish": "Finish"
+    },
+    "cancelDialog": {
+      "title": "Cancel product upload",
+      "content": "Are you sure you want to cancel? Selected files will be lost.",
+      "continue": "Continue"
+    }
   }
 }
