@@ -42,15 +42,21 @@ type AnyStepValues =
 
 const TOTAL_STEPS = 3;
 
-const STEP1_DEFAULTS: CreateSellersStep1Values = {
+// `mainCategoryName` se inyecta en step 1 al hacer submit (id → name del árbol
+// de categorías). Por eso tipamos como `Omit<...>`.
+const STEP1_DEFAULTS: Omit<CreateSellersStep1Values, 'mainCategoryName'> = {
   country: '',
   personType: '',
   mainCategory: '',
 };
 
-// `documentTypeLabel` no está en este default — se inyecta en step 2 al elegir
-// la opción del API. Por eso tipamos como `Omit<...>`.
-const STEP2_DEFAULTS: Omit<CreateSellersStep2Values, 'documentTypeLabel'> = {
+// `documentTypeLabel`, `regionName`, `cityName` y `phoneE164` no están en este
+// default — se inyectan en step 2 al hacer submit (resolución id→name y
+// concatenación del prefijo telefónico). Por eso tipamos como `Omit<...>`.
+const STEP2_DEFAULTS: Omit<
+  CreateSellersStep2Values,
+  'documentTypeLabel' | 'regionName' | 'cityName' | 'phoneE164'
+> = {
   firstName: '',
   lastName: '',
   email: '',
@@ -59,6 +65,9 @@ const STEP2_DEFAULTS: Omit<CreateSellersStep2Values, 'documentTypeLabel'> = {
   documentType: '',
   documentNumber: '',
   phone: '',
+  region: '',
+  city: '',
+  postcode: '',
   addressShop: '',
   shopUrl: '',
 };
@@ -87,6 +96,12 @@ export function CreateSellersView() {
         typePerson: payload.personType ?? '',
         shopUrl: payload.shopUrl ?? '',
         nationalId: payload.documentNumber ?? '',
+        sellerCategory: payload.mainCategoryName ?? '',
+        street: payload.addressShop ?? '',
+        city: payload.cityName ?? '',
+        region: payload.regionName ?? '',
+        postcode: payload.postcode ?? '',
+        telephone: payload.phoneE164 ?? '',
         documents: payload.documents ?? {},
       });
 

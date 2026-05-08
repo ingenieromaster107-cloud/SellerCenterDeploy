@@ -34,10 +34,17 @@ export function buildCreateCustomerMutation(docCodes: string[]): string {
       $numeroIdentificacionUsuario: String!
       $tipoIdentificacionUsuario: String!
       $tipoIdentificacionUsuarioValue: String!
+      $personalTelephone: String!
       $countryCode: String!
       $typePerson: String!
       $shopUrl: String!
       $nationalId: String!
+      $sellerCategory: String!
+      $street: String!
+      $city: String!
+      $region: String!
+      $postcode: String!
+      $telephone: String!
 ${docVarDecls}
     ) {
       createCustomerV2(
@@ -53,13 +60,22 @@ ${docVarDecls}
               selected_options: [{ value: $tipoIdentificacionUsuario }]
               value: $tipoIdentificacionUsuarioValue
             }
+            { attribute_code: "personal_telephone", value: $personalTelephone }
           ]
           is_seller: true
           seller: {
-            country_code: $countryCode
             type_person: $typePerson
             shop_url: $shopUrl
             national_id: $nationalId
+            seller_category: $sellerCategory
+            address: {
+              street: [$street]
+              city: $city
+              region: $region
+              postcode: $postcode
+              country_code: $countryCode
+              telephone: $telephone
+            }
 ${docFields}
           }
         }
