@@ -5,13 +5,19 @@ import { parseCsv, type ParsedCsv } from './parse-csv';
 // ----------------------------------------------------------------------
 // Validación local del archivo CSV antes de enviarlo al backend.
 //
-// Política según `import_mode`:
-//  - CREATE / REPLACE: todas las columnas son obligatorias (header presente
-//    y celda no vacía en cada fila).
-//  - UPDATE: solo `sku` es obligatorio (las demás se mergean).
+// Política — el frontend valida SOLO lo estructural:
+//  1. Tamaño y tipo del archivo.
+//  2. Que el CSV se parsee correctamente (cantidad de columnas consistente).
+//  3. Que el header `sku` esté presente y que cada fila tenga `sku` no vacío.
 //
-// Si la lista de headers requeridos cambia en el backend, ajustar
-// `EXPECTED_HEADERS` y la lógica de `getRequiredHeaders`.
+// Las reglas de negocio (qué columnas son obligatorias en CREATE vs UPDATE,
+// qué valores son válidos por celda, etc.) se delegan al backend, que es
+// la fuente de verdad y devuelve errores específicos por fila/campo.
+// Esto evita rechazar CSVs válidos por un mismatch entre la política del
+// front y la del backend.
+//
+// `EXPECTED_HEADERS` se mantiene como referencia documental, pero ya no
+// se usa para validación de presencia (todas son opcionales a nivel front).
 // ----------------------------------------------------------------------
 
 export const EXPECTED_HEADERS = [
@@ -53,10 +59,14 @@ const ALLOWED_TYPES = new Set([
 
 const isCsvByName = (name: string) => /\.csv$/i.test(name);
 
-export const getRequiredHeaders = (mode: ImportMode): ExpectedHeader[] => {
-  if (mode === 'UPDATE') return ['sku'];
-  return [...EXPECTED_HEADERS];
-};
+/**
+ * Headers obligatorios a nivel front. Solo se exige `sku` siempre. El resto
+ * lo valida el backend según `import_mode`.
+ *
+ * El parámetro `mode` se mantiene en la firma por compatibilidad con
+ * consumidores existentes; actualmente la política es independiente del modo.
+ */
+export const getRequiredHeaders = (_mode: ImportMode): ExpectedHeader[] => ['sku'];
 
 export interface CsvValidationOptions {
   mode: ImportMode;
@@ -129,15 +139,17 @@ export async function validateCsvFile(
 }
 
 /**
- * Valida fila por fila: detecta celdas vacías en columnas requeridas según el
- * modo y propaga errores de parseo. Devuelve estructura útil para marcar la
- * tabla de preview.
+ * Valida fila por fila a nivel ESTRUCTURAL únicamente:
+ *  - Errores de parseo (cantidad de columnas inconsistente).
+ *  - `sku` vacío (es lo único que el front no puede recuperar — es la clave).
+ *
+ * Cualquier otra validación de contenido se delega al backend, que devuelve
+ * los errores específicos en la respuesta de `queueMassUploadImport`.
  */
 export const validateCsvContent = (
   parsed: ParsedCsv,
-  mode: ImportMode
+  _mode: ImportMode
 ): CsvValidationResult => {
-  const required = getRequiredHeaders(mode);
   const rowErrorMap = new Map<number, string[]>();
 
   // Errores globales de parseo (col mismatch).
@@ -149,16 +161,10 @@ export const validateCsvContent = (
   });
 
   parsed.rows.forEach((rowObj, idx) => {
-    const messages: string[] = [];
-    required.forEach((h) => {
-      const value = rowObj[h];
-      if (value === undefined || value === null || String(value).trim() === '') {
-        messages.push(`Falta valor en columna obligatoria: ${h}`);
-      }
-    });
-    if (messages.length > 0) {
+    const sku = rowObj.sku;
+    if (sku === undefined || sku === null || String(sku).trim() === '') {
       const existing = rowErrorMap.get(idx) ?? [];
-      rowErrorMap.set(idx, [...existing, ...messages]);
+      rowErrorMap.set(idx, [...existing, 'Falta valor en columna obligatoria: sku']);
     }
   });
 

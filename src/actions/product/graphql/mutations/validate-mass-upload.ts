@@ -17,7 +17,6 @@ export const VALIDATE_MASS_UPLOAD_QUERY = gql`
       message
       success
       profile_id
-      total_rows
     }
   }
 `;

@@ -2,8 +2,8 @@ import { parseCsv } from './parse-csv';
 import {
   CSV_MAX_BYTES,
   validateCsvFile,
-  EXPECTED_HEADERS,
   validateCsvContent,
+  EXPECTED_HEADERS,
   getRequiredHeaders,
 } from './validate-csv';
 
@@ -24,9 +24,7 @@ describe('validateCsvFile (back-compat: file-only)', () => {
   });
 
   it('rejects files with non-CSV type and non-csv extension', async () => {
-    const errors = await validateCsvFile(
-      createFile(100, 'image/png', 'something.png')
-    );
+    const errors = await validateCsvFile(createFile(100, 'image/png', 'something.png'));
     expect(errors.some((e) => /CSV/i.test(e))).toBe(true);
   });
 
@@ -37,39 +35,45 @@ describe('validateCsvFile (back-compat: file-only)', () => {
 });
 
 describe('getRequiredHeaders', () => {
-  it('returns ALL expected headers for CREATE', () => {
-    expect(getRequiredHeaders('CREATE')).toEqual([...EXPECTED_HEADERS]);
-  });
+  it.each(['CREATE', 'UPDATE', 'REPLACE'] as const)(
+    'returns only [sku] regardless of mode (mode = %s)',
+    (mode) => {
+      expect(getRequiredHeaders(mode)).toEqual(['sku']);
+    }
+  );
 
-  it('returns ALL expected headers for REPLACE', () => {
-    expect(getRequiredHeaders('REPLACE')).toEqual([...EXPECTED_HEADERS]);
-  });
-
-  it('returns only [sku] for UPDATE', () => {
-    expect(getRequiredHeaders('UPDATE')).toEqual(['sku']);
+  it('keeps EXPECTED_HEADERS as documentation reference (sku is included)', () => {
+    expect(EXPECTED_HEADERS).toContain('sku');
   });
 });
 
 describe('validateCsvContent', () => {
-  const HEADER_LINE = EXPECTED_HEADERS.join(',');
+  const HEADER_LINE = ['sku', 'name', 'stock', 'tier_price', 'crosssell_skus'].join(',');
 
-  it('flags rows with empty required cells in CREATE mode', () => {
-    const csv = `${HEADER_LINE}\nSKU-1,${',,'.repeat(20)},Seller_01\n`;
+  it('does NOT flag rows with empty optional cells (CREATE)', () => {
+    // Row con sku presente y otras columnas vacías → válido a nivel front.
+    const csv = `${HEADER_LINE}\nSKU-1,Producto 1,10,,\n`;
     const parsed = parseCsv(csv);
     const result = validateCsvContent(parsed, 'CREATE');
-    expect(result.rowErrorMap.size).toBeGreaterThan(0);
-    expect(result.rowErrorMap.get(0)?.some((m) => /columna obligatoria/i.test(m))).toBe(true);
-  });
-
-  it('does NOT flag rows in UPDATE mode if sku is present', () => {
-    const csv = `${HEADER_LINE}\nSKU-1${','.repeat(EXPECTED_HEADERS.length - 1)}\n`;
-    const parsed = parseCsv(csv);
-    const result = validateCsvContent(parsed, 'UPDATE');
     expect(result.rowErrorMap.size).toBe(0);
   });
 
-  it('flags rows in UPDATE mode if sku is empty', () => {
-    const csv = `${HEADER_LINE}\n${','.repeat(EXPECTED_HEADERS.length - 1)}\n`;
+  it('does NOT flag rows with empty optional cells (REPLACE)', () => {
+    const csv = `${HEADER_LINE}\nSKU-1,Producto 1,10,,\n`;
+    const parsed = parseCsv(csv);
+    const result = validateCsvContent(parsed, 'REPLACE');
+    expect(result.rowErrorMap.size).toBe(0);
+  });
+
+  it('flags rows with empty sku regardless of mode', () => {
+    const csv = `${HEADER_LINE}\n,Producto sin sku,10,,\n`;
+    const parsed = parseCsv(csv);
+    const result = validateCsvContent(parsed, 'CREATE');
+    expect(result.rowErrorMap.get(0)?.some((m) => /sku/.test(m))).toBe(true);
+  });
+
+  it('flags rows with empty sku in UPDATE mode', () => {
+    const csv = `${HEADER_LINE}\n,Producto sin sku,10,,\n`;
     const parsed = parseCsv(csv);
     const result = validateCsvContent(parsed, 'UPDATE');
     expect(result.rowErrorMap.get(0)?.some((m) => /sku/.test(m))).toBe(true);
