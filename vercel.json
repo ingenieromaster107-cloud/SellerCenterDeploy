@@ -1,7 +1,11 @@
 {
   "outputDirectory": "dist",
+  "functions": {
+    "api/**/*.ts": {
+      "runtime": "@vercel/node@latest"
+    }
+  },
   "rewrites": [
-    { "source": "/api/magento/:path*", "destination": "https://kcstaging.mitimiti.com/:path*" },
     { "source": "/(.*)", "destination": "/index.html" }
   ]
 }
