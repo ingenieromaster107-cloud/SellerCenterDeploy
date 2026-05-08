@@ -22,7 +22,7 @@ export function AuthProvider({ children }: PropsWithChildren) {
   const queryClient = useQueryClient();
   const loginMutation = useLogin();
   const logoutMutation = useLogout();
-  const updateTokenMutation = useUpdateToken();
+  const { mutateAsync: refreshToken } = useUpdateToken();
   const { data: user, isLoading } = useCurrentUser();
 
 
@@ -66,12 +66,10 @@ export function AuthProvider({ children }: PropsWithChildren) {
 
     const refreshTime = CONFIG.auth.tokenExpirationTime * 60 * 1000;
 
-    const timeoutId = setTimeout(async () => {
-      await updateTokenMutation.mutateAsync();
-    }, refreshTime);
+    const timeoutId = setTimeout(() => { refreshToken(); }, refreshTime);
 
     return () => clearTimeout(timeoutId);
-  }, [authStatus, updateTokenMutation]);
+  }, [authStatus, refreshToken]);
 
   const memoizedValue = useMemo(
     () => ({
