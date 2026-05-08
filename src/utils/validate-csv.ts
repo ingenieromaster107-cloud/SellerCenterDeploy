@@ -4,11 +4,8 @@ import { parseCsv, type ParsedCsv } from './parse-csv';
 
 type TranslateFn = (namespaceOrKey: string, keyOrDefault?: string, defaultValue?: string) => string;
 
-const getMessage = (
-  translate: TranslateFn | undefined,
-  key: string,
-  fallback: string
-): string => (translate ? translate('productLoad', `errors.${key}`, fallback) : fallback);
+const getMessage = (translate: TranslateFn | undefined, key: string): string =>
+  translate ? translate('productLoad', `errors.${key}`) : `productLoad.errors.${key}`;
 
 // ----------------------------------------------------------------------
 // Validación local del archivo CSV antes de enviarlo al backend.
@@ -99,7 +96,7 @@ const readFileAsText = (file: File): Promise<string> =>
       const result = reader.result;
       resolve(typeof result === 'string' ? result : '');
     };
-    reader.onerror = () => reject(reader.error ?? new Error('No se pudo leer el archivo'));
+    reader.onerror = () => reject(new Error('readError'));
     reader.readAsText(file, 'utf-8');
   });
 
@@ -115,22 +112,16 @@ export async function validateCsvFile(
   options?: Partial<CsvValidationOptions>
 ): Promise<string[]> {
   if (!file) {
-    return [getMessage(options?.translate, 'fileRequired', 'Debe seleccionar un archivo CSV.')];
+    return [getMessage(options?.translate, 'fileRequired')];
   }
 
   const errors: string[] = [];
 
   if (!ALLOWED_TYPES.has(file.type) && !isCsvByName(file.name)) {
-    errors.push(getMessage(options?.translate, 'invalidType', 'El archivo debe tener formato CSV.'));
+    errors.push(getMessage(options?.translate, 'invalidType'));
   }
   if (file.size > CSV_MAX_BYTES) {
-    errors.push(
-      getMessage(
-        options?.translate,
-        'tooBig',
-        'El archivo CSV es demasiado grande. El tamaño máximo permitido es de 1 MB.'
-      )
-    );
+    errors.push(getMessage(options?.translate, 'tooBig'));
   }
 
   // Back-compat: si no nos pasaron `mode`, no validamos contenido.
@@ -143,29 +134,21 @@ export async function validateCsvFile(
   try {
     parsed = options.parsed ?? parseCsv(await readFileAsText(file));
   } catch {
-    return [getMessage(options?.translate, 'readError', 'No se pudo leer el archivo.')];
+    return [getMessage(options?.translate, 'readError')];
   }
 
   if (parsed.headers.length === 0) {
-    return [getMessage(options?.translate, 'empty', 'El archivo CSV está vacío.')];
+    return [getMessage(options?.translate, 'empty')];
   }
 
   const required = getRequiredHeaders(options.mode);
   const missing = required.filter((h) => !parsed.headers.includes(h));
   if (missing.length > 0) {
-    errors.push(
-      getMessage(
-        options?.translate,
-        'missingRequiredColumns',
-        `Faltan columnas obligatorias: ${missing.join(', ')}.`
-      )
-    );
+    errors.push(`${getMessage(options?.translate, 'missingRequiredColumns')}: ${missing.join(', ')}`);
   }
 
   if (parsed.rows.length === 0) {
-    errors.push(
-      getMessage(options?.translate, 'noRows', 'El archivo CSV no contiene filas de datos.')
-    );
+    errors.push(getMessage(options?.translate, 'noRows'));
   }
 
   return errors;
@@ -202,7 +185,7 @@ export const validateCsvContent = (
         idx,
         [
           ...existing,
-          getMessage(options?.translate, 'missingSku', 'Falta valor en columna obligatoria: sku'),
+          getMessage(options?.translate, 'missingSku'),
         ]
       );
     }
