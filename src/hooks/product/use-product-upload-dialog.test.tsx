@@ -73,14 +73,12 @@ const validParsedCsv = {
 };
 
 const validQueuePayload = {
-  queueMassUploadImport: {
-    success: true,
-    message: 'Import queued successfully.',
-    profile_id: 9,
-    job_id: 1,
-    status: 'pending',
-    import_mode: 'CREATE',
-  },
+  success: true,
+  message: 'Import queued successfully.',
+  profile_id: 9,
+  job_id: 1,
+  status: 'pending',
+  import_mode: 'CREATE',
 };
 
 describe('useProductUploadDialog', () => {
@@ -178,17 +176,16 @@ describe('useProductUploadDialog', () => {
     expect(mockQueueMutate).toHaveBeenCalledWith({
       profileId: 9,
       importMode: 'CREATE',
-      imagesZipPath: null,
+      csvFile: file,
+      imagesZipFile: null,
     });
     expect(result.current.step).toBe(3);
     expect(result.current.queueResult?.job_id).toBe(1);
     expect(result.current.queueResult?.status).toBe('pending');
   });
 
-  it('confirmAndImport sends imagesZipPath as base64 when ZIP is selected', async () => {
-    mockFileToBase64
-      .mockResolvedValueOnce('CSVbase64') // CSV
-      .mockResolvedValueOnce('data:application/zip;base64,ZIPbase64'); // ZIP — has dataURL prefix
+  it('confirmAndImport sends the ZIP file directly (multipart) when selected', async () => {
+    mockFileToBase64.mockResolvedValue('CSVbase64');
     mockValidateMutate.mockResolvedValue({
       validateMassUpload: { success: true, message: 'ok', profile_id: 9 },
     });
@@ -207,11 +204,11 @@ describe('useProductUploadDialog', () => {
       await result.current.confirmAndImport();
     });
 
-    // The dataURL prefix must be stripped before sending to the backend.
     expect(mockQueueMutate).toHaveBeenCalledWith({
       profileId: 9,
       importMode: 'CREATE',
-      imagesZipPath: 'ZIPbase64',
+      csvFile: csv,
+      imagesZipFile: zip,
     });
   });
 

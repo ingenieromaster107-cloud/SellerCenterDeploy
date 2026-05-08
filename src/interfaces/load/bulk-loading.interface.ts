@@ -24,7 +24,10 @@ export interface ValidateMassUploadResponseInterface {
 }
 
 // ----------------------------------------------------------------------
-// Step 2 — Encolado de la importación (queueMassUploadImport)
+// Step 2 — Encolado de la importación
+//
+// Endpoint REST (multipart/form-data):
+//   POST {magentoBase}/rest/V1/import/products
 //
 // La importación es ASÍNCRONA: el backend responde inmediatamente con un
 // `job_id` y `status: "pending"`. Los resultados detallados (resumen, errores
@@ -43,22 +46,18 @@ export type ImportMode = 'CREATE' | 'UPDATE' | 'REPLACE';
 export interface QueueMassUploadImportRequestInterface {
   profileId: number;
   importMode: ImportMode;
-  /**
-   * ZIP de imágenes en base64 (sin prefijo `data:`). El backend lo decodifica
-   * y persiste antes de procesar la cola. Si no hay imágenes, enviar `null`.
-   * El parámetro de la mutation se llama `images_zip_path` por convención
-   * histórica del schema, pero su valor es la cadena base64.
-   */
-  imagesZipPath?: string | null;
+  csvFile: File;
+  /** ZIP de imágenes (opcional). Se envía como `images_zip_file`. */
+  imagesZipFile?: File | null;
 }
 
 export interface QueueMassUploadImportResponseInterface {
-  queueMassUploadImport: {
-    success: boolean;
-    message: string;
-    profile_id: number;
-    job_id: number;
-    status: string;
-    import_mode: ImportMode | string;
-  };
+  success: boolean;
+  message: string;
+  profile_id: number;
+  job_id: number;
+  status: string;
+  import_mode: ImportMode | string;
+  /** Path donde el backend persistió el ZIP (informativo). */
+  images_zip_path?: string | null;
 }

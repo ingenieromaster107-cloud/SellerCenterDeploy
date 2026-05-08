@@ -7,22 +7,62 @@ import type {
 
 import { useMutation } from '@tanstack/react-query';
 
-import { GraphQLService } from 'src/lib/graphql-client';
+import { getSession } from 'src/auth/context';
 
-import { queueMassUploadImportAdapter } from './adapters/queue-mass-upload-import-adapter';
-import { QUEUE_MASS_UPLOAD_IMPORT_MUTATION } from './graphql/mutations/queue-mass-upload-import';
+// ----------------------------------------------------------------------
+// Endpoint REST que reemplaza al `queueMassUploadImport` de GraphQL.
+// La URL se arma sobre el proxy `/api/magento` (configurado en vite.config),
+// que apunta a la raíz de Magento definida en `VITE_BACKEND_GRAPHQL_URL`.
+// ----------------------------------------------------------------------
+
+const REST_PATH = '/api/magento/rest/V1/import/products';
+
+const buildEndpoint = (profileId: number): string => {
+  if (typeof window !== 'undefined') {
+    const url = new URL(`${window.location.origin}${REST_PATH}`);
+    url.searchParams.append('profile_id', String(profileId));
+    return url.toString();
+  }
+  return `${REST_PATH}?profile_id=${profileId}`;
+};
 
 export function useQueueMassUploadImport() {
-  const graphql = GraphQLService.getInstance();
   return useMutation({
     mutationFn: async (
       request: QueueMassUploadImportRequestInterface
     ): Promise<QueueMassUploadImportResponseInterface> => {
-      const data = await graphql.request<
-        QueueMassUploadImportResponseInterface,
-        QueueMassUploadImportRequestInterface
-      >(QUEUE_MASS_UPLOAD_IMPORT_MUTATION, request);
-      return queueMassUploadImportAdapter(data);
+      const form = new FormData();
+      form.append('profile_id', String(request.profileId));
+      form.append('import_mode', request.importMode);
+      form.append('csv_file', request.csvFile, request.csvFile.name);
+      if (request.imagesZipFile) {
+        form.append('images_zip_file', request.imagesZipFile, request.imagesZipFile.name);
+      }
+
+      const headers: Record<string, string> = {};
+      const token = getSession();
+      if (token) headers.Authorization = `Bearer ${token}`;
+
+      const res = await fetch(buildEndpoint(request.profileId), {
+        method: 'POST',
+        headers,
+        body: form,
+      });
+
+      let payload: any = null;
+      try {
+        payload = await res.json();
+      } catch {
+        // body vacío o no-JSON
+      }
+
+      if (!res.ok) {
+        const message =
+          payload?.message || `Error ${res.status} al encolar la importación.`;
+        throw new Error(message);
+      }
+
+      return payload as QueueMassUploadImportResponseInterface;
     },
   });
 }

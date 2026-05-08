@@ -76,7 +76,7 @@ export const useProductUploadDialog = ({ onClose }: { onClose: () => void }) => 
   // Backend state
   const [uploading, setUploading] = useState(false);
   const [queueResult, setQueueResult] =
-    useState<QueueMassUploadImportResponseInterface['queueMassUploadImport'] | null>(null);
+    useState<QueueMassUploadImportResponseInterface | null>(null);
 
   // UX
   const [result, setResult] = useState<ResultBanner | null>(null);
@@ -211,8 +211,8 @@ export const useProductUploadDialog = ({ onClose }: { onClose: () => void }) => 
   /**
    * Step 1 → 2 → 3:
    *  1) validateMassUpload(csv base64) → profile_id
-   *  2) Si hay ZIP, lo encodea a base64 y lo manda en images_zip_path
-   *  3) queueMassUploadImport(profile_id, mode, imagesZipBase64) → job_id + status
+   *  2) POST REST /rest/V1/import/products (multipart) con csv_file + images_zip_file
+   *  3) Respuesta { job_id, status } → setQueueResult, step 3.
    */
   const confirmAndImport = useCallback(async () => {
     if (!csvFile) return;
@@ -243,17 +243,14 @@ export const useProductUploadDialog = ({ onClose }: { onClose: () => void }) => 
         return;
       }
 
-      const imagesZipBase64 = imagesZip
-        ? stripDataUrlPrefix(await fileToBase64(imagesZip))
-        : null;
-
       const queue = await queueMassUploadImport({
         profileId: validation.validateMassUpload.profile_id,
         importMode,
-        imagesZipPath: imagesZipBase64,
+        csvFile,
+        imagesZipFile: imagesZip,
       });
 
-      setQueueResult(queue.queueMassUploadImport);
+      setQueueResult(queue);
       setStep(3);
     } catch (err: any) {
       const message = err?.message || 'Error en la carga.';
