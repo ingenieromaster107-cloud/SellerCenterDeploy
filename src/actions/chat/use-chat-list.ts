@@ -1,0 +1,22 @@
+import type { ChatListResponse } from 'src/interfaces/chat/chat-list';
+
+import { useMemo } from 'react';
+import { useQuery } from '@tanstack/react-query';
+
+import { GraphQLService } from 'src/lib/graphql-client';
+
+import { GET_CHATS } from './graphql/queries/get-chats';
+import { mapChatListToContacts, mapChatListToConversations } from './adapters/chats-adapter';
+
+export function useGetChatList() {
+  const graphql = GraphQLService.getInstance();
+  const { data, isLoading, isError, error } = useQuery({
+    queryKey: ['getChats'],
+    queryFn: () => graphql.request<ChatListResponse>(GET_CHATS),
+  });
+
+  const conversations = useMemo(() => mapChatListToConversations(data), [data]);
+  const contacts = useMemo(() => mapChatListToContacts(data), [data]);
+
+  return { data: conversations, contacts, rawData: data, isLoading, isError, error };
+}

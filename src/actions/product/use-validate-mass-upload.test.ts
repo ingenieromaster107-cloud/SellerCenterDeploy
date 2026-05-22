@@ -2,7 +2,7 @@ import React from 'react';
 import { waitFor, renderHook } from '@testing-library/react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
-import { useValidateMassUpload } from './useValidateMassUpload';
+import { useValidateMassUpload } from './use-validate-mass-upload';
 
 const mockRequest = jest.fn();
 jest.mock('src/lib/graphql-client', () => ({

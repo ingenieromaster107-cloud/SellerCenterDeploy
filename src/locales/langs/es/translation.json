@@ -79,11 +79,14 @@
       "title": "Opiniones"
     },
     "academy": {
-      "title": "Academy"
+      "title": "Academia"
+    },
+    "chat": {
+      "title": "Chat"
     }
   },
   "academyModule": {
-    "title": "Academy",
+    "title": "Academia",
     "list": {
       "heading": "Cursos disponibles"
     },
@@ -902,6 +905,37 @@
       "title": "Cancelar carga de productos",
       "content": "¿Seguro que quieres cancelar la carga? Los archivos seleccionados se perderán.",
       "continue": "Continuar"
+    }
+  },
+    "chatModule": {
+    "title": "Chat",
+    "searchPlaceholder": "Buscar por cliente o mensaje...",
+    "noMessages": "No se encontraron mensajes",
+    "messageStatus": {
+      "READ": "Leído",
+      "UNREAD": "No leído"
+    },
+    "profileResumeModal":{
+      "profile": "Perfil",
+      "settings": "Configuración"
+    },
+    "sideBar": {
+      "contactsSearcher": {
+        "placeholder": "Buscar contactos...",
+        "errorMessages": {
+          "notFound": "No encontrado",
+          "notResultsFoundFor": "No se encontraron resultados para",
+          "tryWithAnotherKeyword": "Intenta verificar errores tipográficos o usar palabras completas."
+        }
+      },
+      "contacts":{
+        "errors":{
+          "notConversations": {
+            "title": "Aún no tienes conversaciones activas.",
+            "description": "Cuando un comprador te escriba, los chats aparecerán aquí para que puedas responder fácilmente."
+          }
+        }
+      }
     }
   }
 }

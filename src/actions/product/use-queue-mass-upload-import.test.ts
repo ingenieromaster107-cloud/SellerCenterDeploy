@@ -2,7 +2,9 @@ import React from 'react';
 import { waitFor, renderHook } from '@testing-library/react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
-import { useQueueMassUploadImport } from './useQueueMassUploadImport';
+import { TranslateProvider } from 'src/locales/langs/i18n';
+
+import { useQueueMassUploadImport } from './use-queue-mass-upload-import';
 
 jest.mock('src/auth/context', () => ({
   getSession: () => 'TEST_TOKEN',
@@ -11,7 +13,7 @@ jest.mock('src/auth/context', () => ({
 const wrapper = () => {
   const qc = new QueryClient({ defaultOptions: { queries: { retry: false } } });
   return ({ children }: { children: React.ReactNode }) =>
-    React.createElement(QueryClientProvider, { client: qc }, children);
+    React.createElement(QueryClientProvider, { client: qc }, React.createElement(TranslateProvider, null, children));
 };
 
 const okBody = {
@@ -55,7 +57,7 @@ describe('useQueueMassUploadImport (REST)', () => {
 
     expect(mockFetch).toHaveBeenCalledTimes(1);
     const [url, init] = mockFetch.mock.calls[0];
-    expect(String(url)).toMatch(/\/api\/magento\/rest\/V1\/import\/products$/);
+    expect(String(url)).toMatch(/\/api\/magento\/rest\/V1\/import\/products(\?.*)?$/);
     expect(init.method).toBe('POST');
     expect(init.headers.Authorization).toBe('Bearer TEST_TOKEN');
 
@@ -114,6 +116,12 @@ describe('useQueueMassUploadImport (REST)', () => {
 
     await expect(
       result.current.mutateAsync({ profileId: 1, importMode: 'CREATE', csvFile: csv() })
-    ).rejects.toThrow(/500/);
+    ).rejects.toThrow('Could not queue the import');
   });
 });
+
+
+
+
+
+

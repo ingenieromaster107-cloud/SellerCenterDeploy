@@ -1,4 +1,7 @@
 import { act, renderHook } from '@testing-library/react';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+
+import { TranslateProvider } from 'src/locales/langs/i18n';
 
 import { useProductUploadDialog } from './use-product-upload-dialog';
 
@@ -21,16 +24,16 @@ jest.mock('src/utils/parse-csv', () => ({
   parseCsv: (...args: unknown[]) => mockParseCsv(...args),
 }));
 
-jest.mock('src/actions/product/useValidateMassUpload', () => ({
-  useValidateMassUpload: () => ({ mutateAsync: mockValidateMutate }),
+jest.mock('src/utils/codificateFile', () => ({
+  fileToBase64: (...args: unknown[]) => mockFileToBase64(...args),
 }));
 
-jest.mock('src/actions/product/useQueueMassUploadImport', () => ({
+jest.mock('src/actions/product/use-queue-mass-upload-import', () => ({
   useQueueMassUploadImport: () => ({ mutateAsync: mockQueueMutate }),
 }));
 
-jest.mock('src/utils/codificateFile', () => ({
-  fileToBase64: (...args: unknown[]) => mockFileToBase64(...args),
+jest.mock('src/actions/product/use-validate-mass-upload', () => ({
+  useValidateMassUpload: () => ({ mutateAsync: mockValidateMutate }),
 }));
 
 jest.mock('src/components/snackbar', () => ({
@@ -96,7 +99,7 @@ describe('useProductUploadDialog', () => {
   });
 
   it('starts at step 0 with default mode CREATE', () => {
-    const { result } = renderHook(() => useProductUploadDialog({ onClose: jest.fn() }));
+    const { result } = renderHook(() => useProductUploadDialog({ onClose: jest.fn() }), { wrapper });
     expect(result.current.step).toBe(0);
     expect(result.current.importMode).toBe('CREATE');
     expect(result.current.csvFile).toBeNull();
@@ -108,18 +111,21 @@ describe('useProductUploadDialog', () => {
     mockValidateCsvFile.mockResolvedValue([]);
     const file = makeCsvFile('sku,name\nA,B');
 
-    const { result } = renderHook(() => useProductUploadDialog({ onClose: jest.fn() }));
+    const { result } = renderHook(() => useProductUploadDialog({ onClose: jest.fn() }), { wrapper });
     await act(async () => {
       await result.current.handleCsvFiles(toFileList([file]));
     });
 
     expect(result.current.csvFile).toBe(file);
     expect(result.current.csvErrors).toEqual([]);
-    expect(mockValidateCsvFile).toHaveBeenCalledWith(file);
+    expect(mockValidateCsvFile).toHaveBeenCalledWith(
+      file,
+      expect.objectContaining({ translate: expect.any(Function) })
+    );
   });
 
   it('handleImageFiles stores ZIP files via setImagesZip', () => {
-    const { result } = renderHook(() => useProductUploadDialog({ onClose: jest.fn() }));
+    const { result } = renderHook(() => useProductUploadDialog({ onClose: jest.fn() }), { wrapper });
     const zip = makeZipFile();
     act(() => {
       result.current.handleImageFiles(toFileList([zip]));
@@ -138,7 +144,7 @@ describe('useProductUploadDialog', () => {
     });
 
     const file = makeCsvFile('sku,name\nA,B');
-    const { result } = renderHook(() => useProductUploadDialog({ onClose: jest.fn() }));
+    const { result } = renderHook(() => useProductUploadDialog({ onClose: jest.fn() }), { wrapper });
 
     act(() => result.current.setCsvFile(file));
     await act(async () => {
@@ -158,7 +164,7 @@ describe('useProductUploadDialog', () => {
     mockQueueMutate.mockResolvedValue(validQueuePayload);
 
     const file = makeCsvFile('sku,name\nA,B');
-    const { result } = renderHook(() => useProductUploadDialog({ onClose: jest.fn() }));
+    const { result } = renderHook(() => useProductUploadDialog({ onClose: jest.fn() }), { wrapper });
 
     act(() => result.current.setCsvFile(file));
     await act(async () => {
@@ -193,7 +199,7 @@ describe('useProductUploadDialog', () => {
 
     const csv = makeCsvFile('sku,name\nA,B');
     const zip = makeZipFile();
-    const { result } = renderHook(() => useProductUploadDialog({ onClose: jest.fn() }));
+    const { result } = renderHook(() => useProductUploadDialog({ onClose: jest.fn() }), { wrapper });
 
     act(() => {
       result.current.setCsvFile(csv);
@@ -219,7 +225,7 @@ describe('useProductUploadDialog', () => {
     });
 
     const file = makeCsvFile('sku\nA');
-    const { result } = renderHook(() => useProductUploadDialog({ onClose: jest.fn() }));
+    const { result } = renderHook(() => useProductUploadDialog({ onClose: jest.fn() }), { wrapper });
 
     act(() => result.current.setCsvFile(file));
     await act(async () => {
@@ -236,7 +242,7 @@ describe('useProductUploadDialog', () => {
     mockValidateMutate.mockRejectedValue(new Error('Network down'));
 
     const file = makeCsvFile('sku\nA');
-    const { result } = renderHook(() => useProductUploadDialog({ onClose: jest.fn() }));
+    const { result } = renderHook(() => useProductUploadDialog({ onClose: jest.fn() }), { wrapper });
 
     act(() => result.current.setCsvFile(file));
     await act(async () => {
@@ -248,7 +254,7 @@ describe('useProductUploadDialog', () => {
   });
 
   it('clearAll resets file, ZIP, parsed CSV, errors and step', async () => {
-    const { result } = renderHook(() => useProductUploadDialog({ onClose: jest.fn() }));
+    const { result } = renderHook(() => useProductUploadDialog({ onClose: jest.fn() }), { wrapper });
     act(() => {
       result.current.setCsvFile(makeCsvFile('a'));
       result.current.setImagesZip(makeZipFile());
@@ -262,8 +268,18 @@ describe('useProductUploadDialog', () => {
   });
 
   it('changes import mode', () => {
-    const { result } = renderHook(() => useProductUploadDialog({ onClose: jest.fn() }));
+    const { result } = renderHook(() => useProductUploadDialog({ onClose: jest.fn() }), { wrapper });
     act(() => result.current.setImportMode('UPDATE'));
     expect(result.current.importMode).toBe('UPDATE');
   });
 });
+
+const wrapper = ({ children }: { children: React.ReactNode }) => {
+  const qc = new QueryClient({ defaultOptions: { queries: { retry: false } } });
+  return (
+    <QueryClientProvider client={qc}>
+      <TranslateProvider>{children}</TranslateProvider>
+    </QueryClientProvider>
+  );
+};
+

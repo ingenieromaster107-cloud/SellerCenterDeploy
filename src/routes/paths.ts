@@ -8,6 +8,7 @@ const ROOTS = {
   PRODUCT: '/product',
   ORDER: '/order',
   ACADEMY: '/academy',
+  CHAT: '/chat',
 };
 
 // ----------------------------------------------------------------------
@@ -74,6 +75,9 @@ export const paths = {
     course: (courseId: string) => `${ROOTS.ACADEMY}/${courseId}`,
     lesson: (courseId: string, lessonId: string) =>
       `${ROOTS.ACADEMY}/${courseId}/lesson/${lessonId}`,
+  },
+  chat:{
+    root: ROOTS.CHAT,
   },
   account: {
     root: '/account',

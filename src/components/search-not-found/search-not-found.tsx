@@ -7,6 +7,8 @@ import type { TypographyProps } from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 
+import { useTranslate } from 'src/locales';
+
 // ----------------------------------------------------------------------
 
 type SearchNotFoundProps = BoxProps & {
@@ -19,10 +21,11 @@ type SearchNotFoundProps = BoxProps & {
 };
 
 export function SearchNotFound({ query, sx, slotProps, ...other }: SearchNotFoundProps) {
+  const { translate } = useTranslate();
   if (!query) {
     return (
       <Typography variant="body2" {...slotProps?.description}>
-        Please enter keywords
+        {translate('chatModule.sideBar.contactsSearcher.errorMessages.notFound')}
       </Typography>
     );
   }
@@ -49,14 +52,14 @@ export function SearchNotFound({ query, sx, slotProps, ...other }: SearchNotFoun
           ...(Array.isArray(slotProps?.title?.sx) ? slotProps.title.sx : [slotProps?.title?.sx]),
         ]}
       >
-        Not found
+        {translate('chatModule.sideBar.contactsSearcher.errorMessages.notFound')}&nbsp;
       </Typography>
 
       <Typography variant="body2" {...slotProps?.description}>
-        No results found for &nbsp;
+        {translate('chatModule.sideBar.contactsSearcher.errorMessages.notResultsFoundFor')}&nbsp;
         <strong>{`"${query}"`}</strong>
         .
-        <br /> Try checking for typos or using complete words.
+        <br /> {translate('chatModule.sideBar.contactsSearcher.errorMessages.tryWithAnotherKeyword')}
       </Typography>
     </Box>
   );

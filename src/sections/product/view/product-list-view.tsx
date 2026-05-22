@@ -20,7 +20,7 @@ import { useRouter } from 'src/routes/hooks';
 
 import { HomeContent } from 'src/layouts/home';
 import { useTranslate } from 'src/locales/langs/i18n';
-import { useGetProducts } from 'src/actions/product/useGetProducts';
+import { useGetProducts } from 'src/actions/product/use-get-products';
 
 import { Label } from 'src/components/label';
 import { toast } from 'src/components/snackbar';

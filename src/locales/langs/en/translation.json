@@ -80,6 +80,9 @@
     },
     "academy": {
       "title": "Academy"
+    },
+    "chat": {
+      "title": "Chat"
     }
   },
   "academyModule": {
@@ -901,6 +904,37 @@
       "title": "Cancel product upload",
       "content": "Are you sure you want to cancel? Selected files will be lost.",
       "continue": "Continue"
+    }
+  },
+  "chatModule": {
+    "title": "Chat",
+    "searchPlaceholder": "Search by customer or message...",
+    "noMessages": "No messages found",
+    "messageStatus": {
+      "READ": "Read",
+      "UNREAD": "Unread"
+    },
+    "profileResumeModal":{
+      "profile": "Profile",
+      "settings": "Settings"
+    },
+    "sideBar": {
+      "contactsSearcher": {
+        "placeholder": "Search contacts...",
+        "errorMessages":{
+          "notFound":"Not found",
+          "notResultsFoundFor":"No results found for",
+          "tryWithAnotherKeyword":"Try checking for typos or using complete words."
+        }
+      },
+      "contacts":{
+        "errors":{
+          "notConversations": {
+            "title": "No conversations yet",
+            "description": "When a buyer messages you, chats will appear here so you can respond easily."
+          }
+        }
+      }
     }
   }
 }

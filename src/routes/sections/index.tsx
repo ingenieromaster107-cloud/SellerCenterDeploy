@@ -74,7 +74,10 @@ const AcademyListView = lazy(() =>
 const AcademyCourseView = lazy(() =>
   import('src/sections/academy/view').then((m) => ({ default: m.AcademyCourseView }))
 );
-
+// Chat
+const ChatView = lazy(() =>
+  import('src/sections/chat/chat-view').then((m) => ({ default: m.ChatView }))
+);
 // Account
 const UserProfileView = lazy(() =>
   import('src/sections/account/view').then((m) => ({ default: m.UserProfileView }))
@@ -339,7 +342,8 @@ export const routesSection = [
       { path: 'academy', element: <AcademyListView /> },
       { path: 'academy/:courseId', element: <AcademyCoursePage /> },
       { path: 'academy/:courseId/lesson/:lessonId', element: <AcademyLessonPage /> },
-
+      // Chat
+      {path:'chat', element: <ChatView />},
       // Account
       { path: 'account', element: <UserProfileView /> },
       { path: 'account/subaccount', element: <SubAccountListView /> },

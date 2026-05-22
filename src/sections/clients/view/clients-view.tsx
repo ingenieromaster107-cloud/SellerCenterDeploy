@@ -15,6 +15,7 @@ import { HomeContent } from 'src/layouts/home';
 import { CustomBreadcrumbs } from 'src/components/custom-breadcrumbs';
 
 import { CommonTable } from 'src/sections/common';
+// import { useGetCustomer } from 'src/actions/customer/use-get-customer';
 
 
 
@@ -27,7 +28,10 @@ const clientRender = (client: ClientListDataTable, index: number) => (
     <TableCell align="left">{client.customer_since}</TableCell>
   </TableRow>
 );
+  
 export default function ClientsView() {
+  // const { customer, isLoading, isError } = useGetCustomer();
+  
   const { clientList, tableHead } = useClientList();
   const { translate } = useTranslate();
   return (

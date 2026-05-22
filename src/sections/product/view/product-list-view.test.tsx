@@ -102,7 +102,7 @@ jest.mock('src/components/custom-data-grid', () => ({
 }));
 
 const mockUseGetProducts = jest.fn();
-jest.mock('src/actions/product/useGetProducts', () => ({
+jest.mock('src/actions/product/use-get-products', () => ({
   useGetProducts: (...args: any[]) => mockUseGetProducts(...args),
 }));
 

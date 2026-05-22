@@ -2,8 +2,8 @@ import { parseCsv } from './parse-csv';
 import {
   CSV_MAX_BYTES,
   validateCsvFile,
-  validateCsvContent,
   EXPECTED_HEADERS,
+  validateCsvContent,
   getRequiredHeaders,
 } from './validate-csv';
 

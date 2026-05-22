@@ -24,6 +24,7 @@ const ICONS = {
   return: icon('ic-refresh'),
   feedback: icon('ic-feedback'),
   academy: <Iconify icon="solar:notebook-bold-duotone" width={24} />,
+  chat: <Iconify icon="solar:chat-round-dots-bold" width={24} />,
 };
 
 // ----------------------------------------------------------------------
@@ -90,6 +91,11 @@ export const useNavData = (): NavSectionProps['data'] => {
             title: translate('sidebarMenu.academy.title'),
             path: paths.academy.root,
             icon: ICONS.academy,
+          },
+                    {
+            title: translate('sidebarMenu.chat.title'),
+            path: paths.chat.root,
+            icon: ICONS.chat,
           },
 
         ],

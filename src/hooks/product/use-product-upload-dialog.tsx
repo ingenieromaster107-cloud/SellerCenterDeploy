@@ -10,8 +10,8 @@ import { parseCsv, type ParsedCsv } from 'src/utils/parse-csv';
 import { CSV_MAX_BYTES, validateCsvFile, validateCsvContent } from 'src/utils/validate-csv';
 
 import { useTranslate } from 'src/locales';
-import { useValidateMassUpload } from 'src/actions/product/useValidateMassUpload';
-import { useQueueMassUploadImport } from 'src/actions/product/useQueueMassUploadImport';
+import { useValidateMassUpload } from 'src/actions/product/use-validate-mass-upload';
+import { useQueueMassUploadImport } from 'src/actions/product/use-queue-mass-upload-import';
 
 import { toast } from 'src/components/snackbar';
 

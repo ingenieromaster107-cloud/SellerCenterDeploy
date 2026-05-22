@@ -2,7 +2,7 @@ import React from 'react';
 import { waitFor, renderHook } from '@testing-library/react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
-import { useGetProducts } from './useGetProducts';
+import { useGetProducts } from './use-get-products';
 
 const mockRequest = jest.fn();
 jest.mock('src/lib/graphql-client', () => ({
