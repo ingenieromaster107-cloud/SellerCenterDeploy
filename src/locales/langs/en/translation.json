@@ -589,6 +589,38 @@
       "last": "Last"
     }
   },
+  "reputationModule": {
+    "title": "Reputation",
+    "period": "Period",
+    "completedSales": "Completed sales",
+    "allGood": "No issues detected",
+    "noData": "Insufficient data",
+    "healthScore": "Account health",
+    "overall": {
+      "label": "Account health"
+    },
+    "levels": {
+      "green": "Excellent",
+      "yellow": "Acceptable",
+      "red": "Critical",
+      "insufficient": "Insufficient data",
+      "insufficient_data": "Insufficient data"
+    },
+    "metrics": {
+      "cancellation": {
+        "title": "Cancellation rate"
+      },
+      "claims": {
+        "title": "Claims rate"
+      },
+      "onTimeDispatch": {
+        "title": "On-time dispatch"
+      },
+      "avgResponseTime": {
+        "title": "Avg. response time"
+      }
+    }
+  },
   "ordersModule": {
     "title": "Orders",
     "table": {

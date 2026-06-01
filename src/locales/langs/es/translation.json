@@ -590,6 +590,38 @@
       "last": "Últimos"
     }
   },
+  "reputationModule": {
+    "title": "Reputación",
+    "period": "Periodo",
+    "completedSales": "Ventas completadas",
+    "allGood": "Sin observaciones",
+    "noData": "Sin datos suficientes",
+    "healthScore": "Estado de cuenta",
+    "overall": {
+      "label": "Estado de cuenta"
+    },
+    "levels": {
+      "green": "Excelente",
+      "yellow": "Aceptable",
+      "red": "Crítica",
+      "insufficient": "Datos insuficientes",
+      "insufficient_data": "Datos insuficientes"
+    },
+    "metrics": {
+      "cancellation": {
+        "title": "Tasa de cancelaciones"
+      },
+      "claims": {
+        "title": "Tasa de reclamos"
+      },
+      "onTimeDispatch": {
+        "title": "Despachos a tiempo"
+      },
+      "avgResponseTime": {
+        "title": "Tiempo de respuesta"
+      }
+    }
+  },
   "ordersModule": {
     "title": "Pedidos",
     "table": {

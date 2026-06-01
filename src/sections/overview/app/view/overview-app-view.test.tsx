@@ -13,6 +13,22 @@ jest.mock('src/locales', () => ({
   }),
 }));
 
+const mockUseReputation = jest.fn();
+
+jest.mock('src/hooks/dashboard/use-seller-reputation-indicators', () => ({
+  useSellerReputationIndicators: () => mockUseReputation(),
+}));
+
+jest.mock('../../reputation-panel/components', () => ({
+  ReputationPanelSkeleton: () => <div data-testid="reputation-skeleton" />,
+}));
+
+jest.mock('../../reputation-panel/app-reputation-panel', () => ({
+  AppReputationPanel: ({ data }: any) => (
+    <div data-testid="reputation-panel" data-level={String(data?.reputation_level)} />
+  ),
+}));
+
 jest.mock('src/hooks/dashboard/use-dashboard-data', () => ({
   useDashboardData: () => ({
     topProducts: [],
@@ -60,6 +76,13 @@ jest.mock('../app-top-customers', () => ({
 }));
 
 describe('OverviewAppView', () => {
+  beforeEach(() => {
+    mockUseReputation.mockReturnValue({
+      reputation: { success: true, message: 'ok', data: { reputation_level: 'GREEN' } },
+      isLoading: false,
+    });
+  });
+
   it('renders home content wrapper', () => {
     render(<OverviewAppView />);
     expect(screen.getByTestId('home-content')).toBeInTheDocument();
@@ -81,5 +104,26 @@ describe('OverviewAppView', () => {
   it('does not render loading screen when data is loaded', () => {
     render(<OverviewAppView />);
     expect(screen.queryByTestId('loading-screen')).not.toBeInTheDocument();
+  });
+
+  it('shows the reputation skeleton while reputation is loading', () => {
+    mockUseReputation.mockReturnValue({
+      reputation: { success: false, message: '', data: null },
+      isLoading: true,
+    });
+
+    render(<OverviewAppView />);
+
+    expect(screen.getByTestId('reputation-skeleton')).toBeInTheDocument();
+    expect(screen.queryByTestId('reputation-panel')).not.toBeInTheDocument();
+  });
+
+  it('shows the reputation panel with data when not loading', () => {
+    render(<OverviewAppView />);
+
+    const panel = screen.getByTestId('reputation-panel');
+    expect(panel).toBeInTheDocument();
+    expect(panel).toHaveAttribute('data-level', 'GREEN');
+    expect(screen.queryByTestId('reputation-skeleton')).not.toBeInTheDocument();
   });
 });

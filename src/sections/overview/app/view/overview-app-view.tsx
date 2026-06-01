@@ -4,6 +4,7 @@ import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
 
 import { useDashboardData } from 'src/hooks/dashboard/use-dashboard-data';
+import { useSellerReputationIndicators } from 'src/hooks/dashboard/use-seller-reputation-indicators';
 
 import { _appInvoices } from 'src/_mock';
 import { useTranslate } from 'src/locales';
@@ -15,15 +16,31 @@ import { AppKpiCard } from './app-kpi-card';
 import { AppTopProducts } from '../app-top-products';
 import { AppNewInvoices } from '../app-new-invoices';
 import { AppTopCustomers } from '../app-top-customers';
+import { ReputationPanelSkeleton } from '../../reputation-panel/components';
+import { AppReputationPanel } from '../../reputation-panel/app-reputation-panel';
 
 // ----------------------------------------------------------------------
 
 export function OverviewAppView() {
   const { translate } = useTranslate();
-  const { topProducts, topCustomers, averageOrderValue, totalSales, ordersOverTime, isLoading} = useDashboardData();
+  const { topProducts, topCustomers, averageOrderValue, totalSales, ordersOverTime, isLoading } =
+    useDashboardData();
+  const { reputation, isLoading: isReputationLoading } = useSellerReputationIndicators();
 
   return (
     <HomeContent maxWidth="xl">
+      <Box
+        sx={{
+          gridColumn: { md: 'span 12' },
+          mb: 2,
+        }}
+      >
+        {isReputationLoading ? (
+          <ReputationPanelSkeleton />
+        ) : (
+          <AppReputationPanel data={reputation.data} />
+        )}
+      </Box>
       <Grid
         container
         spacing={3}
@@ -39,33 +56,32 @@ export function OverviewAppView() {
       >
         <Grid>
           <AppKpiCard
-        title={translate('dashboardModule.averageOrderValue.title')}
-        total={Number(averageOrderValue.avg_order_value)}
-        series={averageOrderValue.graph_data.map(Number)}
-        showPeriod
-        transparentCard
-        monthlyData={averageOrderValue.graph_x_value}
+            title={translate('dashboardModule.averageOrderValue.title')}
+            total={Number(averageOrderValue.avg_order_value)}
+            series={averageOrderValue.graph_data.map(Number)}
+            showPeriod
+            transparentCard
+            monthlyData={averageOrderValue.graph_x_value}
           />
         </Grid>
         <Grid>
           <AppKpiCard
-        title={translate('dashboardModule.totalSales.title')}
-        total={Number(totalSales.total_sale_amount)}
-        series={totalSales.graph_data.map(Number)}
-        monthlyData={totalSales.graph_x_value}
+            title={translate('dashboardModule.totalSales.title')}
+            total={Number(totalSales.total_sale_amount)}
+            series={totalSales.graph_data.map(Number)}
+            monthlyData={totalSales.graph_x_value}
           />
         </Grid>
         <Grid>
           <AppKpiCard
-        title={translate('dashboardModule.ordersOverTime.title')}
-        total={Number(ordersOverTime.graph_data.reduce((sum, value) => sum + Number(value), 0))}
-        series={ordersOverTime.graph_data.map(Number)}
-        monthlyData={ordersOverTime.graph_x_value}
-        typeTotal='text'
+            title={translate('dashboardModule.ordersOverTime.title')}
+            total={Number(ordersOverTime.graph_data.reduce((sum, value) => sum + Number(value), 0))}
+            series={ordersOverTime.graph_data.map(Number)}
+            monthlyData={ordersOverTime.graph_x_value}
+            typeTotal="text"
           />
         </Grid>
       </Grid>
-
       <Box
         display="grid"
         gap={2}
