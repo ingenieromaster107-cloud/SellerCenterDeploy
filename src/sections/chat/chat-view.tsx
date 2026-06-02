@@ -1,5 +1,3 @@
-import type { ChatParticipant } from 'src/interfaces/chat/chat';
-
 import { useState, useEffect, useCallback, startTransition } from 'react';
 
 import Typography from '@mui/material/Typography';
@@ -10,13 +8,10 @@ import { useRouter, useSearchParams } from 'src/routes/hooks';
 import { useTranslate } from 'src/locales';
 import { CONFIG } from 'src/global-config';
 import { DashboardContent } from 'src/layouts/dashboard';
-import { useGetConversation } from 'src/actions/chat/chat';
 import { useGetChatList } from 'src/actions/chat/use-chat-list';
 import { useGetSellerConversationsById } from 'src/actions/chat/use-conversations';
 
 import { EmptyContent } from 'src/components/empty-content';
-
-import { useMockedUser, useAuthContext } from 'src/auth/hooks';
 
 import { ChatNav } from './chat-nav';
 import { ChatLayout } from './layout';
@@ -24,7 +19,6 @@ import { ChatRoom } from './chat-room';
 import { ChatMessageList } from './chat-message-list';
 import { ChatMessageInput } from './chat-message-input';
 import { ChatHeaderDetails } from './chat-header-details';
-import { ChatHeaderCompose } from './chat-header-compose';
 import { useCollapseNav } from './hooks/use-collapse-nav';
 
 // ----------------------------------------------------------------------
@@ -32,39 +26,27 @@ import { useCollapseNav } from './hooks/use-collapse-nav';
 export function ChatView() {
   const router = useRouter();
   const { translate } = useTranslate();
-
   const {
     data: sellerChatConversations,
     contacts: sellerChatContacts,
     isLoading: sellerChatsLoading,
   } = useGetChatList();
   
-  const { user: userData } = useAuthContext();
-  const customerFormatted: ChatParticipant[] = [];
-  customerFormatted.push({
-    id: userData?.identificationNumber?.value ?? '',
-    address: userData?.address?.city ?? '',
-    avatarUrl: userData?.firstname ?? '',
-    email: userData?.email ?? '',
-    lastActivity: '',
-    name: userData?.firstname ?? '',
-    phoneNumber: '',
-    role: 'customer',
-    status: 'online',
-  });
   const searchParams = useSearchParams();
   const selectedConversationId = searchParams.get('id') || '';
+  const selectedConversationNumericId = Number(selectedConversationId);
+  const conversationId =
+     selectedConversationNumericId > 0
+      ? selectedConversationNumericId
+      : undefined;
 
-  const { conversation, conversationError, conversationLoading } =
-    useGetConversation(selectedConversationId);
-
-  const  { messages} =useGetSellerConversationsById(Number(selectedConversationId));
+  const { messages, error, isLoading: conversationLoading } = useGetSellerConversationsById(
+    conversationId?.toString()
+  );
   
-
   const roomNav = useCollapseNav();
   const conversationsNav = useCollapseNav();
-
-  const [recipients, setRecipients] = useState<ChatParticipant[]>([]);
+  const [messageDraft, setMessageDraft] = useState('');
 
   useEffect(() => {
     if (!selectedConversationId) {
@@ -72,10 +54,12 @@ export function ChatView() {
         router.push(paths.chat.root);
       });
     }
-  }, [conversationError, router, selectedConversationId]);
+  }, [ router, selectedConversationId]);
 
-  const handleAddRecipients = useCallback((selected: ChatParticipant[]) => {
-    setRecipients(selected);
+  const filterToGetProduct = messages.find((message) =>(message.productId));
+
+  const handleSelectTemplate = useCallback((content: string) => {
+    setMessageDraft(content);
   }, []);
 
   return (
@@ -90,16 +74,12 @@ export function ChatView() {
       <ChatLayout
         slots={{
           // Header changes based on whether a conversation is selected or not
-          header: selectedConversationId ? (
+          header: selectedConversationId && (
             <ChatHeaderDetails
               collapseNav={roomNav}
               participants={sellerChatConversations.byId[selectedConversationId]?.participants ?? []}
-              loading={conversationLoading}
-            />
-          ) : (
-            <ChatHeaderCompose
-              contacts={sellerChatContacts}
-              onAddRecipients={handleAddRecipients}
+              loading={sellerChatsLoading}
+              productId={filterToGetProduct?.productId}
             />
           ),
           nav: (
@@ -114,40 +94,43 @@ export function ChatView() {
           main: (
             <>
               {selectedConversationId ? (
-                conversationError ? (
+                error ? (
                   <EmptyContent
-                    title={conversationError.message}
+                    title={error.message}
                     imgUrl={`${CONFIG.assetsDir}/assets/icons/empty/ic-chat-empty.svg`}
                   />
                 ) : (
                   <ChatMessageList
                     messages={messages}
-                    participants={sellerChatContacts}
                     loading={conversationLoading}
+                    participants={sellerChatContacts}
+                    currentConversationId={selectedConversationId}
                   />
                 )
               ) : (
                 <EmptyContent
-                  title="Good morning!"
-                  description="Write something awesome..."
-                  imgUrl={`${CONFIG.assetsDir}/assets/icons/empty/ic-chat-active.svg`}
+                  title={translate('chatModule.emptyContent.title')}
+                  description={translate('chatModule.emptyContent.description')}
+                  imgUrl={`${CONFIG.assetsDir}/assets/images/logo/logo-small.svg`}
                 />
               )}
 
               <ChatMessageInput
-                recipients={recipients}
-                onAddRecipients={handleAddRecipients}
+                message={messageDraft}
+                onMessageChange={setMessageDraft}
                 selectedConversationId={selectedConversationId}
-                disabled={!recipients.length && !selectedConversationId}
+                disabled={!selectedConversationId || conversationLoading}
               />
             </>
           ),
-          details: conversation && selectedConversationId && (
+          details: sellerChatConversations && selectedConversationId && (
             <ChatRoom
               collapseNav={roomNav}
               participants={sellerChatContacts}
               loading={conversationLoading}
-              messages={conversation?.messages ?? []}
+              messages={messages}
+              onSelectTemplate={handleSelectTemplate}
+              currentConversationId={selectedConversationId}
             />
           ),
         }}

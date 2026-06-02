@@ -445,6 +445,7 @@
     "profile": "Perfil",
     "configuration": "Configuración",
     "security": "Seguridad",
+    "responseTemplate": "Plantillas",
     "documents": "Documentos",
     "personalData": "Datos personales"
   },
@@ -968,6 +969,27 @@
           }
         }
       }
+    },
+    "headerProduct":{
+      "redirectToProduct": "Ver producto"
+    },
+    "messageInput": {
+      "placeholder": "Escribe tu mensaje...",
+      "sendButton": "Enviar",
+      "sending": "Enviando...",
+      "errors":{
+        "sending":"Error al enviar el mensaje. Intenta de nuevo."
+      }
+    },
+    "chatRoom": {
+      "chatStatus":{
+        "open": "Abierto",
+        "closed": "Cerrado"
+      }
+    },
+    "emptyContent":{
+      "title": "Selecciona un chat para comenzar",
+      "description": "Aquí podrás ver y responder los mensajes de tus clientes. Selecciona una conversación para empezar a chatear."
     }
   }
 }

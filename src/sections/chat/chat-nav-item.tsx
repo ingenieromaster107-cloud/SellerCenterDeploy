@@ -15,12 +15,11 @@ import { paths } from 'src/routes/paths';
 import { useRouter } from 'src/routes/hooks';
 
 import { fToNow } from 'src/utils/format-time';
-
-import { clickConversation } from 'src/actions/chat/chat';
+import { getNavItem } from 'src/utils/get-nav-item';
 
 import { useMockedUser } from 'src/auth/hooks';
 
-import { getNavItem } from './utils/get-nav-item';
+
 
 // ----------------------------------------------------------------------
 
@@ -48,9 +47,6 @@ export function ChatNavItem({ selected, collapse, conversation, onCloseMobile }:
       if (!mdUp) {
         onCloseMobile();
       }
-
-      await clickConversation(conversation.id);
-
       const redirectPath = `${paths.chat.root}?id=${conversation.id}`;
 
       startTransition(() => {
@@ -72,7 +68,7 @@ export function ChatNavItem({ selected, collapse, conversation, onCloseMobile }:
   );
 
   const renderSingle = () => (
-    <Badge variant={singleParticipant?.status} badgeContent=" ">
+    <Badge variant={singleParticipant?.isClosed === 'OPEN' ? 'online' : 'busy'} badgeContent=" ">
       <Avatar
         alt={singleParticipant?.name}
         src={singleParticipant?.avatarUrl}

@@ -446,7 +446,8 @@
     "configuration": "Configuration",
     "security": "Security",
     "documents": "Documents",
-    "personalData": "Personal Data"
+    "personalData": "Personal Data",
+    "responseTemplate": "Templates"
   },
   "formErrorRequired": {
     "firstNameRequired": "First name is required",
@@ -967,6 +968,27 @@
           }
         }
       }
+    },
+    "headerProduct": {
+      "redirectToProduct": "View product"
+    },
+    "messageInput": {
+      "placeholder": "Type your message here...",
+      "sendButton": "Send",
+      "sending": "Sending...",
+      "errors": {
+        "sending": "Error sending message. Try again."
+      }
+    },
+    "chatRoom": {
+      "chatStatus":{
+        "open": "Open",
+        "closed": "Closed"
+      }
+    },
+        "emptyContent":{
+      "title": "Select a chat to start",
+      "description": "Here you can view and respond to your customers' messages. Select a conversation to start chatting."
     }
   }
 }

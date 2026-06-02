@@ -1,129 +1,110 @@
-import type { ChatParticipant } from 'src/interfaces/chat/chat';
 
-import { useRef, useMemo, useState, useCallback } from 'react';
+import { useRef, useState, useCallback } from 'react';
 
-import Box from '@mui/material/Box';
+import Alert from '@mui/material/Alert';
+import Button from '@mui/material/Button';
 import InputBase from '@mui/material/InputBase';
-import IconButton from '@mui/material/IconButton';
 
-import { paths } from 'src/routes/paths';
-import { useRouter } from 'src/routes/hooks';
+import { useTranslate } from 'src/locales';
+import { useReplyConversation } from 'src/actions/chat/use-reply-conversation';
 
-import { today } from 'src/utils/format-time';
 
-import { sendMessage, createConversation } from 'src/actions/chat/chat';
 
-import { Iconify } from 'src/components/iconify';
-
-import { useMockedUser } from 'src/auth/hooks';
-
-import { initialConversation } from './utils/initial-conversation';
 
 // ----------------------------------------------------------------------
 
 type Props = {
   disabled: boolean;
-  recipients: ChatParticipant[];
+  message: string;
   selectedConversationId: string;
-  onAddRecipients: (recipients: ChatParticipant[]) => void;
+  onMessageChange: (value: string) => void;
 };
 
 export function ChatMessageInput({
   disabled,
-  recipients,
-  onAddRecipients,
+  message,
+  onMessageChange,
   selectedConversationId,
 }: Props) {
-  const router = useRouter();
-
-  const { user } = useMockedUser();
-
   const fileRef = useRef<HTMLInputElement>(null);
+  const errorTimerRef = useRef<number | undefined>(undefined);
+  const { translate: t } = useTranslate();
 
-  const [message, setMessage] = useState('');
-
-  const myContact: ChatParticipant = useMemo(
-    () => ({
-      id: `${user?.id}`,
-      role: `${user?.role}`,
-      email: `${user?.email}`,
-      address: `${user?.address}`,
-      name: `${user?.displayName}`,
-      lastActivity: today(),
-      avatarUrl: `${user?.photoURL}`,
-      phoneNumber: `${user?.phoneNumber}`,
-      status: 'online',
-    }),
-    [user]
-  );
-
-  const { messageData, conversationData } = initialConversation({
-    message,
-    recipients,
-    me: myContact,
-  });
-
-  const handleAttach = useCallback(() => {
-    if (fileRef.current) {
-      fileRef.current.click();
-    }
-  }, []);
-
+  const { mutateAsync: replyConversation, isError, isPending } = useReplyConversation();
+  const [showError, setShowError] = useState(false);
+  const [disabledControl,setDisabledControl] = useState(false);
   const handleChangeMessage = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
-    setMessage(event.target.value);
-  }, []);
+    onMessageChange(event.target.value);
+  }, [onMessageChange]);
+
+  const sendMessage = useCallback(async () => {
+
+    if (!message.trim()) {
+      return;
+    }
+
+    try {
+      if (selectedConversationId) {
+        // If the conversation already exists
+        await replyConversation({ conversationId: selectedConversationId, message });
+        onMessageChange('');
+        setDisabledControl(false);
+      }
+    } catch (error) {
+      console.error(error);
+      setShowError(true);
+      if (errorTimerRef.current) {
+        window.clearTimeout(errorTimerRef.current);
+      }
+      errorTimerRef.current = window.setTimeout(() => {
+        setShowError(false);
+        setDisabledControl(false);
+      }, 4000);
+    }
+  }, [message, onMessageChange, selectedConversationId, replyConversation]);
 
   const handleSendMessage = useCallback(
     async (event: React.KeyboardEvent<HTMLInputElement>) => {
-      if (event.key !== 'Enter' || !message) return;
-
-      try {
-        if (selectedConversationId) {
-          // If the conversation already exists
-          await sendMessage(selectedConversationId, messageData);
-        } else {
-          // If the conversation does not exist
-          const res = await createConversation(conversationData);
-          router.push(`${paths.chat.root}?id=${res.conversation.id}`);
-
-          onAddRecipients([]);
-        }
-      } catch (error) {
-        console.error(error);
-      } finally {
-        setMessage('');
+      if (event.key !== 'Enter') {
+        return;
       }
+      setDisabledControl(true);
+      await sendMessage();
     },
-    [conversationData, message, messageData, onAddRecipients, router, selectedConversationId]
+    [sendMessage]
   );
+
+  const handleSendClick = useCallback(async () => {
+    await sendMessage();
+  }, [sendMessage]);
 
   return (
     <>
+      {isError && showError && (
+        <Alert
+          severity="error"
+          onClose={() => {
+            if (errorTimerRef.current) {
+              window.clearTimeout(errorTimerRef.current);
+            }
+            setShowError(false);
+          }}
+        >
+          {t('chatModule.messageInput.errors.sending')}
+        </Alert>
+      )}
       <InputBase
         name="chat-message"
         id="chat-message-input"
         value={message}
         onKeyUp={handleSendMessage}
         onChange={handleChangeMessage}
-        placeholder="Type a message"
-        disabled={disabled}
-        startAdornment={
-          <IconButton>
-            <Iconify icon="eva:smiling-face-fill" />
-          </IconButton>
-        }
+        placeholder={t('chatModule.messageInput.placeholder')}
+        disabled={disabled || disabledControl || isPending}
         endAdornment={
-          <Box sx={{ flexShrink: 0, display: 'flex' }}>
-            <IconButton onClick={handleAttach}>
-              <Iconify icon="solar:gallery-add-bold" />
-            </IconButton>
-            <IconButton onClick={handleAttach}>
-              <Iconify icon="eva:attach-2-fill" />
-            </IconButton>
-            <IconButton>
-              <Iconify icon="solar:microphone-bold" />
-            </IconButton>
-          </Box>
+          <Button onClick={handleSendClick} disabled={disabled || !message.trim() || isPending}>
+            {isPending ? t('chatModule.messageInput.sending') : t('chatModule.messageInput.sendButton')}
+          </Button>
         }
         sx={[
           (theme) => ({
@@ -133,8 +114,8 @@ export function ChatMessageInput({
             borderTop: `solid 1px ${theme.vars.palette.divider}`,
           }),
         ]}
-      />
-
+        />
+        
       <input type="file" ref={fileRef} style={{ display: 'none' }} />
     </>
   );

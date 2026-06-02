@@ -27,7 +27,7 @@ export function useMessagesScroll(messages: ChatMessage[]): UseMessagesScrollRet
 
   useEffect(() => {
     scrollToBottom();
-  }, [messages]);
+  }, [messages, scrollToBottom]);
 
   return { messagesEndRef };
 }

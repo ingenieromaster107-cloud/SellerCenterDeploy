@@ -1,16 +1,11 @@
 import type { ChatParticipant } from 'src/interfaces/chat/chat';
 
-import { useBoolean } from 'minimal-shared/hooks';
-
-import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import Avatar from '@mui/material/Avatar';
-import Collapse from '@mui/material/Collapse';
 import Typography from '@mui/material/Typography';
 
-import { Iconify } from 'src/components/iconify';
+import { useTranslate } from 'src/locales';
 
-import { CollapseButton } from './styles';
 
 // ----------------------------------------------------------------------
 
@@ -19,14 +14,7 @@ type Props = {
 };
 
 export function ChatRoomSingle({ participant }: Props) {
-  const collapse = useBoolean(true);
-
-  const contactInfo = [
-    { icon: 'mingcute:location-fill', value: participant?.address },
-    { icon: 'solar:phone-bold', value: participant?.phoneNumber },
-    { icon: 'solar:letter-bold', value: participant?.email },
-  ] as const;
-
+  const { translate:t } = useTranslate();
   const renderInfo = () => (
     <Stack alignItems="center" sx={{ py: 5 }}>
       <Avatar
@@ -38,25 +26,9 @@ export function ChatRoomSingle({ participant }: Props) {
       <Typography variant="body2" sx={{ color: 'text.secondary', mt: 0.5 }}>
         {participant?.role}
       </Typography>
-    </Stack>
-  );
-
-  const renderContact = () => (
-    <Stack spacing={2} sx={{ px: 2, py: 2.5 }}>
-      {contactInfo.map((item) => (
-        <Box
-          key={item.icon}
-          sx={{
-            gap: 1,
-            display: 'flex',
-            typography: 'body2',
-            wordBreak: 'break-all',
-          }}
-        >
-          <Iconify icon={item.icon} sx={{ flexShrink: 0, color: 'text.disabled' }} />
-          {item.value}
-        </Box>
-      ))}
+      <Typography variant="body2" color={participant?.isClosed === 'CLOSED' ? 'error.main' : 'success.main'}>
+        {participant?.isClosed === 'CLOSED' ? t('chatModule.chatRoom.chatStatus.closed') : t('chatModule.chatRoom.chatStatus.open')}
+      </Typography>
     </Stack>
   );
 
@@ -64,11 +36,6 @@ export function ChatRoomSingle({ participant }: Props) {
     <>
       {renderInfo()}
 
-      <CollapseButton selected={collapse.value} onClick={collapse.onToggle}>
-        Information
-      </CollapseButton>
-
-      <Collapse in={collapse.value}>{renderContact()}</Collapse>
     </>
   );
 }

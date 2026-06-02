@@ -169,7 +169,6 @@ export function ProfileConfiguration({ customer }: ProfileConfigurationProps) {
       // TODO: Mutación para actualizar datos en backend
       await new Promise((r) => setTimeout(r, 500));
       toast.success('Update success!');
-      // console.info('DATA', data);
     } catch (error) {
       console.error(error);
     }
@@ -225,7 +224,6 @@ export function ProfileConfiguration({ customer }: ProfileConfigurationProps) {
       // TODO: Mutación para actualizar datos en backend
       await new Promise((r) => setTimeout(r, 500));
       toast.success('Update success!');
-      console.info('DATA', data);
     } catch (error) {
       console.error(error);
     }
@@ -244,7 +242,7 @@ export function ProfileConfiguration({ customer }: ProfileConfigurationProps) {
 
   return (
     <>
-      <Box sx={{ mt: 3 }}>
+      <Box>
         <Form methods={methodPersonalData} onSubmit={onSubmitPersonalData}>
           <Grid container spacing={3}>
             <Grid size={{ xs: 12 }}>

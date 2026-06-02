@@ -15,11 +15,11 @@ type Props = {
   loading: boolean;
   messages: ChatMessage[];
   participants: ChatParticipant[];
+  currentConversationId?: string;
 };
 
-export function ChatMessageList({ messages = [], participants, loading }: Props) {
+export function ChatMessageList({ messages = [], participants, loading, currentConversationId }: Props) {
   const { messagesEndRef } = useMessagesScroll(messages);
-
   const slides = messages
     .filter((message) => message.contentType === 'image')
     .map((message) => ({ src: message.body }));
@@ -60,6 +60,7 @@ export function ChatMessageList({ messages = [], participants, loading }: Props)
             message={message}
             participants={participants}
             onOpenLightbox={() => lightbox.onOpen(message.body)}
+            currentConversationId={currentConversationId}
           />
         ))}
       </Scrollbar>

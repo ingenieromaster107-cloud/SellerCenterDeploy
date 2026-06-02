@@ -15,11 +15,13 @@ export type ChatAttachment = {
 
 export type ChatMessage = {
   id: string;
+  productId?: string;
   body: string;
   senderId: string;
   contentType: string;
   createdAt: DateValue;
   attachments: ChatAttachment[];
+  procedence?: string;
 };
 
 export type ChatParticipant = {
@@ -32,6 +34,7 @@ export type ChatParticipant = {
   phoneNumber: string;
   lastActivity: DateValue;
   status: BadgeProps['variant'];
+  isClosed?: string;
 };
 
 export type ChatConversation = {

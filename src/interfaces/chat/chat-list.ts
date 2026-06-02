@@ -1,10 +1,10 @@
 
 export interface ChatListResponse {
-    wolfsellersMyConversations: WolfsellersMyConversations
+    interMyConversations: InterMyConversations
 }
 
 
-export interface WolfsellersMyConversations {
+export interface InterMyConversations {
   total_count: number
   items: Item[]
 }

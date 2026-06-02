@@ -76,7 +76,6 @@ export function ProfileChangePassword({ customer }: ProfileChangePasswordProps) 
       await new Promise((resolve) => setTimeout(resolve, 500));
       reset();
       toast.success('Update success!');
-      console.info('DATA', data);
     } catch (error) {
       console.error(error);
     }
@@ -96,7 +95,7 @@ export function ProfileChangePassword({ customer }: ProfileChangePasswordProps) 
   };
 
   return (
-    <Box sx={{ mt: 3 }}>
+    <Box>
       <Form methods={methods} onSubmit={onSubmit}>
         <Card
           sx={{

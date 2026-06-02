@@ -2,23 +2,19 @@ import type { ChatParticipant } from 'src/interfaces/chat/chat';
 import type { UseNavCollapseReturn } from './hooks/use-collapse-nav';
 
 import { useCallback } from 'react';
-import { usePopover } from 'minimal-shared/hooks';
+import { Link } from 'react-router';
 
 import Box from '@mui/material/Box';
 import Badge from '@mui/material/Badge';
+import Button from '@mui/material/Button';
 import Avatar from '@mui/material/Avatar';
-import Divider from '@mui/material/Divider';
-import MenuList from '@mui/material/MenuList';
-import MenuItem from '@mui/material/MenuItem';
 import IconButton from '@mui/material/IconButton';
 import ListItemText from '@mui/material/ListItemText';
-import useMediaQuery from '@mui/material/useMediaQuery';
-import AvatarGroup, { avatarGroupClasses } from '@mui/material/AvatarGroup';
+import useMediaQuery from '@mui/material/useMediaQuery';  
 
-import { fToNow } from 'src/utils/format-time';
+import { useTranslate } from 'src/locales';
 
 import { Iconify } from 'src/components/iconify';
-import { CustomPopover } from 'src/components/custom-popover';
 
 import { ChatHeaderSkeleton } from './chat-skeleton';
 
@@ -28,16 +24,15 @@ type Props = {
   loading: boolean;
   participants: ChatParticipant[];
   collapseNav: UseNavCollapseReturn;
+  productId?: string;
 };
 
-export function ChatHeaderDetails({ collapseNav, participants, loading }: Props) {
+export function ChatHeaderDetails({ collapseNav, participants, loading, productId }: Props) {
   const lgUp = useMediaQuery((theme) => theme.breakpoints.up('lg'));
-
-  const menuActions = usePopover();
-
-  const isGroup = participants.length > 1;
+  const {translate:t}= useTranslate();
 
   const singleParticipant = participants[0];
+
 
   const { collapseDesktop, onCollapseDesktop, onOpenMobile } = collapseNav;
 
@@ -47,37 +42,22 @@ export function ChatHeaderDetails({ collapseNav, participants, loading }: Props)
     } else {
       onOpenMobile();
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [lgUp]);
+    
+  }, [lgUp, onCollapseDesktop, onOpenMobile]);
 
-  const renderGroup = () => (
-    <AvatarGroup
-      max={3}
-      sx={{
-        [`& .${avatarGroupClasses.avatar}`]: {
-          width: 32,
-          height: 32,
-        },
-      }}
-    >
-      {participants.map((participant) => (
-        <Avatar key={participant.id} alt={participant.name} src={participant.avatarUrl} />
-      ))}
-    </AvatarGroup>
-  );
 
   const renderSingle = () => (
     <Box sx={{ gap: 2, display: 'flex', alignItems: 'center' }}>
-      <Badge variant={singleParticipant?.status} badgeContent=" ">
+      <Badge variant={singleParticipant?.isClosed === 'OPEN' ? 'online' : 'busy'} badgeContent=" ">
         <Avatar src={singleParticipant?.avatarUrl} alt={singleParticipant?.name} />
       </Badge>
 
       <ListItemText
         primary={singleParticipant?.name}
         secondary={
-          singleParticipant?.status === 'offline'
-            ? fToNow(singleParticipant?.lastActivity)
-            : singleParticipant?.status
+          singleParticipant?.isClosed === 'OPEN'
+            ? t('chatModule.chatRoom.chatStatus.open')
+            : t('chatModule.chatRoom.chatStatus.closed')
         }
       />
     </Box>
@@ -87,63 +67,25 @@ export function ChatHeaderDetails({ collapseNav, participants, loading }: Props)
     return <ChatHeaderSkeleton />;
   }
 
-  const renderMenuActions = () => (
-    <CustomPopover
-      open={menuActions.open}
-      anchorEl={menuActions.anchorEl}
-      onClose={menuActions.onClose}
-    >
-      <MenuList>
-        <MenuItem onClick={() => menuActions.onClose()}>
-          <Iconify icon="solar:bell-off-bold" />
-          Hide notifications
-        </MenuItem>
-
-        <MenuItem onClick={() => menuActions.onClose()}>
-          <Iconify icon="solar:forbidden-circle-bold" />
-          Block
-        </MenuItem>
-
-        <MenuItem onClick={() => menuActions.onClose()}>
-          <Iconify icon="solar:danger-triangle-bold" />
-          Report
-        </MenuItem>
-
-        <Divider sx={{ borderStyle: 'dashed' }} />
-
-        <MenuItem onClick={() => menuActions.onClose()} sx={{ color: 'error.main' }}>
-          <Iconify icon="solar:trash-bin-trash-bold" />
-          Solicitud de cierre de conversación
-        </MenuItem>
-      </MenuList>
-    </CustomPopover>
-  );
 
   return (
     <>
-      {isGroup ? renderGroup() : renderSingle()}
+      {renderSingle()}
 
-      <Box sx={{ flexGrow: 1, display: 'flex', justifyContent: 'flex-end' }}>
-        <IconButton>
-          <Iconify icon="solar:phone-bold" />
-        </IconButton>
-
-        <IconButton>
-          <Iconify icon="solar:videocamera-record-bold" />
-        </IconButton>
-
+      <Box sx={{ flexGrow: 1, display: 'flex', justifyContent: 'flex-end', alignItems: 'center', }}>
+        {productId && (
+          <Link target='_blank' to={`/product/${productId}`} style={{ textDecoration: 'none', color: 'inherit' }}>
+          <Button>
+            {t('chatModule.headerProduct.redirectToProduct')}
+          </Button>
+          </Link>
+        )}
         <IconButton onClick={handleToggleNav}>
           <Iconify
             icon={!collapseDesktop ? 'custom:sidebar-unfold-fill' : 'custom:sidebar-fold-fill'}
           />
         </IconButton>
-
-        <IconButton onClick={menuActions.onOpen}>
-          <Iconify icon="eva:more-vertical-fill" />
-        </IconButton>
       </Box>
-
-      {renderMenuActions()}
     </>
   );
 }

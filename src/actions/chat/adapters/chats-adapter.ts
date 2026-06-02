@@ -3,14 +3,13 @@ import type { ChatListResponse, Item as ChatListItem } from 'src/interfaces/chat
 import type { ChatParticipant, ChatConversation, ChatConversations } from 'src/interfaces/chat/chat';
 
 export function mapChatListToContacts(data?: ChatListResponse): ChatParticipant[] {
-	const items = data?.wolfsellersMyConversations?.items ?? [];
-
+	const items = data?.interMyConversations?.items ?? [];
 	const contactsById = items.reduce<Record<string, ChatParticipant>>((acc, item) => {
 		const buyerId = String(item.buyer_id);
 
 		if (!acc[buyerId]) {
 			acc[buyerId] = {
-				id: buyerId,
+				id: item.entity_id.toString(),
 				name: `User ${buyerId}`,
 				email: buyerId,
 				avatarUrl: buyerId,
@@ -19,6 +18,7 @@ export function mapChatListToContacts(data?: ChatListResponse): ChatParticipant[
 				phoneNumber: buyerId,
 				role: 'buyer',
 				status: item.status === 'offline' ? 'offline' : 'online',
+				isClosed: item.status,
 			};
 		}
 
@@ -29,8 +29,7 @@ export function mapChatListToContacts(data?: ChatListResponse): ChatParticipant[
 }
 
 export function mapChatListToConversations(data?: ChatListResponse): ChatConversations {
-	const items = data?.wolfsellersMyConversations?.items ?? [];
-
+	const items = data?.interMyConversations?.items.filter((item) => item.last_message_at != null) ?? [];
 	const byId = items.reduce<Record<string, ChatConversation>>((acc, item: ChatListItem) => {
 		const conversationId = String(item.entity_id);
 		const buyerId = String(item.buyer_id);
@@ -60,6 +59,7 @@ export function mapChatListToConversations(data?: ChatListResponse): ChatConvers
 					phoneNumber: buyerId,
 					lastActivity: item.last_message_at,
 					status: item.status === 'offline' ? 'offline' : 'online',
+					isClosed: item.status,
 				},
 			],
 		};
@@ -74,7 +74,7 @@ export function mapChatListToConversations(data?: ChatListResponse): ChatConvers
 }
 
 export function chatAdapter(data?: ConversationListResponse): ChatConversations {
-	const items = data?.wolfsellersConversationMessages?.items ?? [];
+	const items = data?.interConversationMessages?.items ?? [];
 
 	const byId = items.reduce<Record<string, ChatConversation>>((acc, item) => {
 		const id = String(item.entity_id);

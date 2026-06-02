@@ -9,13 +9,15 @@ type Props = {
 };
 
 export function getMessage({ message, participants, currentUserId }: Props) {
-  const sender = participants.find((participant) => participant.id === message.senderId);
+  const SELLER_ID = 'SELLER';
+  
+  const sender = participants.find((participant) => participant.id === currentUserId);
 
-  const isCurrentUser = message.senderId === currentUserId;
+  const isCurrentUser = message.procedence ===  SELLER_ID;
 
-  const senderDetails = isCurrentUser
+  const senderDetails = message.procedence ===  SELLER_ID
     ? { type: 'me' }
-    : { avatarUrl: sender?.avatarUrl, firstName: sender?.name?.split(' ')[0] ?? 'Unknown' };
+    : { avatarUrl: sender?.name, firstName: ` ${sender?.name ?? 'Unknown'}` };
 
   const hasImage = message.contentType === 'image';
 

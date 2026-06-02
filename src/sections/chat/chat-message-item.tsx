@@ -3,16 +3,13 @@ import type { ChatMessage, ChatParticipant } from 'src/interfaces/chat/chat';
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import Avatar from '@mui/material/Avatar';
-import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
 
 import { fToNow } from 'src/utils/format-time';
-
-import { Iconify } from 'src/components/iconify';
+import { getMessage } from 'src/utils/get-message';
 
 import { useMockedUser } from 'src/auth/hooks';
 
-import { getMessage } from './utils/get-message';
 
 // ----------------------------------------------------------------------
 
@@ -20,15 +17,16 @@ type Props = {
   message: ChatMessage;
   participants: ChatParticipant[];
   onOpenLightbox: (value: string) => void;
-  currentUserId?: string | number;
+  currentConversationId?: string;
 };
 
-export function ChatMessageItem({ message, participants, onOpenLightbox }: Props) {
+export function ChatMessageItem({ message, participants, onOpenLightbox, currentConversationId }: Props) {
+  
   const { user } = useMockedUser();  
   const { me, senderDetails, hasImage } = getMessage({
     message,
     participants,
-    currentUserId: `${user?.id}`,
+    currentUserId: currentConversationId ?? `${user?.id}`,
   });
 
   const { firstName, avatarUrl } = senderDetails;
@@ -82,35 +80,6 @@ export function ChatMessageItem({ message, participants, onOpenLightbox }: Props
     </Stack>
   );
 
-  const renderActions = () => (
-    <Box
-      className="message-actions"
-      sx={(theme) => ({
-        pt: 0.5,
-        left: 0,
-        opacity: 0,
-        top: '100%',
-        display: 'flex',
-        position: 'absolute',
-        transition: theme.transitions.create(['opacity'], {
-          duration: theme.transitions.duration.shorter,
-        }),
-        ...(me && { right: 0, left: 'unset' }),
-      })}
-    >
-      <IconButton size="small">
-        <Iconify icon="solar:reply-bold" width={16} />
-      </IconButton>
-
-      <IconButton size="small">
-        <Iconify icon="eva:smiling-face-fill" width={16} />
-      </IconButton>
-
-      <IconButton size="small">
-        <Iconify icon="solar:trash-bin-trash-bold" width={16} />
-      </IconButton>
-    </Box>
-  );
 
   if (!message.body) {
     return null;
@@ -118,7 +87,7 @@ export function ChatMessageItem({ message, participants, onOpenLightbox }: Props
 
   return (
     <Box sx={{ mb: 5, display: 'flex', justifyContent: me ? 'flex-end' : 'unset' }}>
-      {!me && <Avatar alt={firstName} src={avatarUrl} sx={{ width: 32, height: 32, mr: 2 }} />}
+      {!me && <Avatar alt={firstName?.split(' ')[1]} src={avatarUrl} sx={{ width: 32, height: 32, mr: 2 }} />}
 
       <Stack alignItems={me ? 'flex-end' : 'flex-start'}>
         {renderInfo()}
@@ -132,7 +101,6 @@ export function ChatMessageItem({ message, participants, onOpenLightbox }: Props
           }}
         >
           {renderBody()}
-          {renderActions()}
         </Box>
       </Stack>
     </Box>

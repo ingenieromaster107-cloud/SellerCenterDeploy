@@ -1,7 +1,7 @@
 import type { UseNavCollapseReturn } from './hooks/use-collapse-nav';
 import type { ChatParticipant, ChatConversations } from 'src/interfaces/chat/chat';
 
-import { useMemo, useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
@@ -15,22 +15,16 @@ import ClickAwayListener from '@mui/material/ClickAwayListener';
 import { paths } from 'src/routes/paths';
 import { useRouter } from 'src/routes/hooks';
 
-import { today } from 'src/utils/format-time';
-
 import { useTranslate } from 'src/locales';
-import { createConversation } from 'src/actions/chat/chat';
 
 import { Iconify } from 'src/components/iconify';
 import { Scrollbar } from 'src/components/scrollbar';
-
-import { useMockedUser } from 'src/auth/hooks';
 
 import { ToggleButton } from './styles';
 import { ChatNavItem } from './chat-nav-item';
 import { ChatNavAccount } from './chat-nav-account';
 import { ChatNavItemSkeleton } from './chat-skeleton';
 import { ChatNavSearchResults } from './chat-nav-search-results';
-import { initialConversation } from './utils/initial-conversation';
 
 // ----------------------------------------------------------------------
 
@@ -54,7 +48,6 @@ export function ChatNav({
 }: Props) {
   const router = useRouter();
   const { translate } = useTranslate();
-  const { user } = useMockedUser();
 
   const mdUp = useMediaQuery((theme) => theme.breakpoints.up('md'));
 
@@ -67,24 +60,11 @@ export function ChatNav({
     onCollapseDesktop,
   } = collapseNav;
 
+
   const [searchContacts, setSearchContacts] = useState<{
     query: string;
     results: ChatParticipant[];
   }>({ query: '', results: [] });
-  const myContact: ChatParticipant = useMemo(
-    () => ({
-      id: `${user?.id}`,
-      role: `${user?.role}`,
-      email: `${user?.email}`,
-      address: `${user?.address}`,
-      name: `${user?.displayName}`,
-      lastActivity: today(),
-      avatarUrl: `${user?.photoURL}`,
-      phoneNumber: `${user?.phoneNumber}`,
-      status: 'online',
-    }),
-    [user]
-  );
   useEffect(() => {
     if (!mdUp) {
       onCloseDesktop();
@@ -145,26 +125,13 @@ export function ChatNav({
           return;
         }
 
-        // Prepare conversation data
-        const { conversationData } = initialConversation({
-          recipients: [recipient],
-          me: myContact,
-        });
-
-        // Create a new conversation
-        const res = await createConversation(conversationData);
-
-        if (!res || !res.conversation) {
-          console.error('Failed to create conversation');
-        }
-
         // Navigate to the new conversation
-        linkTo(res.conversation.id);
+        
       } catch (error) {
         console.error('Error handling click result:', error);
       }
     },
-    [contacts, conversations.allIds, handleClickAwaySearch, myContact, router]
+    [contacts, conversations.allIds, handleClickAwaySearch, router]
   );
 
   const renderLoading = () => <ChatNavItemSkeleton />;
@@ -193,6 +160,8 @@ export function ChatNav({
     />
   );
 
+  //chat searcher
+  
   const renderSearchInput = () => (
     <ClickAwayListener onClickAway={handleClickAwaySearch}>
       <TextField

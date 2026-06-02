@@ -11,19 +11,20 @@ function inferContentType(content: string): ChatMessage['contentType'] {
   return 'text';
 }
 
-export function mapConversationToChatMessages(data?: ConversationListResponse): ChatMessage[] {
-  const items = data?.wolfsellersConversationMessages?.items ?? [];
-
+export function mapConversationToChatMessages(data?: ConversationListResponse, conversationId?: string): ChatMessage[] {
+  const items = data?.interConversationMessages?.items ?? [];
   return items.map((item) => {
     const body = item.content ?? '';
 
     return {
       id: String(item.entity_id),
       body,
-      senderId: item.author_type || 'unknown',
+      senderId: conversationId ? conversationId : 'unknown',
       contentType: inferContentType(body),
       createdAt: item.created_at,
       attachments: [],
+      procedence: item.author_type,
+      productId: String(item.product_context_id),
     };
   });
 }

@@ -22,6 +22,7 @@ import { ProfileCover } from '../components/profile-cover';
 import {
   ProfileHome,
   ProfileDocuments,
+  ProfileTemplates,
   ProfileConfiguration,
   ProfileChangePassword,
 } from '../components';
@@ -49,6 +50,11 @@ export function UserProfileView() {
       value: 'documents',
       label: translate('customerProfileView.documents'),
       icon: <Iconify width={24} icon="solar:document-add-bold" />,
+    },
+    {
+      value: 'responseTemplate',  
+      label: translate('customerProfileView.responseTemplate'),
+      icon: <Iconify width={24} icon="custom:send-fill" />,
     },
   ];
   //---- Define the navigation items for the user profile tabs
@@ -79,7 +85,7 @@ export function UserProfileView() {
   }
 
   return (
-    <HomeContent>
+    <HomeContent sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
       <CustomBreadcrumbs
         heading={translate('customerProfileView.profile')}
         links={[
@@ -123,10 +129,11 @@ export function UserProfileView() {
         </Box>
       </Card>
 
-      {selectedTab === '' && <ProfileHome sx={{ mt: 3 }} customer={customer} />}
+      {selectedTab === '' && <ProfileHome  customer={customer} />}
       {selectedTab === 'configuration' && <ProfileConfiguration customer={customer} />}
       {selectedTab === 'security' && <ProfileChangePassword customer={customer} />}
       {selectedTab === 'documents' && <ProfileDocuments />}
+      {selectedTab === 'responseTemplate' && <ProfileTemplates />}
     </HomeContent>
   );
 }
