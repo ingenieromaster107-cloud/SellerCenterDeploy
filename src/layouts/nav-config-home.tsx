@@ -25,6 +25,7 @@ const ICONS = {
   feedback: icon('ic-feedback'),
   academy: <Iconify icon="solar:notebook-bold-duotone" width={24} />,
   chat: <Iconify icon="solar:chat-round-dots-bold" width={24} />,
+  movements: <Iconify icon="solar:bill-list-bold-duotone" width={24} />,
 };
 
 // ----------------------------------------------------------------------
@@ -84,6 +85,11 @@ export const useNavData = (): NavSectionProps['data'] => {
             title: translate('sidebarMenu.feedback.title'),
             path: paths.feedback.root,
             icon: ICONS.feedback,
+          },
+          {
+            title: translate('sidebarMenu.movements.title'),
+            path: paths.movements.root,
+            icon: ICONS.movements,
           },
           // Academy: visible para cualquier estado de vinculación del seller
           // (Pendiente, Procesando, Aprobado, Desaprobado). HU325974.

@@ -8,6 +8,7 @@ import {
   fIsSame,
   fDateTime,
   fTimestamp,
+  startOfMonth,
   fDateRangeShortLabel,
 } from './format-time';
 
@@ -21,6 +22,18 @@ describe('format-time utils', () => {
     it('returns formatted with template', () => {
       const result = today('YYYY');
       expect(result).toMatch(/^\d{4}$/);
+    });
+  });
+
+  describe('startOfMonth', () => {
+    it('returns a string', () => {
+      expect(typeof startOfMonth()).toBe('string');
+    });
+    it('returns the first day of the current month', () => {
+      expect(startOfMonth('YYYY-MM-DD')).toMatch(/^\d{4}-\d{2}-01$/);
+    });
+    it('respects the given template', () => {
+      expect(startOfMonth('DD')).toBe('01');
     });
   });
 

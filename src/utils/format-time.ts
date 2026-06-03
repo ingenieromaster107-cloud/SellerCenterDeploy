@@ -57,6 +57,17 @@ export function today(template?: string): string {
 // ----------------------------------------------------------------------
 
 /**
+ * Returns the first day of the current month.
+ * @example
+ * startOfMonth('YYYY-MM-DD') // '2022-04-01'
+ */
+export function startOfMonth(template?: string): string {
+  return dayjs().startOf('month').format(template);
+}
+
+// ----------------------------------------------------------------------
+
+/**
  * Formats a date-time string.
  * @returns Formatted date-time string or 'Invalid'.
  * @example

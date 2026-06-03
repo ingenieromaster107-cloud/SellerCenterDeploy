@@ -9,6 +9,7 @@ const ROOTS = {
   ORDER: '/order',
   ACADEMY: '/academy',
   CHAT: '/chat',
+  MOVEMENTS: '/movements',
 };
 
 // ----------------------------------------------------------------------
@@ -78,6 +79,9 @@ export const paths = {
   },
   chat:{
     root: ROOTS.CHAT,
+  },
+  movements: {
+    root: ROOTS.MOVEMENTS,
   },
   account: {
     root: '/account',

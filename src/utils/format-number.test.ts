@@ -1,4 +1,4 @@
-import { fData, fNumber, fPercent, fCurrency, fShortenNumber } from './format-number';
+import { fData, fNumber, fPercent, fCurrency, fCurrencyCop, fShortenNumber } from './format-number';
 
 describe('format-number utils', () => {
   describe('fNumber', () => {
@@ -34,6 +34,27 @@ describe('format-number utils', () => {
     });
     it('includes currency symbol', () => {
       expect(fCurrency(50)).toContain('$');
+    });
+  });
+
+  describe('fCurrencyCop', () => {
+    it('formats as COP without decimals', () => {
+      expect(fCurrencyCop(1500)).toContain('1.500');
+    });
+    it('does not include decimals', () => {
+      expect(fCurrencyCop(1500.99)).not.toContain(',99');
+    });
+    it('includes currency symbol', () => {
+      expect(fCurrencyCop(50)).toContain('$');
+    });
+    it('returns empty string for null', () => {
+      expect(fCurrencyCop(null)).toBe('');
+    });
+    it('returns empty string for undefined', () => {
+      expect(fCurrencyCop(undefined)).toBe('');
+    });
+    it('handles string input', () => {
+      expect(fCurrencyCop('2000')).toContain('2.000');
     });
   });
 

@@ -83,6 +83,52 @@
     },
     "chat": {
       "title": "Chat"
+    },
+    "movements": {
+      "title": "My movements"
+    }
+  },
+  "movements": {
+    "title": "My movements",
+    "summary": {
+      "grossSales": "Gross sales",
+      "totalCommissions": "Commissions",
+      "totalRefunds": "Refunds",
+      "netSeller": "Net for the period"
+    },
+    "toolbar": {
+      "dateFrom": "From",
+      "dateTo": "To",
+      "apply": "Apply",
+      "exportCsv": "Download statement"
+    },
+    "table": {
+      "date": "Date",
+      "order": "Order",
+      "category": "Type",
+      "product": "Product",
+      "amount": "Amount",
+      "commission": "Commission",
+      "net": "Net",
+      "guide": "Tracking #",
+      "orderStatus": "Status"
+    },
+    "category": {
+      "VENTA": "Sale",
+      "COMISION": "Commission",
+      "DEVOLUCION": "Refund"
+    },
+    "empty": {
+      "title": "No movements",
+      "description": "There are no movements in the selected period.",
+      "descriptionFiltered": "No movements match the applied filters.",
+      "periodLabel": "Period",
+      "typeLabel": "Type",
+      "hint": "Check the date range or remove the filters to see more movements."
+    },
+    "export": {
+      "success": "Statement downloaded successfully",
+      "error": "We couldn't generate the statement. Please try again."
     }
   },
   "academyModule": {

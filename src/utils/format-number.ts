@@ -47,6 +47,26 @@ export function fCurrency(inputValue: InputNumberValue, options?: Options) {
 
 // ----------------------------------------------------------------------
 
+/**
+ * Formats a value as Colombian peso (COP) without decimals.
+ * @example
+ * fCurrencyCop(1500) // '$ 1.500'
+ */
+export function fCurrencyCop(inputValue: InputNumberValue, options?: Options) {
+  const number = processInput(inputValue);
+  if (number === null) return '';
+
+  return new Intl.NumberFormat('es-CO', {
+    style: 'currency',
+    currency: 'COP',
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 0,
+    ...options,
+  }).format(number);
+}
+
+// ----------------------------------------------------------------------
+
 export function fPercent(inputValue: InputNumberValue, options?: Options) {
   const locale = DEFAULT_LOCALE;
 

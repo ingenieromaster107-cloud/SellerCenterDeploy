@@ -83,6 +83,52 @@
     },
     "chat": {
       "title": "Chat"
+    },
+    "movements": {
+      "title": "Mis movimientos"
+    }
+  },
+  "movements": {
+    "title": "Mis movimientos",
+    "summary": {
+      "grossSales": "Ventas brutas",
+      "totalCommissions": "Comisiones",
+      "totalRefunds": "Devoluciones",
+      "netSeller": "Neto del periodo"
+    },
+    "toolbar": {
+      "dateFrom": "Desde",
+      "dateTo": "Hasta",
+      "apply": "Aplicar",
+      "exportCsv": "Descargar extracto"
+    },
+    "table": {
+      "date": "Fecha",
+      "order": "Orden",
+      "category": "Tipo",
+      "product": "Producto",
+      "amount": "Valor",
+      "commission": "Comisión",
+      "net": "Neto",
+      "guide": "Guía",
+      "orderStatus": "Estado"
+    },
+    "category": {
+      "VENTA": "Venta",
+      "COMISION": "Comisión",
+      "DEVOLUCION": "Devolución"
+    },
+    "empty": {
+      "title": "Sin movimientos",
+      "description": "No hay movimientos en el periodo seleccionado.",
+      "descriptionFiltered": "No encontramos movimientos con los filtros aplicados.",
+      "periodLabel": "Periodo",
+      "typeLabel": "Tipo",
+      "hint": "Verifica el rango de fechas o quita los filtros para ver más movimientos."
+    },
+    "export": {
+      "success": "Extracto descargado correctamente",
+      "error": "No fue posible generar el extracto. Intenta nuevamente."
     }
   },
   "academyModule": {

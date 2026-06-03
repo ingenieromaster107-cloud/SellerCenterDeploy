@@ -60,6 +60,10 @@ export default defineConfig(({ mode }) => {
           changeOrigin: true,
           rewrite: (p) => p.replace(/^\/api\/magento/, ''),
         },
+        '/rest': {
+          target: new URL(env.VITE_BACKEND_GRAPHQL_URL).origin,
+          changeOrigin: true,
+        },
       },
     },
     preview: { port: PORT, host: true },
