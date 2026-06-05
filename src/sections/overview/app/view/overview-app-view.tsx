@@ -41,80 +41,93 @@ export function OverviewAppView() {
           <AppReputationPanel data={reputation.data} />
         )}
       </Box>
-      <Grid
-        container
-        spacing={3}
-        sx={{
-          backgroundColor: 'common.black',
-          borderRadius: 2,
-          display: 'grid',
-          gap: 2,
-          gridTemplateColumns: { xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)', md: 'repeat(3, 1fr)' },
-          mb: 2,
-          p: 2,
-        }}
-      >
-        <Grid>
-          <AppKpiCard
-            title={translate('dashboardModule.averageOrderValue.title')}
-            total={Number(averageOrderValue.avg_order_value)}
-            series={averageOrderValue.graph_data.map(Number)}
-            showPeriod
-            transparentCard
-            monthlyData={averageOrderValue.graph_x_value}
-          />
+        <Grid
+          className="metrics-sections"
+          container
+          spacing={3}
+          sx={{
+            backgroundColor: 'common.black',
+            borderRadius: 2,
+            display: 'grid',
+            gap: 2,
+            gridTemplateColumns: {
+              xs: 'repeat(1, 1fr)',
+              sm: 'repeat(2, 1fr)',
+              md: 'repeat(3, 1fr)',
+            },
+            mb: 2,
+            p: 2,
+          }}
+        >
+          <Grid>
+            <AppKpiCard
+              title={translate('dashboardModule.averageOrderValue.title')}
+              total={Number(averageOrderValue.avg_order_value)}
+              series={averageOrderValue.graph_data.map(Number)}
+              showPeriod
+              transparentCard
+              className="average-order-value"
+              monthlyData={averageOrderValue.graph_x_value}
+            />
+          </Grid>
+          <Grid>
+            <AppKpiCard
+              title={translate('dashboardModule.totalSales.title')}
+              total={Number(totalSales.total_sale_amount)}
+              series={totalSales.graph_data.map(Number)}
+              monthlyData={totalSales.graph_x_value}
+              className='total-sales'
+            />
+          </Grid>
+          <Grid>
+            <AppKpiCard
+              title={translate('dashboardModule.ordersOverTime.title')}
+              total={Number(
+                ordersOverTime.graph_data.reduce((sum, value) => sum + Number(value), 0)
+              )}
+              series={ordersOverTime.graph_data.map(Number)}
+              monthlyData={ordersOverTime.graph_x_value}
+              typeTotal="text"
+              className="orders-over-time"
+            />
+          </Grid>
         </Grid>
-        <Grid>
-          <AppKpiCard
-            title={translate('dashboardModule.totalSales.title')}
-            total={Number(totalSales.total_sale_amount)}
-            series={totalSales.graph_data.map(Number)}
-            monthlyData={totalSales.graph_x_value}
-          />
-        </Grid>
-        <Grid>
-          <AppKpiCard
-            title={translate('dashboardModule.ordersOverTime.title')}
-            total={Number(ordersOverTime.graph_data.reduce((sum, value) => sum + Number(value), 0))}
-            series={ordersOverTime.graph_data.map(Number)}
-            monthlyData={ordersOverTime.graph_x_value}
-            typeTotal="text"
-          />
-        </Grid>
-      </Grid>
-      <Box
-        display="grid"
-        gap={2}
-        gridTemplateColumns={{ xs: '1fr', md: 'repeat(12, 1fr)' }}
-        sx={{ mb: 2 }}
-      >
-        <Box sx={{ gridColumn: { md: 'span 8 ' } }}>
-          <AppNewInvoices
-            title={translate('tableLatestOrders', 'title')}
-            tableData={_appInvoices}
-            headCells={[
-              { id: 'id', label: translate('tableLatestOrders', 'columns.id') },
-              { id: 'customer', label: translate('tableLatestOrders', 'columns.customer') },
-              { id: 'date', label: translate('tableLatestOrders', 'columns.date') },
-              { id: 'total', label: translate('tableLatestOrders', 'columns.total') },
-              { id: 'status', label: translate('tableLatestOrders', 'columns.status') },
-              { id: '' },
-            ]}
-          />
-        </Box>
-        <Box sx={{ gridColumn: { md: 'span 4' } }}>
-          <Box display="flex" flexDirection="column" gap={3}>
-            {isLoading ? (
-              <LoadingScreen />
-            ) : (
-              <>
-                <AppTopProducts title={translate('TopProducts', 'title')} list={topProducts} />
-                <AppTopCustomers title={translate('TopClients', 'title')} list={topCustomers} />
-              </>
-            )}
+
+        <Box
+          className="products-section"
+          display="grid"
+          gap={2}
+          gridTemplateColumns={{ xs: '1fr', md: 'repeat(12, 1fr)' }}
+          sx={{ mb: 2 }}
+        >
+          <Box sx={{ gridColumn: { md: 'span 8 ' } }}>
+            <AppNewInvoices
+              className='last-orders'
+              title={translate('tableLatestOrders', 'title')}
+              tableData={_appInvoices}
+              headCells={[
+                { id: 'id', label: translate('tableLatestOrders', 'columns.id') },
+                { id: 'customer', label: translate('tableLatestOrders', 'columns.customer') },
+                { id: 'date', label: translate('tableLatestOrders', 'columns.date') },
+                { id: 'total', label: translate('tableLatestOrders', 'columns.total') },
+                { id: 'status', label: translate('tableLatestOrders', 'columns.status') },
+                { id: '' },
+              ]}
+            />
+          </Box>
+          <Box sx={{ gridColumn: { md: 'span 4' } }}>
+            <Box display="flex" flexDirection="column" gap={3}>
+              {isLoading ? (
+                <LoadingScreen />
+              ) : (
+                <>
+                  <AppTopProducts title={translate('TopProducts', 'title')} list={topProducts} className="top-products" />
+                  <AppTopCustomers title={translate('TopClients', 'title')} list={topCustomers} className="top-customers"  />
+                </>
+              )}
+            </Box>
           </Box>
         </Box>
-      </Box>
-    </HomeContent>
+      </HomeContent>
   );
 }

@@ -83,7 +83,7 @@ export function SubAccountListView() {
 
   return (
     <>
-      <HomeContent>
+      <HomeContent className="subaccount-list-view">
         <CustomBreadcrumbs
           heading={translate('subAccount.manageSubaccounts')}
           links={[

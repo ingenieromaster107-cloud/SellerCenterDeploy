@@ -106,7 +106,7 @@ export function CreateSellersView() {
       });
 
       toast.success(translate('createSellers.toasts.submitSuccess'));
-      router.push(paths.auth.signIn);
+      router.push(`${paths.auth.signIn}?newSeller=true`);
     } catch (error) {
       console.error('create-sellers · mutation error', error);
       toast.error(translate('createSellers.toasts.submitError'));

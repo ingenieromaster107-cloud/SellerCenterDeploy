@@ -18,6 +18,7 @@ type MovementsTableToolbarProps = {
   onChange: (dateFrom: string, dateTo: string) => void;
   onExport: () => void;
   isExporting: boolean;
+  exportLimitExceeded: boolean;
 };
 
 export function MovementsTableToolbar({
@@ -26,6 +27,7 @@ export function MovementsTableToolbar({
   onChange,
   onExport,
   isExporting,
+  exportLimitExceeded,
 }: MovementsTableToolbarProps) {
   return (
     <ToolbarContainer sx={{ p: 2 }}>
@@ -36,6 +38,7 @@ export function MovementsTableToolbar({
           onChange={onChange}
           onExport={onExport}
           isExporting={isExporting}
+          exportLimitExceeded={exportLimitExceeded}
         />
       </ToolbarLeftPanel>
 

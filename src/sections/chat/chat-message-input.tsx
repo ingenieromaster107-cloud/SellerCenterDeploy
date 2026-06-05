@@ -70,6 +70,9 @@ export function ChatMessageInput({
       }
       setDisabledControl(true);
       await sendMessage();
+      setDisabledControl(false);
+
+      
     },
     [sendMessage]
   );

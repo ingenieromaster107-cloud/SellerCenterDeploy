@@ -187,7 +187,7 @@ export function DashboardSummaryView() {
         sx={{ mb: { xs: 2, md: 3 } }}
       />
 
-      <Card variant="outlined" sx={{ p: { xs: 2, md: 2.25 }, mb: 2.5 }}>
+      <Card variant="outlined" sx={{ p: { xs: 2, md: 2.25 }, mb: 2.5 }} className="dashboard-summary-card">
         <Grid container spacing={2} alignItems="center">
           <Grid
             size={{ xs: 12, md: 12, lg: 4 }}

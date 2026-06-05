@@ -20,6 +20,7 @@ import { useGetMovementsSummary } from 'src/actions/movements/use-get-movements-
 
 import { CustomBreadcrumbs } from 'src/components/custom-breadcrumbs';
 
+import { EXPORT_MAX_ROWS } from '../constants';
 import { MovementsTable } from '../components/movements-table';
 import { MovementsSummaryCards } from '../components/movements-summary';
 
@@ -38,7 +39,14 @@ export function MovementsView() {
 
   const exportMutation = useExportMovements();
 
+  // El back trunca/no entrega el CSV sobre EXPORT_MAX_ROWS filas.
+  const exportLimitExceeded = (summary?.movements_count ?? 0) > EXPORT_MAX_ROWS;
+
   const handleExport = useCallback(async () => {
+    if (exportLimitExceeded) {
+      toast.error(translate('movements.export.limitExceeded'));
+      return;
+    }
     try {
       const csv = await exportMutation.mutateAsync({
         dateFrom: filters.dateFrom,
@@ -49,7 +57,7 @@ export function MovementsView() {
     } catch {
       toast.error(translate('movements.export.error'));
     }
-  }, [exportMutation, filters.dateFrom, filters.dateTo, translate]);
+  }, [exportLimitExceeded, exportMutation, filters.dateFrom, filters.dateTo, translate]);
 
   return (
     <HomeContent>
@@ -83,6 +91,7 @@ export function MovementsView() {
             onDateRangeChange={setDateRange}
             onExport={handleExport}
             isExporting={exportMutation.isPending}
+            exportLimitExceeded={exportLimitExceeded}
           />
         </Card>
       </Stack>

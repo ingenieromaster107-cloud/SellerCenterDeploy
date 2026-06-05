@@ -85,7 +85,7 @@ export function ReturnListView() {
   const notFound = (!dataFiltered.length && canReset) || !dataFiltered.length;
 
   return (
-    <HomeContent>
+    <HomeContent >
       <CustomBreadcrumbs
         heading={translate('returnList')}
         links={[
@@ -96,7 +96,7 @@ export function ReturnListView() {
         sx={{ mb: { xs: 3, md: 5 } }}
       />
 
-      <Card>
+      <Card className="return-list-view">
         <OrderTableToolbar
           filters={filters}
           onResetPage={table.onResetPage}

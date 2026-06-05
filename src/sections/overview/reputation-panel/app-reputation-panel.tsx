@@ -121,7 +121,7 @@ export function AppReputationPanel({ data, sx, ...other }: Props) {
       : undefined;
 
   return (
-    <Card sx={sx} {...other}>
+    <Card sx={sx} {...other} className="reputation-panel">
       <CardHeader title={translate('reputationModule.title')} subheader={subheaderText} />
 
       <Box sx={{ p: 3, pt: 1 }}>

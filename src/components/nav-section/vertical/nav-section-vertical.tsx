@@ -27,7 +27,6 @@ export function NavSectionVertical({
   const theme = useTheme();
 
   const cssVars = { ...navSectionCssVars.vertical(theme), ...overridesVars };
-
   return (
     <Nav
       className={mergeClasses([navSectionClasses.vertical, className])}
@@ -58,13 +57,15 @@ function Group({
   subheader,
   slotProps,
   enabledRootRedirect,
+  className,
 }: NavGroupProps) {
   const groupOpen = useBoolean(true);
 
   const renderContent = () => (
-    <NavUl sx={{ gap: 'var(--nav-item-gap)' }}>
+    <NavUl sx={{ gap: 'var(--nav-item-gap)' }} className={className}>
       {items.map((list) => (
         <NavList
+          className={list.onboarding?.target}
           key={`${list.title}-${list.path}`}
           data={list}
           render={render}

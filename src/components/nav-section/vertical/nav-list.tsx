@@ -19,6 +19,7 @@ export function NavList({
   depth,
   render,
   slotProps,
+  className,
   enabledRootRedirect,
 }: NavListProps) {
   const pathname = usePathname();
@@ -83,6 +84,7 @@ export function NavList({
   return (
     <NavLi
       disabled={data.disabled}
+      className={className}
       sx={{
         ...(!!data.children && {
           [`& .${navSectionClasses.li}`]: {
@@ -110,6 +112,7 @@ function NavSubList({
     <NavUl sx={{ gap: 'var(--nav-item-gap)' }}>
       {data.map((list) => (
         <NavList
+          className={list.onboarding?.target}
           key={`${list.title}-${list.path}`}
           data={list}
           render={render}

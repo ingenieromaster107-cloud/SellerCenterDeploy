@@ -101,9 +101,10 @@ const defaultAddresslDataValues: FormAddressDataValues = {
 
 type ProfileConfigurationProps = {
   customer: Customer;
+  className?: string;
 };
 
-export function ProfileConfiguration({ customer }: ProfileConfigurationProps) {
+export function ProfileConfiguration({ customer, className }: ProfileConfigurationProps) {
   //---- Load necessary data for the profile configuration form
   const { translate } = useTranslate();
 
@@ -241,7 +242,7 @@ export function ProfileConfiguration({ customer }: ProfileConfigurationProps) {
   }
 
   return (
-    <>
+    <Box className={className}>
       <Box>
         <Form methods={methodPersonalData} onSubmit={onSubmitPersonalData}>
           <Grid container spacing={3}>
@@ -367,6 +368,6 @@ export function ProfileConfiguration({ customer }: ProfileConfigurationProps) {
           </Grid>
         </Form>
       </Box>
-    </>
+    </Box>
   );
 }

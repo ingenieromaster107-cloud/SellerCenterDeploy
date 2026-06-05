@@ -16,9 +16,10 @@ import { Iconify } from 'src/components/iconify';
 type ProfileHomeProps = {
   sx?: SxProps<Theme>;
   customer: Customer;
+  className?: string;
 };
 
-export function ProfileHome({ sx, customer }: ProfileHomeProps) {
+export function ProfileHome({ sx, customer, className }: ProfileHomeProps) {
   const { translate } = useTranslate();
   const firstName = (customer?.firstname ?? '').trim();
   const lastName = (customer?.lastname ?? '').trim();
@@ -71,7 +72,7 @@ export function ProfileHome({ sx, customer }: ProfileHomeProps) {
   );
 
   return (
-    <Grid container spacing={0} sx={sx}>
+    <Grid container spacing={0} sx={sx} className={className}>
       <Grid size={{ xs: 12, md: 8 }} sx={{ gap: 0, display: 'flex', flexDirection: 'column' }}>
         {renderPostCard()}
       </Grid>

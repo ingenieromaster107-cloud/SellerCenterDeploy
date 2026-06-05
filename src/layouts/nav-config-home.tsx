@@ -26,6 +26,7 @@ const ICONS = {
   academy: <Iconify icon="solar:notebook-bold-duotone" width={24} />,
   chat: <Iconify icon="solar:chat-round-dots-bold" width={24} />,
   movements: <Iconify icon="solar:bill-list-bold-duotone" width={24} />,
+  promotions: <Iconify icon="solar:tag-horizontal-bold-duotone" width={24} />,
 };
 
 // ----------------------------------------------------------------------
@@ -41,11 +42,19 @@ export const useNavData = (): NavSectionProps['data'] => {
             title: translate('sidebarMenu.home.title'),
             path: paths.home.root,
             icon: ICONS.home,
+            onboarding: {
+              active: true,
+              target: 'sidebar-metrics-sections',
+            },
           },
           {
             title: translate('sidebarMenu.dashboard.title'),
             path: paths.dashboard.root,
             icon: ICONS.dashboard,
+            onboarding: {
+              active: true,
+              target: 'dashboard-sections',
+            },
           },
         ],
       },
@@ -56,9 +65,27 @@ export const useNavData = (): NavSectionProps['data'] => {
             path: paths.product.root,
             icon: ICONS.product,
             children: [
-              { title: translate('sidebarMenu.myProducts.subtitles.list'), path: paths.product.root },
-              { title: translate('sidebarMenu.myProducts.subtitles.loadProducts'), path: paths.product.load },
+              {
+                title: translate('sidebarMenu.myProducts.subtitles.list'),
+                path: paths.product.root,
+                onboarding: {
+                  active: true,
+                  target: 'sidebar-dashboard-sections-products',
+                },
+              },
+              {
+                title: translate('sidebarMenu.myProducts.subtitles.loadProducts'),
+                path: paths.product.load,
+                onboarding: {
+                  active: true,
+                  target: 'sidebar-dashboard-sections-load-products',
+                },
+              },
             ],
+            onboarding: {
+              active: true,
+              target: 'sidebar-dashboard-sections',
+            },
           },
           {
             title: translate('sidebarMenu.returns.title'),
@@ -67,24 +94,38 @@ export const useNavData = (): NavSectionProps['data'] => {
             children: [
               { title: translate('sidebarMenu.returns.subtitles.list'), path: paths.return.root },
             ],
+            onboarding: {
+              active: true,
+              target: 'sidebar-dashboard-sections-returns',
+            }
           },
           {
             title: translate('ordersModule.title'),
             path: paths.order.root,
             icon: ICONS.order,
-            children: [
-              { title: translate('ordersModule.list.title'), path: paths.order.root },
-            ],
+            children: [{ title: translate('ordersModule.list.title'), path: paths.order.root }],
+            onboarding: {
+              active: true,
+              target: 'sidebar-dashboard-sections-orders',
+            }
           },
           {
             title: translate('sidebarMenu.clients.title'),
             path: paths.clients.root,
             icon: ICONS.users,
+            onboarding: {
+              active: true,
+              target: 'sidebar-dashboard-sections-clients',
+            }
           },
           {
             title: translate('sidebarMenu.feedback.title'),
             path: paths.feedback.root,
             icon: ICONS.feedback,
+            onboarding: {
+              active: true,
+              target: 'sidebar-dashboard-sections-feedback',
+            }
           },
           {
             title: translate('sidebarMenu.movements.title'),
@@ -97,13 +138,29 @@ export const useNavData = (): NavSectionProps['data'] => {
             title: translate('sidebarMenu.academy.title'),
             path: paths.academy.root,
             icon: ICONS.academy,
+            onboarding: {
+              active: true,
+              target: 'sidebar-dashboard-sections-academy',
+            }
           },
-                    {
+          {
             title: translate('sidebarMenu.chat.title'),
             path: paths.chat.root,
             icon: ICONS.chat,
+            onboarding: {
+              active: true,
+              target: 'sidebar-dashboard-sections-chat',
+            }
           },
-
+          {
+            title: translate('sidebarMenu.promotions.title'),
+            path: paths.promotions.root,
+            icon: ICONS.promotions,
+            children: [
+              { title: translate('sidebarMenu.promotions.subtitles.list'), path: paths.promotions.root },
+              { title: translate('sidebarMenu.promotions.subtitles.create'), path: paths.promotions.create },
+            ],
+          },
         ],
       },
       {
@@ -111,10 +168,14 @@ export const useNavData = (): NavSectionProps['data'] => {
         items: [
           {
             title: translate('sidebarMenu.subAccount.title'),
-            path: paths.account.subaccount.root ,
+            path: paths.account.subaccount.root,
             icon: ICONS.users,
-          }
+          },
         ],
+        onboarding: {
+          active: true,
+          target: 'sidebar-dashboard-sections-subaccounts',
+        }
       },
     ],
     [translate]

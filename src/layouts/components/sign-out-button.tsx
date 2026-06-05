@@ -63,6 +63,7 @@ export function SignOutButton({ onClose, sx, isNavMini = false, ...other }: Prop
         fullWidth
         size="medium"
         onClick={handleLogout}
+        className="sign-out-button"
         sx={{
           ...sx,
           color: 'error.main',

@@ -23,6 +23,7 @@ type Props = {
   readonly transparentCard?: boolean;
   readonly monthlyData?: string[];
   readonly typeTotal?: "text" | "value";
+  readonly className?: string;
 };
 
 export function AppKpiCard({
@@ -33,7 +34,8 @@ export function AppKpiCard({
   showPeriod = false,
   transparentCard = false,
   monthlyData,
-  typeTotal
+  typeTotal,
+  className
 }: Props) {
   const { translate } = useTranslate();
 
@@ -62,7 +64,7 @@ export function AppKpiCard({
   });
 
   return (
-    <Card sx={{ p: 3, backgroundColor: transparentCard ? 'transparent' : 'background.paper' }}>
+    <Card sx={{ p: 3, backgroundColor: transparentCard ? 'transparent' : 'background.paper' }} className={className}>
       {/* Header */}
       <Box
         sx={{

@@ -84,6 +84,13 @@
     "chat": {
       "title": "Chat"
     },
+    "promotions": {
+      "title": "Promociones",
+      "subtitles": {
+        "list": "Lista",
+        "create": "Crear"
+      }
+    },
     "movements": {
       "title": "Mis movimientos"
     }
@@ -111,7 +118,8 @@
       "commission": "Comisión",
       "net": "Neto",
       "guide": "Guía",
-      "orderStatus": "Estado"
+      "orderStatus": "Estado",
+      "loading": "Cargando movimientos, espere por favor..."
     },
     "category": {
       "VENTA": "Venta",
@@ -128,11 +136,13 @@
     },
     "export": {
       "success": "Extracto descargado correctamente",
-      "error": "No fue posible generar el extracto. Intenta nuevamente."
+      "error": "No fue posible generar el extracto. Intenta nuevamente.",
+      "limitExceeded": "El periodo supera las 5000 filas permitidas para el extracto. Reduce el rango de fechas para descargarlo."
     }
   },
   "academyModule": {
     "title": "Academia",
+    "buttonToOnboarding": "Iniciar onboarding",
     "list": {
       "heading": "Cursos disponibles"
     },
@@ -986,7 +996,160 @@
       "continue": "Continuar"
     }
   },
-    "chatModule": {
+  "promotionsModule": {
+    "title": "Mis Promociones",
+    "breadcrumbs": {
+      "home": "Inicio",
+      "promotions": "Promociones",
+      "list": "Lista",
+      "create": "Crear",
+      "edit": "Editar",
+      "detail": "Detalle"
+    },
+    "list": {
+      "heading": "Mis Promociones",
+      "addPromotion": "Nueva Promoción",
+      "empty": "No se encontraron promociones"
+    },
+    "create": {
+      "heading": "Crear Promoción",
+      "successMessage": "¡Promoción creada exitosamente!",
+      "errorMessage": "Error al crear la promoción"
+    },
+    "edit": {
+      "heading": "Editar Promoción",
+      "successMessage": "¡Promoción actualizada exitosamente!",
+      "errorMessage": "Error al actualizar la promoción",
+      "readonlyHint": "Este campo no puede modificarse después de crear la promoción."
+    },
+    "detail": {
+      "heading": "Detalle de Promoción",
+      "statsTitle": "Rendimiento",
+      "timesUsed": "Usos totales",
+      "totalDiscountGranted": "Descuento otorgado",
+      "totalRevenueGenerated": "Ventas generadas"
+    },
+    "status": {
+      "all": "Todos",
+      "PENDING_APPROVAL": "Pendiente",
+      "ACTIVE": "Activa",
+      "PAUSED": "Pausada",
+      "EXPIRED": "Expirada",
+      "EXHAUSTED": "Agotada"
+    },
+    "discountType": {
+      "BY_PERCENT": "Porcentaje",
+      "BY_FIXED": "Valor fijo"
+    },
+    "applyType": {
+      "AUTOMATIC": "Automática",
+      "COUPON": "Cupón"
+    },
+    "table": {
+      "columns": {
+        "name": "Nombre",
+        "discountType": "Tipo de descuento",
+        "applyType": "Aplicación",
+        "discountAmount": "Descuento",
+        "fromDate": "Desde",
+        "toDate": "Hasta",
+        "status": "Estado",
+        "timesUsed": "Usos",
+        "actions": "Acciones"
+      },
+      "searchFilter": "Buscar por nombre o cupón..."
+    },
+    "actions": {
+      "activate": "Activar",
+      "pause": "Pausar",
+      "delete": "Eliminar",
+      "edit": "Editar",
+      "viewDetail": "Ver detalle",
+      "confirm": "Confirmar",
+      "cancel": "Cancelar"
+    },
+    "confirmDelete": {
+      "title": "Eliminar promoción",
+      "content": "¿Seguro que deseas eliminar esta promoción? Esta acción no se puede deshacer.",
+      "confirmButton": "Eliminar",
+      "successMessage": "Promoción eliminada correctamente.",
+      "errorMessage": "No se pudo eliminar la promoción. Solo es posible si no tiene historial de uso."
+    },
+    "confirmPause": {
+      "title": "Pausar promoción",
+      "content": "La promoción dejará de aplicarse a los clientes hasta que la reactives.",
+      "successMessage": "Promoción pausada correctamente.",
+      "errorMessage": "No se pudo pausar la promoción."
+    },
+    "confirmActivate": {
+      "title": "Activar promoción",
+      "content": "La promoción comenzará a aplicarse automáticamente.",
+      "successMessage": "Promoción activada correctamente.",
+      "errorMessage": "No se pudo activar la promoción."
+    },
+    "form": {
+      "sections": {
+        "basic": "Información básica",
+        "discount": "Configuración del descuento",
+        "scope": "Alcance y productos",
+        "limits": "Límites y vigencia"
+      },
+      "fields": {
+        "name": "Nombre de la promoción",
+        "namePh": "Ej: Descuento de temporada",
+        "description": "Descripción (opcional)",
+        "descriptionPh": "Describe el objetivo de esta promoción",
+        "discountType": "Tipo de descuento",
+        "applyType": "Modo de aplicación",
+        "discountAmount": "Valor del descuento",
+        "couponCode": "Código de cupón",
+        "couponCodePh": "Ej: VERANO2026",
+        "fromDate": "Fecha de inicio",
+        "toDate": "Fecha de fin (opcional)",
+        "maxBudget": "Presupuesto máximo (opcional)",
+        "usageLimit": "Límite de usos totales (opcional)",
+        "usesPerCustomer": "Usos por cliente (opcional)",
+        "minPurchaseAmount": "Compra mínima (opcional)",
+        "appliesToAllProducts": "Aplica a todos mis productos",
+        "productIds": "IDs de productos (separados por coma)",
+        "categoryIds": "IDs de categorías (separados por coma)"
+      },
+      "hints": {
+        "couponRequired": "Requerido cuando el modo de aplicación es Cupón",
+        "discountPercent": "Porcentaje del total del carrito (ej: 15 = 15%)",
+        "discountFixed": "Monto fijo a descontar del total",
+        "maxBudget": "La promoción se pausará cuando se alcance este presupuesto",
+        "usageLimit": "Número máximo de veces que puede usarse en total",
+        "usesPerCustomer": "Número máximo de veces que un cliente puede usarla"
+      },
+      "validation": {
+        "nameRequired": "El nombre es obligatorio",
+        "discountTypeRequired": "Selecciona el tipo de descuento",
+        "applyTypeRequired": "Selecciona el modo de aplicación",
+        "discountAmountPositive": "El descuento debe ser mayor a 0",
+        "discountAmountMax": "El porcentaje no puede ser mayor a 100",
+        "couponCodeRequired": "El código de cupón es obligatorio cuando el modo es Cupón",
+        "fromDateRequired": "La fecha de inicio es obligatoria",
+        "toDateAfterFrom": "La fecha de fin debe ser posterior a la de inicio"
+      },
+      "actions": {
+        "save": "Guardar Promoción",
+        "saving": "Guardando...",
+        "cancel": "Cancelar"
+      }
+    },
+    "errors": {
+      "notFound": {
+        "title": "Promoción no encontrada",
+        "description": "No se encontró la promoción solicitada."
+      },
+      "loadError": {
+        "title": "Error al cargar",
+        "description": "No pudimos cargar las promociones. Por favor, intenta nuevamente."
+      }
+    }
+  },
+  "chatModule": {
     "title": "Chat",
     "searchPlaceholder": "Buscar por cliente o mensaje...",
     "noMessages": "No se encontraron mensajes",
@@ -1037,5 +1200,70 @@
       "title": "Selecciona un chat para comenzar",
       "description": "Aquí podrás ver y responder los mensajes de tus clientes. Selecciona una conversación para empezar a chatear."
     }
+  },
+  "onboardingSteps": {
+    "buttons": {
+      "back": "Atrás",
+      "next": "Siguiente",
+      "last": "Finalizar",
+      "close": "Cerrar",
+      "skip": "Omitir tour"
+    },
+    "welcome": "Bienvenido al tour de Seller Center. Comenzamos por tu perfil de vendedor.",
+    "profile": {
+      "overview": "Este es tu perfil de vendedor. Aquí puedes ver y editar toda la información de tu cuenta.",
+      "tabs": "Usa estas pestañas para navegar entre las distintas secciones de tu perfil.",
+      "tabProfile": "En la pestaña Perfil encuentras tu información personal: nombre, correo, teléfono y foto. Mantén estos datos actualizados para que tus clientes te reconozcan.",
+      "tabConfiguration": "En Configuración personalizas los datos de tu tienda: nombre comercial, descripción, y preferencias generales de tu negocio.",
+      "tabSecurity": "En Seguridad puedes cambiar tu contraseña y gestionar el acceso a tu cuenta para mantenerla protegida.",
+      "tabDocuments": "En Documentos cargas los archivos legales requeridos por la plataforma: RUT, cámara de comercio, contratos, entre otros.",
+      "tabResponseTemplate": "Las Plantillas de Respuesta te permiten guardar mensajes predefinidos para responder rápidamente las consultas frecuentes de tus clientes en el chat."
+    },
+    "home": {
+      "overview": "Aquí tienes un vistazo rápido del rendimiento general de tu tienda con los indicadores más importantes del día.",
+      "metrics": "Este panel muestra métricas clave: valor promedio de órdenes, ventas totales y evolución de pedidos en el tiempo.",
+      "reputation": "Aquí puedes ver tu reputación como vendedor, incluyendo cancelaciones, reclamaciones y tiempo de respuesta a clientes.",
+      "lastOrders": "Un resumen de tus últimas transacciones para que tengas siempre al día el estado de tus ventas recientes.",
+      "topProducts": "Tus productos estrella: los artículos que más vendes y que impulsan el crecimiento de tu tienda.",
+      "topCustomers": "Tus clientes más frecuentes y de mayor valor, para que puedas enfocar tus esfuerzos de fidelización."
+    },
+    "dashboard": {
+      "overview": "El Dashboard es tu centro de análisis. Aquí encontrarás gráficos interactivos con ventas, órdenes, productos más vendidos y clientes principales para tomar decisiones informadas.",
+      "summary": "Este resumen consolidado te muestra los indicadores financieros y de desempeño más relevantes de tu negocio en un solo lugar."
+    },
+    "products": {
+      "sidebar": "En la sección de Productos gestionas todo tu catálogo. Puedes ver, editar y controlar el inventario de los artículos que ofreces en la plataforma.",
+      "list": "Este es tu catálogo completo de productos. Desde aquí puedes buscar, filtrar, editar precios, actualizar stock y gestionar el estado de cada artículo.",
+      "load": "Carga Productos te permite añadir nuevos artículos a tu catálogo, ya sea de forma individual o mediante carga masiva con archivos."
+    },
+    "returns": {
+      "sidebar": "En Devoluciones gestionas todas las solicitudes de reembolso o cambio enviadas por tus clientes. Responde a tiempo para mantener una buena reputación.",
+      "list": "Aquí ves el listado completo de devoluciones: su estado, motivo y los pasos a seguir para resolverlas correctamente."
+    },
+    "orders": {
+      "sidebar": "En Órdenes encuentras todos los pedidos realizados por tus clientes. Gestiona el estado de cada orden, desde la confirmación hasta el despacho.",
+      "list": "Este listado muestra todas tus órdenes con su estado actual. Puedes filtrar por fecha, estado o cliente para encontrar rápidamente lo que necesitas."
+    },
+    "clients": {
+      "sidebar": "En Clientes tienes acceso al directorio completo de compradores que han adquirido tus productos, con su historial de compras y datos de contacto.",
+      "list": "Explora el perfil de cada cliente, revisa su historial de compras y usa esta información para mejorar tu estrategia de ventas."
+    },
+    "feedback": {
+      "sidebar": "En Feedback encuentras todas las opiniones y valoraciones que tus clientes han dejado sobre tus productos y servicio. Responde y gestiona tu reputación.",
+      "list": "Aquí puedes leer cada comentario, responder preguntas y gestionar las reseñas para construir la confianza de nuevos compradores."
+    },
+    "academy": {
+      "sidebar": "La Academia es tu centro de aprendizaje: cursos, tutoriales y recursos para que saques el máximo provecho de la plataforma y hagas crecer tu negocio.",
+      "list": "Explora los cursos disponibles, sigue las lecciones a tu ritmo y aplica lo aprendido para mejorar tus ventas."
+    },
+    "chat": {
+      "sidebar": "El Chat te permite comunicarte en tiempo real con tus clientes, responder dudas y brindar un servicio personalizado que aumenta la conversión.",
+      "view": "Desde aquí gestionas todas tus conversaciones activas. Usa las plantillas de respuesta para atender más rápido y con mayor consistencia."
+    },
+    "subaccounts": {
+      "sidebar": "En Sub Cuentas administras los accesos de tu equipo: crea colaboradores, asígnales roles específicos y controla qué secciones puede ver cada uno.",
+      "list": "Aquí ves todos los colaboradores activos en tu cuenta. Gestiona sus permisos para mantener la seguridad y el orden en tu operación."
+    },
+    "signOut": "Cuando termines tu jornada, usa este botón para cerrar sesión de forma segura y proteger tu cuenta."
   }
 }

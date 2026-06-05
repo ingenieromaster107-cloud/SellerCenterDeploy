@@ -84,6 +84,13 @@
     "chat": {
       "title": "Chat"
     },
+    "promotions": {
+      "title": "Promotions",
+      "subtitles": {
+        "list": "List",
+        "create": "Create"
+      }
+    },
     "movements": {
       "title": "My movements"
     }
@@ -111,7 +118,8 @@
       "commission": "Commission",
       "net": "Net",
       "guide": "Tracking #",
-      "orderStatus": "Status"
+      "orderStatus": "Status",
+      "loading": "Loading movements, please wait..."
     },
     "category": {
       "VENTA": "Sale",
@@ -128,11 +136,13 @@
     },
     "export": {
       "success": "Statement downloaded successfully",
-      "error": "We couldn't generate the statement. Please try again."
+      "error": "We couldn't generate the statement. Please try again.",
+      "limitExceeded": "The period exceeds the 5000-row limit for the statement. Narrow the date range to download it."
     }
   },
   "academyModule": {
     "title": "Academy",
+    "buttonToOnboarding": "Start onboarding",
     "list": {
       "heading": "Available courses"
     },
@@ -985,6 +995,159 @@
       "continue": "Continue"
     }
   },
+  "promotionsModule": {
+    "title": "My Promotions",
+    "breadcrumbs": {
+      "home": "Home",
+      "promotions": "Promotions",
+      "list": "List",
+      "create": "Create",
+      "edit": "Edit",
+      "detail": "Detail"
+    },
+    "list": {
+      "heading": "My Promotions",
+      "addPromotion": "New Promotion",
+      "empty": "No promotions found"
+    },
+    "create": {
+      "heading": "Create Promotion",
+      "successMessage": "Promotion created successfully!",
+      "errorMessage": "Error creating the promotion"
+    },
+    "edit": {
+      "heading": "Edit Promotion",
+      "successMessage": "Promotion updated successfully!",
+      "errorMessage": "Error updating the promotion",
+      "readonlyHint": "This field cannot be modified after the promotion is created."
+    },
+    "detail": {
+      "heading": "Promotion Detail",
+      "statsTitle": "Performance",
+      "timesUsed": "Total uses",
+      "totalDiscountGranted": "Discount granted",
+      "totalRevenueGenerated": "Revenue generated"
+    },
+    "status": {
+      "all": "All",
+      "PENDING_APPROVAL": "Pending",
+      "ACTIVE": "Active",
+      "PAUSED": "Paused",
+      "EXPIRED": "Expired",
+      "EXHAUSTED": "Exhausted"
+    },
+    "discountType": {
+      "BY_PERCENT": "Percentage",
+      "BY_FIXED": "Fixed amount"
+    },
+    "applyType": {
+      "AUTOMATIC": "Automatic",
+      "COUPON": "Coupon"
+    },
+    "table": {
+      "columns": {
+        "name": "Name",
+        "discountType": "Discount type",
+        "applyType": "Apply type",
+        "discountAmount": "Discount",
+        "fromDate": "From",
+        "toDate": "To",
+        "status": "Status",
+        "timesUsed": "Uses",
+        "actions": "Actions"
+      },
+      "searchFilter": "Search by name or coupon code..."
+    },
+    "actions": {
+      "activate": "Activate",
+      "pause": "Pause",
+      "delete": "Delete",
+      "edit": "Edit",
+      "viewDetail": "View detail",
+      "confirm": "Confirm",
+      "cancel": "Cancel"
+    },
+    "confirmDelete": {
+      "title": "Delete promotion",
+      "content": "Are you sure you want to delete this promotion? This action cannot be undone.",
+      "confirmButton": "Delete",
+      "successMessage": "Promotion deleted successfully.",
+      "errorMessage": "Could not delete the promotion. Only allowed if it has no usage history."
+    },
+    "confirmPause": {
+      "title": "Pause promotion",
+      "content": "The promotion will stop applying to customers until you reactivate it.",
+      "successMessage": "Promotion paused successfully.",
+      "errorMessage": "Could not pause the promotion."
+    },
+    "confirmActivate": {
+      "title": "Activate promotion",
+      "content": "The promotion will start applying automatically.",
+      "successMessage": "Promotion activated successfully.",
+      "errorMessage": "Could not activate the promotion."
+    },
+    "form": {
+      "sections": {
+        "basic": "Basic information",
+        "discount": "Discount configuration",
+        "scope": "Scope and products",
+        "limits": "Limits and validity"
+      },
+      "fields": {
+        "name": "Promotion name",
+        "namePh": "e.g. Season discount",
+        "description": "Description (optional)",
+        "descriptionPh": "Describe the goal of this promotion",
+        "discountType": "Discount type",
+        "applyType": "Application mode",
+        "discountAmount": "Discount value",
+        "couponCode": "Coupon code",
+        "couponCodePh": "e.g. SUMMER2026",
+        "fromDate": "Start date",
+        "toDate": "End date (optional)",
+        "maxBudget": "Maximum budget (optional)",
+        "usageLimit": "Total usage limit (optional)",
+        "usesPerCustomer": "Uses per customer (optional)",
+        "minPurchaseAmount": "Minimum purchase (optional)",
+        "appliesToAllProducts": "Applies to all my products",
+        "productIds": "Product IDs (comma separated)",
+        "categoryIds": "Category IDs (comma separated)"
+      },
+      "hints": {
+        "couponRequired": "Required when application mode is Coupon",
+        "discountPercent": "Percentage of cart total (e.g. 15 = 15%)",
+        "discountFixed": "Fixed amount to deduct from total",
+        "maxBudget": "The promotion will pause when this budget is reached",
+        "usageLimit": "Maximum number of times it can be used in total",
+        "usesPerCustomer": "Maximum number of times a customer can use it"
+      },
+      "validation": {
+        "nameRequired": "Name is required",
+        "discountTypeRequired": "Select a discount type",
+        "applyTypeRequired": "Select an application mode",
+        "discountAmountPositive": "Discount must be greater than 0",
+        "discountAmountMax": "Percentage cannot exceed 100",
+        "couponCodeRequired": "Coupon code is required when mode is Coupon",
+        "fromDateRequired": "Start date is required",
+        "toDateAfterFrom": "End date must be after start date"
+      },
+      "actions": {
+        "save": "Save Promotion",
+        "saving": "Saving...",
+        "cancel": "Cancel"
+      }
+    },
+    "errors": {
+      "notFound": {
+        "title": "Promotion not found",
+        "description": "The requested promotion was not found."
+      },
+      "loadError": {
+        "title": "Load error",
+        "description": "We couldn't load the promotions. Please try again."
+      }
+    }
+  },
   "chatModule": {
     "title": "Chat",
     "searchPlaceholder": "Search by customer or message...",
@@ -1036,5 +1199,70 @@
       "title": "Select a chat to start",
       "description": "Here you can view and respond to your customers' messages. Select a conversation to start chatting."
     }
+  },
+  "onboardingSteps": {
+    "buttons": {
+      "back": "Back",
+      "next": "Next",
+      "last": "Finish",
+      "close": "Close",
+      "skip": "Skip tour"
+    },
+    "welcome": "Welcome to the Seller Center tour. We start with your seller profile.",
+    "profile": {
+      "overview": "This is your seller profile. Here you can view and edit all your account information.",
+      "tabs": "Use these tabs to navigate between the different sections of your profile.",
+      "tabProfile": "In the Profile tab you'll find your personal information: name, email, phone and photo. Keep this data updated so your customers recognize you.",
+      "tabConfiguration": "In Configuration you customize your store data: business name, description, and general preferences for your business.",
+      "tabSecurity": "In Security you can change your password and manage access to your account to keep it protected.",
+      "tabDocuments": "In Documents you upload the legal files required by the platform: tax ID, business registration, contracts, among others.",
+      "tabResponseTemplate": "Response Templates let you save predefined messages to quickly answer frequent customer inquiries in the chat."
+    },
+    "home": {
+      "overview": "Here you have a quick overview of your store's overall performance with the most important indicators of the day.",
+      "metrics": "This panel shows key metrics: average order value, total sales and order evolution over time.",
+      "reputation": "Here you can see your reputation as a seller, including cancellations, claims and customer response time.",
+      "lastOrders": "A summary of your latest transactions so you always have the status of your recent sales up to date.",
+      "topProducts": "Your star products: the items you sell the most and that drive the growth of your store.",
+      "topCustomers": "Your most frequent and highest-value customers, so you can focus your loyalty efforts."
+    },
+    "dashboard": {
+      "overview": "The Dashboard is your analytics center. Here you'll find interactive charts with sales, orders, best-selling products and top customers to make informed decisions.",
+      "summary": "This consolidated summary shows you the most relevant financial and performance indicators of your business in one place."
+    },
+    "products": {
+      "sidebar": "In the Products section you manage your entire catalog. You can view, edit and control the inventory of the items you offer on the platform.",
+      "list": "This is your complete product catalog. From here you can search, filter, edit prices, update stock and manage the status of each item.",
+      "load": "Load Products lets you add new items to your catalog, either individually or through bulk upload with files."
+    },
+    "returns": {
+      "sidebar": "In Returns you manage all refund or exchange requests sent by your customers. Respond on time to maintain a good reputation.",
+      "list": "Here you see the complete list of returns: their status, reason and the steps to follow to resolve them correctly."
+    },
+    "orders": {
+      "sidebar": "In Orders you find all orders placed by your customers. Manage the status of each order, from confirmation to dispatch.",
+      "list": "This list shows all your orders with their current status. You can filter by date, status or customer to quickly find what you need."
+    },
+    "clients": {
+      "sidebar": "In Clients you have access to the complete directory of buyers who have purchased your products, with their purchase history and contact data.",
+      "list": "Explore each customer's profile, review their purchase history and use this information to improve your sales strategy."
+    },
+    "feedback": {
+      "sidebar": "In Feedback you find all the opinions and ratings that your customers have left about your products and service. Respond and manage your reputation.",
+      "list": "Here you can read each comment, answer questions and manage reviews to build the trust of new buyers."
+    },
+    "academy": {
+      "sidebar": "The Academy is your learning center: courses, tutorials and resources so you can get the most out of the platform and grow your business.",
+      "list": "Explore the available courses, follow the lessons at your own pace and apply what you've learned to improve your sales."
+    },
+    "chat": {
+      "sidebar": "The Chat allows you to communicate in real time with your customers, answer questions and provide personalized service that increases conversion.",
+      "view": "From here you manage all your active conversations. Use response templates to attend faster and with greater consistency."
+    },
+    "subaccounts": {
+      "sidebar": "In Sub Accounts you manage your team's access: create collaborators, assign them specific roles and control which sections each one can see.",
+      "list": "Here you see all active collaborators in your account. Manage their permissions to maintain security and order in your operation."
+    },
+    "signOut": "When you finish your session, use this button to log out securely and protect your account."
   }
 }

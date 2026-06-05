@@ -4,6 +4,7 @@ import { useMemo } from 'react';
 
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
+import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 
 import { paths } from 'src/routes/paths';
@@ -12,6 +13,7 @@ import { useSellerStatus } from 'src/hooks/seller/use-seller-status';
 import { useAcademyProgress } from 'src/hooks/academy/use-academy-progress';
 
 import { HomeContent } from 'src/layouts/home';
+import { useTourContext } from 'src/contexts/tour';
 import { useTranslate } from 'src/locales/langs/i18n';
 
 import { Iconify } from 'src/components/iconify';
@@ -40,18 +42,24 @@ export function AcademyListView() {
     [status]
   );
 
-  const resumePoint = getResumePoint();
+  const { setRunTour } = useTourContext();
 
+
+  const resumePoint = getResumePoint();
+  
   return (
-    <HomeContent>
-      <CustomBreadcrumbs
+    <HomeContent className="academy-list-view">
+      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
+        <CustomBreadcrumbs
         heading={translate('academyModule.title')}
         links={[
           { name: translate('sidebarMenu.home.title'), href: paths.home.root },
           { name: translate('academyModule.title') },
         ]}
         sx={{ mb: { xs: 3, md: 5 } }}
-      />
+        />
+        <Button onClick={() => setRunTour(true)}> {translate('academyModule.buttonToOnboarding')}</Button>
+      </Box>
 
       <AcademyResumeBanner resumePoint={resumePoint} />
 

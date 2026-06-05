@@ -1,6 +1,5 @@
 'use client';
 
-import type { Customer } from 'src/interfaces/customer/customer.interface';
 
 import * as z from 'zod';
 import { useMemo, useState } from 'react';
@@ -51,10 +50,10 @@ const defaultValues: FormPassValue = {
 };
 
 type ProfileChangePasswordProps = {
-  customer: Customer;
+  className?: string;
 };
 
-export function ProfileChangePassword({ customer }: ProfileChangePasswordProps) {
+export function ProfileChangePassword({ className }: ProfileChangePasswordProps) {
   const { translate } = useTranslate();
 
   const schemaPassUser = useMemo(() => UserPasswordSchema(translate), [translate]);
@@ -95,7 +94,7 @@ export function ProfileChangePassword({ customer }: ProfileChangePasswordProps) 
   };
 
   return (
-    <Box>
+    <Box className={className}>
       <Form methods={methods} onSubmit={onSubmit}>
         <Card
           sx={{

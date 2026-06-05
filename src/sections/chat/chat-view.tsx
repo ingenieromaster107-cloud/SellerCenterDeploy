@@ -66,6 +66,7 @@ export function ChatView() {
     <DashboardContent
       maxWidth={false}
       sx={{ display: 'flex', flex: '1 1 auto', flexDirection: 'column' }}
+      className="chat-view"
     >
       <Typography variant="h4" sx={{ mb: { xs: 3, md: 5 } }}>
         {translate('chatModule.title')}

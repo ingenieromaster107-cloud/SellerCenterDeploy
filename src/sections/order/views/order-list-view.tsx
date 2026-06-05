@@ -130,7 +130,7 @@ export function OrderListView() {
   const notFound = (!dataFiltered.length && canReset) || !dataFiltered.length;
 
   return (
-    <HomeContent>
+    <HomeContent >
       <Box>
         <CustomBreadcrumbs
           heading={translate('breadcrumbs.orders.list')}
@@ -148,7 +148,7 @@ export function OrderListView() {
           sx={{ mt: 0 }}
         />
       ) : (
-        <Card>
+        <Card className="order-list-view">
           {/* Filters section */}
           <Tabs
             value={currentFilters.status}

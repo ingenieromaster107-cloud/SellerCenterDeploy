@@ -14,6 +14,7 @@ import { fDate, FORMAT_PATTERNS } from 'src/utils/format-time';
 import { useTranslate } from 'src/locales';
 
 import { Label } from 'src/components/label';
+import { SectionLoadingOverlay } from 'src/components/loading-screen';
 
 import { MovementsEmpty } from './movements-empty';
 import { MovementsTableToolbar } from './movements-table-toolbar';
@@ -60,6 +61,7 @@ type MovementsTableProps = {
   onDateRangeChange: (dateFrom: string, dateTo: string) => void;
   onExport: () => void;
   isExporting: boolean;
+  exportLimitExceeded: boolean;
 };
 
 export function MovementsTable({
@@ -74,6 +76,7 @@ export function MovementsTable({
   onDateRangeChange,
   onExport,
   isExporting,
+  exportLimitExceeded,
 }: MovementsTableProps) {
   const { translate } = useTranslate();
   const currentLang = localStorage.getItem('i18n_lang') as LangCode | null;
@@ -93,9 +96,10 @@ export function MovementsTable({
         onChange={onDateRangeChange}
         onExport={onExport}
         isExporting={isExporting}
+        exportLimitExceeded={exportLimitExceeded}
       />
     ),
-    [dateFrom, dateTo, onDateRangeChange, onExport, isExporting]
+    [dateFrom, dateTo, onDateRangeChange, onExport, isExporting, exportLimitExceeded]
   );
 
   // Scrollbar horizontal flotante: solo aparece mientras el nativo queda bajo el viewport.
@@ -271,6 +275,8 @@ export function MovementsTable({
 
   return (
     <Box ref={wrapperRef} sx={{ width: '100%', position: 'relative' }}>
+      <SectionLoadingOverlay open={isLoading} message={translate('movements.table.loading')} />
+
       <DataGrid<Movement>
         rows={rows}
         columns={columns}

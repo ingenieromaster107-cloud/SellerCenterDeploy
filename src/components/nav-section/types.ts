@@ -56,7 +56,13 @@ export type NavItemDataProps = Pick<NavItemStateProps, 'disabled'> & {
   caption?: string;
   deepMatch?: boolean;
   children?: NavItemDataProps[];
+  onboarding?: OnboardingProps;
 };
+
+export type OnboardingProps = {
+  active: boolean;
+  target: string;
+}
 
 export type NavItemProps = ButtonBaseProps &
   NavItemDataProps &
@@ -70,6 +76,7 @@ export type NavListProps = Pick<NavItemProps, 'render' | 'depth' | 'enabledRootR
   cssVars?: CSSObject;
   data: NavItemDataProps;
   slotProps?: NavSlotProps;
+  className?: string;
 };
 
 export type NavSubListProps = Omit<NavListProps, 'data'> & {
@@ -79,6 +86,7 @@ export type NavSubListProps = Omit<NavListProps, 'data'> & {
 export type NavGroupProps = Omit<NavListProps, 'data' | 'depth'> & {
   subheader?: string;
   items: NavItemDataProps[];
+  className?: string;
 };
 
 /**

@@ -47,7 +47,11 @@ export const StoreIdentity = ({ user, isNavMini = false, onSettingsClick }: Prop
         primaryBorder: { size: 120, sx: { color: 'primary.main' } },
       }}
     >
-      <Avatar alt={user?.firstname} sx={{ width: 1, height: 1 }}>
+      <Avatar 
+        alt={user?.firstname}
+        sx={{ width: 1, height: 1 }}       
+        className='sidebar-avatar'
+      >
         {getInitials(user)}
       </Avatar>
     </AnimateBorder>
@@ -75,10 +79,11 @@ export const StoreIdentity = ({ user, isNavMini = false, onSettingsClick }: Prop
         backgroundColor: (theme) => alpha(theme.palette.common.white, 0.04),
       }}
       width="90%"
+      className='store-resume'
     >
       {renderAvatar()}
 
-      <Box flexGrow={1} minWidth={0}>
+      <Box flexGrow={1} minWidth={0} className='store-identity-info'>
         <Tooltip title={`${user.firstname} ${user.lastname}`} placement="auto" arrow>
           <Typography variant="subtitle2" fontWeight={600} noWrap>
             {`${user.firstname} ${user.lastname}`}
@@ -95,6 +100,7 @@ export const StoreIdentity = ({ user, isNavMini = false, onSettingsClick }: Prop
       <IconButton
         size="small"
         onClick={handleSettingsClick}
+        className='sidebar-configurations-button'
         sx={{
           color: 'text.secondary',
           '&:hover': { color: 'primary.main' },

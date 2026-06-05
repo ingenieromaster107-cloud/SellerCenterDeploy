@@ -1,8 +1,8 @@
 'use client';
 
 import * as z from 'zod';
-import { useState } from 'react';
 import { useForm } from 'react-hook-form';
+import { useState, useEffect } from 'react';
 import { ClientError } from 'graphql-request';
 import { useBoolean } from 'minimal-shared/hooks';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -19,9 +19,10 @@ import InputAdornment from '@mui/material/InputAdornment';
 import FormControlLabel from '@mui/material/FormControlLabel';
 
 import { paths } from 'src/routes/paths';
-import { useRouter } from 'src/routes/hooks';
 import { RouterLink } from 'src/routes/components';
+import { useRouter, useSearchParams} from 'src/routes/hooks';
 
+import { useTourContext } from 'src/contexts/tour';
 import { ErrorCode, ERROR_MESSAGES } from 'src/lib';
 import { useTranslate } from 'src/locales/langs/i18n';
 
@@ -49,6 +50,15 @@ export const SignInSchema = z.object({
 export function SignInView() {
 
   const { translate } = useTranslate();
+
+    const { setRunTour } = useTourContext();
+  
+  const searchParams = useSearchParams();
+  useEffect(() => {
+    if (searchParams.get('newSeller') === 'true') {
+      setRunTour(true);
+    }
+  }, [searchParams, setRunTour]);
 
   const router = useRouter();
 

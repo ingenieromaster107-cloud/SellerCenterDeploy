@@ -10,6 +10,7 @@ const ROOTS = {
   ACADEMY: '/academy',
   CHAT: '/chat',
   MOVEMENTS: '/movements',
+  PROMOTIONS: '/promotions',
 };
 
 // ----------------------------------------------------------------------
@@ -82,6 +83,12 @@ export const paths = {
   },
   movements: {
     root: ROOTS.MOVEMENTS,
+  },
+  promotions: {
+    root: ROOTS.PROMOTIONS,
+    create: `${ROOTS.PROMOTIONS}/create`,
+    details: (id: number | string) => `${ROOTS.PROMOTIONS}/${id}`,
+    edit: (id: number | string) => `${ROOTS.PROMOTIONS}/${id}/edit`,
   },
   account: {
     root: '/account',

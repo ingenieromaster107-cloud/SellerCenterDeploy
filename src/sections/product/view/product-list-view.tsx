@@ -118,7 +118,7 @@ export function ProductListView() {
   const columns = useGetColumns({ onDeleteRow: handleDeleteRow, translate });
 
   return (
-    <HomeContent sx={{ flexGrow: 1, display: 'flex', flexDirection: 'column' }}>
+    <HomeContent sx={{ flexGrow: 1, display: 'flex', flexDirection: 'column' }} >
       <CustomBreadcrumbs
         heading={translate('sidebarMenu.myProducts.title')}
         links={[
@@ -145,6 +145,7 @@ export function ProductListView() {
           height: { xs: 800, md: '1px' },
           flexDirection: { md: 'column' },
         }}
+        className="product-list-view"
       >
         {isError ? (
           <ErrorContent

@@ -111,7 +111,7 @@ export default function FeedbackView() {
       </TableRow>
     );
   return (
-    <HomeContent>
+    <HomeContent className="feedback-view">
       <CustomBreadcrumbs
         heading={translate('feedbackModule.title')}
         links={[{ name: 'Home', href: paths.home.root }, { name: translate('feedbackModule.title') }]}

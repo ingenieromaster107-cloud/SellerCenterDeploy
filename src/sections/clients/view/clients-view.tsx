@@ -35,7 +35,7 @@ export default function ClientsView() {
   const { clientList, tableHead } = useClientList();
   const { translate } = useTranslate();
   return (
-    <HomeContent>
+    <HomeContent className="clients-view">
       {' '}
       <CustomBreadcrumbs
         heading={translate('clientsModule.title')}

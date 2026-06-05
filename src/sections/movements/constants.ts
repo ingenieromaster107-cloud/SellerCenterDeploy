@@ -1,3 +1,9 @@
+/** Max days between date_from and date_to (mirrors the backend limit). */
+export const MAX_RANGE_DAYS = 366;
+
+/** Backend CSV export row cap; above this the file is not returned. */
+export const EXPORT_MAX_ROWS = 5000;
+
 /** Movement categories as defined by the Magento backend enum. */
 export const MOVEMENT_CATEGORY = {
   SALE: 'VENTA',

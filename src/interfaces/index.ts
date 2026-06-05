@@ -1,5 +1,6 @@
 export * from './returns';
 export * from './account';
+export * from './promotions';
 export * from './user.interface';
 export * from './category.interface';
 export * from './product/product.interface';

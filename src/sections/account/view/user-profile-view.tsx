@@ -52,7 +52,7 @@ export function UserProfileView() {
       icon: <Iconify width={24} icon="solar:document-add-bold" />,
     },
     {
-      value: 'responseTemplate',  
+      value: 'responseTemplate',
       label: translate('customerProfileView.responseTemplate'),
       icon: <Iconify width={24} icon="custom:send-fill" />,
     },
@@ -85,7 +85,7 @@ export function UserProfileView() {
   }
 
   return (
-    <HomeContent sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
+    <HomeContent sx={{ display: 'flex', flexDirection: 'column', gap: 3 }} >
       <CustomBreadcrumbs
         heading={translate('customerProfileView.profile')}
         links={[
@@ -99,7 +99,7 @@ export function UserProfileView() {
         sx={{ mb: { xs: 3, md: 5 } }}
       />
 
-      <Card sx={{ height: 290, position: 'relative' }}>
+      <Card sx={{ height: 290, position: 'relative' }} className = 'profile-section'>
         <ProfileCover role="role" name={displayName} avatarUrl={undefined} coverUrl="coverUrl" />
 
         <Box
@@ -113,6 +113,7 @@ export function UserProfileView() {
             bgcolor: 'background.paper',
             justifyContent: { xs: 'center', md: 'flex-end' },
           }}
+          className='profile-section-options'
         >
           <Tabs value={selectedTab}>
             {NAV_ITEMS.map((tab) => (
@@ -129,11 +130,11 @@ export function UserProfileView() {
         </Box>
       </Card>
 
-      {selectedTab === '' && <ProfileHome  customer={customer} />}
-      {selectedTab === 'configuration' && <ProfileConfiguration customer={customer} />}
-      {selectedTab === 'security' && <ProfileChangePassword customer={customer} />}
-      {selectedTab === 'documents' && <ProfileDocuments />}
-      {selectedTab === 'responseTemplate' && <ProfileTemplates />}
+      {selectedTab === '' && <ProfileHome className="profile-tab-profile" customer={customer} />}
+      {selectedTab === 'configuration' && <ProfileConfiguration className="profile-tab-configuration" customer={customer} />}
+      {selectedTab === 'security' && <ProfileChangePassword className="profile-tab-security" />}
+      {selectedTab === 'documents' && <ProfileDocuments className="profile-tab-documents" />}
+      {selectedTab === 'responseTemplate' && <ProfileTemplates className="profile-tab-response-template" />}
     </HomeContent>
   );
 }

@@ -41,9 +41,10 @@ type Payload = {
 type Props = {
   onSubmit?: (payload: Payload) => Promise<void> | void;
   sx?: SxProps<Theme>;
+  className?: string;
 };
 
-export function ProfileDocuments({ onSubmit, sx, ...other }: Props) {
+export function ProfileDocuments({ onSubmit, sx, className, ...other }: Props) {
   const { translate } = useTranslate();
   const cedulaRef = useRef<HTMLInputElement | null>(null);
   const rutRef = useRef<HTMLInputElement | null>(null);
@@ -162,6 +163,7 @@ export function ProfileDocuments({ onSubmit, sx, ...other }: Props) {
 
   return (
     <Card
+      className={className}
       sx={[
         { mt: 3 },
         ...(Array.isArray(sx) ? sx : [sx]),

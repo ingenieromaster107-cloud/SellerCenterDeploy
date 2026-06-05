@@ -82,6 +82,20 @@ const ChatView = lazy(() =>
 const MovementsView = lazy(() =>
   import('src/sections/movements/view').then((m) => ({ default: m.MovementsView }))
 );
+// Promotions
+const PromotionListView = lazy(() =>
+  import('src/sections/promotions/view').then((m) => ({ default: m.PromotionListView }))
+);
+const PromotionCreateView = lazy(() =>
+  import('src/sections/promotions/view').then((m) => ({ default: m.PromotionCreateView }))
+);
+const PromotionDetailClient = lazy(() =>
+  import('src/sections/promotions/promotion-detail-client').then((m) => ({ default: m.default }))
+);
+const PromotionEditClient = lazy(() =>
+  import('src/sections/promotions/promotion-edit-client').then((m) => ({ default: m.default }))
+);
+
 // Account
 const UserProfileView = lazy(() =>
   import('src/sections/account/view').then((m) => ({ default: m.UserProfileView }))
@@ -148,6 +162,20 @@ function AcademyCoursePage() {
   const { courseId } = useParams() as { courseId?: string };
   if (!courseId) return <Navigate to="/404" replace />;
   return <AcademyCourseView courseId={courseId} />;
+}
+
+function PromotionDetailsPage() {
+  const { id } = useParams() as { id?: string };
+  const promotionId = id ? Number(id) : Number.NaN;
+  if (!Number.isFinite(promotionId)) return <Navigate to="/404" replace />;
+  return <PromotionDetailClient promotionId={promotionId} />;
+}
+
+function PromotionEditPage() {
+  const { id } = useParams() as { id?: string };
+  const promotionId = id ? Number(id) : Number.NaN;
+  if (!Number.isFinite(promotionId)) return <Navigate to="/404" replace />;
+  return <PromotionEditClient promotionId={promotionId} />;
 }
 
 function AcademyLessonPage() {
@@ -351,6 +379,13 @@ export const routesSection = [
 
       // Movements
       { path: 'movements', element: <MovementsView /> },
+
+      // Promotions
+      { path: 'promotions', element: <PromotionListView /> },
+      { path: 'promotions/create', element: <PromotionCreateView /> },
+      { path: 'promotions/:id', element: <PromotionDetailsPage /> },
+      { path: 'promotions/:id/edit', element: <PromotionEditPage /> },
+
       // Account
       { path: 'account', element: <UserProfileView /> },
       { path: 'account/subaccount', element: <SubAccountListView /> },
