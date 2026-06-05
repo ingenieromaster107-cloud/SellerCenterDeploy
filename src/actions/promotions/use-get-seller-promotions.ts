@@ -34,7 +34,6 @@ export function useGetSellerPromotions(variables: Variables = {}) {
         currentPage,
         filter,
       }),
-    placeholderData: (previousData) => previousData,
   });
 
   const items = data?.sellerPromotions?.items ?? [];

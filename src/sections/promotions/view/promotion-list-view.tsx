@@ -44,8 +44,8 @@ import { ErrorContent } from 'src/components/error-content';
 import { CustomBreadcrumbs } from 'src/components/custom-breadcrumbs';
 import {
   useTable,
-  emptyRows,
   TableNoData,
+  getComparator,
   TableSkeleton,
   TableEmptyRows,
   TableHeadCustom,
@@ -70,7 +70,7 @@ export function PromotionListView() {
 
   const [searchValue, setSearchValue] = useState('');
   const [statusTab, setStatusTab] = useState<StatusTab>('all');
-  const [paginationModel, setPaginationModel] = useState({ page: 0, pageSize: 20 });
+  const [paginationModel, setPaginationModel] = useState({ page: 0, pageSize: 10 });
 
   const [confirmDialog, setConfirmDialog] = useState<{
     open: boolean;
@@ -82,11 +82,13 @@ export function PromotionListView() {
 
   const filter = statusTab !== 'all' ? { status: statusTab } : undefined;
 
-  const { items, totalCount, isLoading, isError } = useGetSellerPromotions({
+  const { items, totalCount, isLoading, isFetching, isError } = useGetSellerPromotions({
     pageSize: paginationModel.pageSize,
     currentPage: paginationModel.page + 1,
     filter,
   });
+
+  const isTableLoading = isLoading || isFetching;
 
   const { mutate: deletePromotion, isPending: isDeleting } = useDeleteSellerPromotion({
     onSuccess: () => {
@@ -118,14 +120,16 @@ export function PromotionListView() {
     },
   });
 
-  const filteredItems = items.filter((row) => {
-    if (!searchValue) return true;
-    const q = searchValue.toLowerCase();
-    return (
-      row.name.toLowerCase().includes(q) ||
-      (row.coupon_code?.toLowerCase() ?? '').includes(q)
-    );
-  });
+  const filteredItems = items
+    .filter((row) => {
+      if (!searchValue) return true;
+      const q = searchValue.toLowerCase();
+      return (
+        row.name.toLowerCase().includes(q) ||
+        (row.coupon_code?.toLowerCase() ?? '').includes(q)
+      );
+    })
+    .sort(getComparator(table.order, table.orderBy) as (a: any, b: any) => number);
 
   const closeConfirmDialog = useCallback(() => {
     setConfirmDialog({ open: false, type: null, promotionId: null });
@@ -272,37 +276,30 @@ export function PromotionListView() {
               />
 
               <TableBody>
-                {isLoading
+                {isTableLoading
                   ? [...Array(paginationModel.pageSize)].map((_, i) => (
                       <TableSkeleton key={i} sx={{ height: 68 }} />
                     ))
-                  : filteredItems
-                      .slice(
-                        paginationModel.page * paginationModel.pageSize,
-                        paginationModel.page * paginationModel.pageSize + paginationModel.pageSize
-                      )
-                      .map((row) => (
-                        <PromotionTableRow
-                          key={row.entity_id}
-                          row={row}
-                          onView={(id) => router.push(paths.promotions.details(id))}
-                          onEdit={(id) => router.push(paths.promotions.edit(id))}
-                          onPause={handleOpenPauseDialog}
-                          onActivate={handleOpenActivateDialog}
-                          onDelete={handleOpenDeleteDialog}
-                        />
-                      ))}
+                  : filteredItems.map((row) => (
+                      <PromotionTableRow
+                        key={row.entity_id}
+                        row={row}
+                        onView={(id) => router.push(paths.promotions.details(id))}
+                        onEdit={(id) => router.push(paths.promotions.edit(id))}
+                        onPause={handleOpenPauseDialog}
+                        onActivate={handleOpenActivateDialog}
+                        onDelete={handleOpenDeleteDialog}
+                      />
+                    ))}
 
-                <TableEmptyRows
-                  height={68}
-                  emptyRows={emptyRows(
-                    paginationModel.page,
-                    paginationModel.pageSize,
-                    filteredItems.length
-                  )}
-                />
+                {!isTableLoading && (
+                  <TableEmptyRows
+                    height={68}
+                    emptyRows={Math.max(0, paginationModel.pageSize - filteredItems.length)}
+                  />
+                )}
 
-                <TableNoData notFound={!isLoading && filteredItems.length === 0} />
+                <TableNoData notFound={!isTableLoading && filteredItems.length === 0} />
               </TableBody>
             </Table>
           </Scrollbar>
