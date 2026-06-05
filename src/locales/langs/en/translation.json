@@ -1129,7 +1129,9 @@
         "discountAmountMax": "Percentage cannot exceed 100",
         "couponCodeRequired": "Coupon code is required when mode is Coupon",
         "fromDateRequired": "Start date is required",
-        "toDateAfterFrom": "End date must be after start date"
+        "fromDatePast": "Start date cannot be earlier than today",
+        "toDateAfterFrom": "End date must be after start date",
+        "toDatePast": "End date cannot be earlier than today"
       },
       "actions": {
         "save": "Save Promotion",

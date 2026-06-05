@@ -1130,7 +1130,9 @@
         "discountAmountMax": "El porcentaje no puede ser mayor a 100",
         "couponCodeRequired": "El código de cupón es obligatorio cuando el modo es Cupón",
         "fromDateRequired": "La fecha de inicio es obligatoria",
-        "toDateAfterFrom": "La fecha de fin debe ser posterior a la de inicio"
+        "fromDatePast": "La fecha de inicio no puede ser anterior al día de hoy",
+        "toDateAfterFrom": "La fecha de fin debe ser posterior a la de inicio",
+        "toDatePast": "La fecha de fin no puede ser anterior al día de hoy"
       },
       "actions": {
         "save": "Guardar Promoción",

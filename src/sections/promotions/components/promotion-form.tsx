@@ -46,7 +46,8 @@ const buildSchema = (translate: (k: string) => string) =>
       }),
       discount_amount: z
         .number({ error: translate('promotionsModule.form.validation.discountAmountPositive') })
-        .positive(translate('promotionsModule.form.validation.discountAmountPositive')),
+        .positive(translate('promotionsModule.form.validation.discountAmountPositive'))
+        .optional(),
       coupon_code: z.string().optional(),
       from_date: z.string().min(1, translate('promotionsModule.form.validation.fromDateRequired')),
       to_date: z.string().optional(),
@@ -66,11 +67,27 @@ const buildSchema = (translate: (k: string) => string) =>
           message: translate('promotionsModule.form.validation.couponCodeRequired'),
         });
       }
-      if (data.discount_type === 'BY_PERCENT' && data.discount_amount > 100) {
+      if (data.discount_type === 'BY_PERCENT' && (data.discount_amount ?? 0) > 100) {
         ctx.addIssue({
           code: z.ZodIssueCode.custom,
           path: ['discount_amount'],
           message: translate('promotionsModule.form.validation.discountAmountMax'),
+        });
+      }
+      const today = dayjs().startOf('day').format('YYYY-MM-DD');
+
+      if (data.from_date && data.from_date < today) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          path: ['from_date'],
+          message: translate('promotionsModule.form.validation.fromDatePast'),
+        });
+      }
+      if (data.to_date && data.to_date < today) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          path: ['to_date'],
+          message: translate('promotionsModule.form.validation.toDatePast'),
         });
       }
       if (data.to_date && data.from_date && data.to_date < data.from_date) {
@@ -87,7 +104,7 @@ type FormValues = {
   description?: string;
   discount_type: SellerPromotionDiscountType;
   apply_type: SellerPromotionApplyType;
-  discount_amount: number;
+  discount_amount?: number;
   coupon_code?: string;
   from_date: string;
   to_date?: string;
@@ -134,7 +151,7 @@ export function PromotionForm({ onSubmit, onCancel, isLoading = false, mode = 'c
       description: initialValues?.description ?? '',
       discount_type: initialValues?.discount_type ?? 'BY_PERCENT',
       apply_type: initialValues?.apply_type ?? 'AUTOMATIC',
-      discount_amount: initialValues?.discount_amount ?? 0,
+      discount_amount: initialValues?.discount_amount,
       coupon_code: initialValues?.coupon_code ?? '',
       from_date: initialValues?.from_date ?? '',
       to_date: initialValues?.to_date ?? '',
@@ -154,7 +171,7 @@ export function PromotionForm({ onSubmit, onCancel, isLoading = false, mode = 'c
       description: values.description || undefined,
       discount_type: values.discount_type,
       apply_type: values.apply_type,
-      discount_amount: values.discount_amount,
+      discount_amount: values.discount_amount!,
       coupon_code: values.coupon_code || undefined,
       from_date: values.from_date,
       to_date: values.to_date || undefined,
@@ -281,11 +298,16 @@ export function PromotionForm({ onSubmit, onCancel, isLoading = false, mode = 'c
                       control={control}
                       render={({ field }) => (
                         <TextField
-                          {...field}
-                          onChange={(e) => field.onChange(parseFloat(e.target.value) || 0)}
+                          value={field.value ?? ''}
+                          onChange={(e) =>
+                            field.onChange(e.target.value ? parseFloat(e.target.value) : undefined)
+                          }
+                          onBlur={field.onBlur}
+                          name={field.name}
                           fullWidth
                           type="number"
                           label={t('promotionsModule.form.fields.discountAmount')}
+                          placeholder={discountType === 'BY_PERCENT' ? 'Ej: 15' : 'Ej: 5000'}
                           error={!!errors.discount_amount}
                           helperText={
                             errors.discount_amount?.message ||
@@ -411,6 +433,7 @@ export function PromotionForm({ onSubmit, onCancel, isLoading = false, mode = 'c
                           field.onChange(val ? val.format('YYYY-MM-DD') : '')
                         }
                         format="DD/MM/YYYY"
+                        minDate={dayjs()}
                         slotProps={{
                           textField: {
                             fullWidth: true,
@@ -433,6 +456,7 @@ export function PromotionForm({ onSubmit, onCancel, isLoading = false, mode = 'c
                           field.onChange(val ? val.format('YYYY-MM-DD') : '')
                         }
                         format="DD/MM/YYYY"
+                        minDate={dayjs()}
                         slotProps={{
                           textField: {
                             fullWidth: true,
