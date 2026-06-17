@@ -8,6 +8,8 @@ import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 
+import { FORMAT_PATTERNS } from 'src/utils/format-time';
+
 import { useTranslate } from 'src/locales';
 
 import { Iconify } from 'src/components/iconify';
@@ -24,7 +26,7 @@ type MovementsToolbarProps = {
 };
 
 function isoFromDayjs(value: Dayjs | null): string | null {
-  return value && value.isValid() ? value.format('YYYY-MM-DD') : null;
+  return value && value.isValid() ? value.format(FORMAT_PATTERNS.iso.date) : null;
 }
 
 export function MovementsToolbar({
@@ -91,7 +93,7 @@ export function MovementsToolbar({
         label={translate('movements.toolbar.dateFrom')}
         value={localFrom}
         onChange={handleFromChange}
-        format="YYYY-MM-DD"
+        format={FORMAT_PATTERNS.iso.date}
         minDate={fromMinDate}
         maxDate={localTo?.isValid() ? localTo : undefined}
         disableFuture
@@ -102,7 +104,7 @@ export function MovementsToolbar({
         label={translate('movements.toolbar.dateTo')}
         value={localTo}
         onChange={handleToChange}
-        format="YYYY-MM-DD"
+        format={FORMAT_PATTERNS.iso.date}
         minDate={localFrom?.isValid() ? localFrom : undefined}
         maxDate={toMaxDate}
         disableFuture

@@ -491,9 +491,23 @@
         "name": "Nombre",
         "email": "Correo electrónico",
         "address": "Dirección",
-        "clientSince": "Cliente desde"
+        "clientSince": "Cliente desde",
+        "ordersCount": "Órdenes",
+        "classification": "Clasificación"
       },
       "searchFilter": "Buscar por nombre o correo..."
+    },
+    "loyalty": {
+      "cards": {
+        "total": "Total de clientes",
+        "new": "Clientes nuevos",
+        "frequent": "Clientes frecuentes",
+        "loyaltyRate": "Tasa de lealtad"
+      },
+      "classification": {
+        "new": "Nuevo",
+        "frequent": "Frecuente"
+      }
     }
   },
   "customerProfileView": {
@@ -564,6 +578,7 @@
   },
   "dashboardModule": {
     "summary": {
+      "title": "Resumen general",
       "subtitle": "Estado general de tu operación",
       "upcoming": "Próximamente",
       "detail": "Haz clic para ver detalle",
@@ -641,6 +656,39 @@
       },
       "body": {
         "last": "Últimos"
+      }
+    },
+    "productRanking": {
+      "title": "Ranking de publicaciones",
+      "columns": {
+        "product": "Producto",
+        "sales": "Ventas",
+        "units": "Unidades",
+        "visits": "Visitas",
+        "participation": "Participación"
+      }
+    },
+    "kpiMetrics": {
+      "title": "Métricas clave",
+      "compare": "Comparar con otro periodo",
+      "period": "Periodo",
+      "periodA": "Periodo A",
+      "periodB": "Periodo B",
+      "vs": "VS",
+      "above": "por encima del",
+      "below": "por debajo del",
+      "noChange": "Sin variación entre Periodo A y Periodo B",
+      "differentDuration": "Periodos de distinta duración",
+      "days": "días",
+      "dailyAverage": "Promedio diario",
+      "new": "Nuevo",
+      "metrics": {
+        "grossSales": "Ventas brutas",
+        "unitsSold": "Unidades vendidas",
+        "averagePrice": "Precio promedio",
+        "visits": "Visitas",
+        "conversion": "Conversión",
+        "cancellationRate": "Tasa de cancelación"
       }
     },
     "body": {

@@ -8,19 +8,23 @@ import { useState, useCallback } from 'react';
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import Chip from '@mui/material/Chip';
-import Grid from '@mui/material/Grid';
 import Stack from '@mui/material/Stack';
+import Switch from '@mui/material/Switch';
 import Avatar from '@mui/material/Avatar';
+import Divider from '@mui/material/Divider';
 import Typography from '@mui/material/Typography';
 import CardActionArea from '@mui/material/CardActionArea';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import FormControlLabel from '@mui/material/FormControlLabel';
 
 import { paths } from 'src/routes/paths';
 import { RouterLink } from 'src/routes/components';
 
+import { useSellerKpiMetrics } from 'src/hooks/dashboard/use-seller-kpi-metrics';
 import { useSellerSummaryDashboard } from 'src/hooks/dashboard/use-seller-summary-dashboard';
 
 import { fNumber, fCurrency } from 'src/utils/format-number';
+import { fDate, FORMAT_PATTERNS } from 'src/utils/format-time';
 
 import { useTranslate } from 'src/locales';
 import { HomeContent } from 'src/layouts/home';
@@ -28,13 +32,16 @@ import { HomeContent } from 'src/layouts/home';
 import { Iconify } from 'src/components/iconify';
 import { CustomBreadcrumbs } from 'src/components/custom-breadcrumbs';
 
+import { KPI_METRICS } from '../constants';
+import { KpiMetricCard } from './kpi-metric-card';
+
 // ----------------------------------------------------------------------
 
 export function DashboardSummaryView() {
   const { translate } = useTranslate();
 
   const today = dayjs();
-  const defaultFrom = today.subtract(2, 'year');
+  const defaultFrom = today.subtract(1, 'month');
 
   const [dateFilters, setDateFilters] = useState<{ fromDate: Dayjs | null; toDate: Dayjs | null }>({
     fromDate: defaultFrom,
@@ -43,11 +50,50 @@ export function DashboardSummaryView() {
 
   const [dateError, setDateError] = useState(false);
   const [appliedDateRange, setAppliedDateRange] = useState({
-    fromDate: defaultFrom.format('YYYY-MM-DD'),
-    toDate: today.format('YYYY-MM-DD'),
+    fromDate: defaultFrom.format(FORMAT_PATTERNS.iso.date),
+    toDate: today.format(FORMAT_PATTERNS.iso.date),
   });
 
   const { summary, hasLiveData, isLoading } = useSellerSummaryDashboard(appliedDateRange);
+
+  const [compareEnabled, setCompareEnabled] = useState(false);
+  const [compareFilters, setCompareFilters] = useState<{ fromDate: Dayjs | null; toDate: Dayjs | null }>({
+    fromDate: defaultFrom.subtract(1, 'month'),
+    toDate: defaultFrom.subtract(1, 'day'),
+  });
+
+  const compareRange =
+    compareEnabled && compareFilters.fromDate && compareFilters.toDate
+      ? {
+          compareFromDate: compareFilters.fromDate.format(FORMAT_PATTERNS.iso.date),
+          compareToDate: compareFilters.toDate.format(FORMAT_PATTERNS.iso.date),
+        }
+      : { compareFromDate: null, compareToDate: null };
+
+  const { data: kpiData, hasComparison, isLoading: isKpiLoading } = useSellerKpiMetrics({
+    ...appliedDateRange,
+    ...compareRange,
+  });
+
+  const kpiPeriodLabel = kpiData
+    ? `${fDate(kpiData.period_from, FORMAT_PATTERNS.split.date)} – ${fDate(kpiData.period_to, FORMAT_PATTERNS.split.date)}`
+    : '';
+
+  const kpiCompareLabel =
+    hasComparison && kpiData?.compare_from && kpiData?.compare_to
+      ? `${fDate(kpiData.compare_from, FORMAT_PATTERNS.split.date)} – ${fDate(kpiData.compare_to, FORMAT_PATTERNS.split.date)}`
+      : '';
+
+  const kpiPeriodDays = kpiData
+    ? dayjs(kpiData.period_to).diff(dayjs(kpiData.period_from), 'day') + 1
+    : 0;
+
+  const kpiCompareDays =
+    hasComparison && kpiData?.compare_from && kpiData?.compare_to
+      ? dayjs(kpiData.compare_to).diff(dayjs(kpiData.compare_from), 'day') + 1
+      : 0;
+
+  const periodALabel = `${fDate(appliedDateRange.fromDate, FORMAT_PATTERNS.split.date)} – ${fDate(appliedDateRange.toDate, FORMAT_PATTERNS.split.date)}`;
 
   const handleStartDate = useCallback((newValue: Dayjs | null) => {
     if (!newValue) return;
@@ -59,8 +105,8 @@ export function DashboardSummaryView() {
 
       if (!hasInvalidRange && next.toDate) {
         setAppliedDateRange({
-          fromDate: next.fromDate.format('YYYY-MM-DD'),
-          toDate: next.toDate.format('YYYY-MM-DD'),
+          fromDate: next.fromDate.format(FORMAT_PATTERNS.iso.date),
+          toDate: next.toDate.format(FORMAT_PATTERNS.iso.date),
         });
       }
 
@@ -78,8 +124,8 @@ export function DashboardSummaryView() {
 
       if (!hasInvalidRange && next.fromDate) {
         setAppliedDateRange({
-          fromDate: next.fromDate.format('YYYY-MM-DD'),
-          toDate: next.toDate.format('YYYY-MM-DD'),
+          fromDate: next.fromDate.format(FORMAT_PATTERNS.iso.date),
+          toDate: next.toDate.format(FORMAT_PATTERNS.iso.date),
         });
       }
 
@@ -116,11 +162,6 @@ export function DashboardSummaryView() {
 
   const showPlaceholder = isLoading || !hasLiveData;
   const summaryData = summary.data ?? fallbackSummaryData;
-  const selectedDays = Math.max(
-    dayjs(appliedDateRange.toDate).diff(dayjs(appliedDateRange.fromDate), 'day') + 1,
-    1
-  );
-  const selectedDaysLabel = `Últimos ${selectedDays} ${selectedDays === 1 ? 'día' : 'días'}`;
 
   const summaryCards = [
     {
@@ -155,27 +196,6 @@ export function DashboardSummaryView() {
     },
   ] as const;
 
-  const topMetrics = [
-    {
-      title: translate('dashboardModule.summary.metrics.grossSales.title'),
-      value: showPlaceholder ? '$ 0' : fCurrency(summaryData.sales_account.total_sales),
-      subtitle: selectedDaysLabel,
-      icon: 'solar:tag-horizontal-bold-duotone',
-    },
-    {
-      title: translate('dashboardModule.summary.metrics.orders.title'),
-      value: showPlaceholder ? '0' : fNumber(summaryData.orders_account.created_orders),
-      subtitle: translate('dashboardModule.summary.metrics.orders.subtitle'),
-      icon: 'solar:cart-3-bold',
-    },
-    {
-      title: translate('dashboardModule.summary.metrics.products.title'),
-      value: showPlaceholder ? '0' : fNumber(summaryData.products_account.created_products),
-      subtitle: translate('dashboardModule.summary.metrics.products.subtitle'),
-      icon: 'solar:list-bold',
-    },
-  ] as const;
-
   return (
     <HomeContent>
       <CustomBreadcrumbs
@@ -188,81 +208,149 @@ export function DashboardSummaryView() {
       />
 
       <Card variant="outlined" sx={{ p: { xs: 2, md: 2.25 }, mb: 2.5 }} className="dashboard-summary-card">
-        <Grid container spacing={2} alignItems="center">
-          <Grid
-            size={{ xs: 12, md: 12, lg: 4 }}
-            sx={{
-              borderBottom: { xs: (theme) => `1px solid ${theme.palette.divider}`, lg: 0 },
-              pb: { xs: 2, lg: 0 },
-              mb: { xs: 1, lg: 0 },
-              borderRight: { lg: (theme) => `1px solid ${theme.palette.divider}` },
-              pr: { lg: 2.5 },
-            }}
+        <Stack spacing={2}>
+          <FormControlLabel
+            control={
+              <Switch
+                checked={compareEnabled}
+                onChange={(event) => setCompareEnabled(event.target.checked)}
+              />
+            }
+            label={translate('dashboardModule.kpiMetrics.compare')}
+          />
+
+          <Stack
+            direction={{ xs: 'column', md: 'row' }}
+            spacing={{ xs: 2, md: 3 }}
+            divider={
+              compareEnabled ? (
+                <Divider
+                  orientation="vertical"
+                  flexItem
+                  sx={{ display: { xs: 'none', md: 'block' } }}
+                />
+              ) : undefined
+            }
           >
-            <Stack spacing={1.25} sx={{ width: 1 }}>
-              <DatePicker
-                label={translate('dashboardModule.summary.filters.initialDate')}
-                value={dateFilters.fromDate}
-                onChange={handleStartDate}
-                format="DD/MM/YYYY"
-                slotProps={{
-                  textField: {
-                    size: 'small',
-                  },
-                }}
-                sx={{ width: 1 }}
-              />
+            <Stack spacing={1}>
+              {compareEnabled && (
+                <Typography variant="subtitle2">
+                  {translate('dashboardModule.kpiMetrics.periodA')}
+                </Typography>
+              )}
 
-              <DatePicker
-                label={translate('dashboardModule.summary.filters.finalDate')}
-                value={dateFilters.toDate}
-                onChange={handleEndDate}
-                format="DD/MM/YYYY"
-                slotProps={{
-                  textField: {
-                    size: 'small',
-                    error: dateError,
-                    helperText: dateError ? translate('dashboardModule.summary.filters.invalidRange') : null,
-                  },
-                }}
-                sx={{ width: 1 }}
-              />
+              <Stack direction={{ xs: 'column', sm: 'row' }} spacing={1.5}>
+                <DatePicker
+                  label={translate('dashboardModule.summary.filters.initialDate')}
+                  value={dateFilters.fromDate}
+                  onChange={handleStartDate}
+                  format="DD/MM/YYYY"
+                  slotProps={{
+                    textField: {
+                      size: 'small',
+                    },
+                  }}
+                  sx={{ width: { xs: 1, sm: 240 } }}
+                />
+
+                <DatePicker
+                  label={translate('dashboardModule.summary.filters.finalDate')}
+                  value={dateFilters.toDate}
+                  onChange={handleEndDate}
+                  format="DD/MM/YYYY"
+                  slotProps={{
+                    textField: {
+                      size: 'small',
+                      error: dateError,
+                      helperText: dateError ? translate('dashboardModule.summary.filters.invalidRange') : null,
+                    },
+                  }}
+                  sx={{ width: { xs: 1, sm: 240 } }}
+                />
+              </Stack>
             </Stack>
-          </Grid>
 
-          <Grid size={{ xs: 12, md: 12, lg: 8 }}>
-            <Grid container rowSpacing={2} columnSpacing={{ xs: 2, md: 2, lg: 1 }}>
-              {topMetrics.map((metric) => (
-                <Grid key={metric.title} size={{ xs: 12, md: 4 }} sx={{ display: 'flex', alignItems: 'center' }}>
-                  <Stack direction="row" spacing={1.5} alignItems="center">
-                    <Avatar
-                      sx={{
-                        width: 36,
-                        height: 36,
-                        bgcolor: 'primary.lighter',
-                        color: 'primary.main',
-                      }}
-                    >
-                      <Iconify icon={metric.icon} width={18} />
-                    </Avatar>
-                    <Stack spacing={0.25}>
-                      <Typography variant="caption" color="text.secondary">
-                        {metric.title}
-                      </Typography>
-                      <Typography variant="h5" sx={{ fontWeight: 700 }}>
-                        {metric.value}
-                      </Typography>
-                      <Typography variant="caption" color="text.secondary">
-                        {metric.subtitle}
-                      </Typography>
-                    </Stack>
-                  </Stack>
-                </Grid>
-              ))}
-            </Grid>
-          </Grid>
-        </Grid>
+            {compareEnabled && (
+              <Stack spacing={1}>
+                <Typography variant="subtitle2">
+                  {translate('dashboardModule.kpiMetrics.periodB')}
+                </Typography>
+
+                <Stack direction={{ xs: 'column', sm: 'row' }} spacing={1.5}>
+                  <DatePicker
+                    label={translate('dashboardModule.summary.filters.initialDate')}
+                    value={compareFilters.fromDate}
+                    onChange={(newValue) =>
+                      setCompareFilters((prev) => ({ ...prev, fromDate: newValue }))
+                    }
+                    format="DD/MM/YYYY"
+                    slotProps={{ textField: { size: 'small' } }}
+                    sx={{ width: { xs: 1, sm: 240 } }}
+                  />
+
+                  <DatePicker
+                    label={translate('dashboardModule.summary.filters.finalDate')}
+                    value={compareFilters.toDate}
+                    onChange={(newValue) =>
+                      setCompareFilters((prev) => ({ ...prev, toDate: newValue }))
+                    }
+                    format="DD/MM/YYYY"
+                    slotProps={{ textField: { size: 'small' } }}
+                    sx={{ width: { xs: 1, sm: 240 } }}
+                  />
+                </Stack>
+              </Stack>
+            )}
+          </Stack>
+        </Stack>
       </Card>
+
+      <Box sx={{ mb: 2 }}>
+        <Typography variant="h6">{translate('dashboardModule.kpiMetrics.title')}</Typography>
+
+        {kpiData && (
+          <Typography variant="caption" color="text.secondary">
+            {kpiCompareLabel
+              ? `${translate('dashboardModule.kpiMetrics.periodA')}: ${kpiPeriodLabel} · ${translate('dashboardModule.kpiMetrics.periodB')}: ${kpiCompareLabel}`
+              : `${translate('dashboardModule.kpiMetrics.period')}: ${kpiPeriodLabel}`}
+          </Typography>
+        )}
+      </Box>
+
+      <Box
+        sx={{
+          mb: 2.5,
+          display: 'grid',
+          gap: { xs: 2, md: 2.5 },
+          gridTemplateColumns: {
+            xs: 'repeat(1, minmax(0, 1fr))',
+            sm: 'repeat(2, minmax(0, 1fr))',
+            lg: 'repeat(3, minmax(0, 1fr))',
+          },
+        }}
+      >
+        {KPI_METRICS.map((metric) => (
+          <KpiMetricCard
+            key={metric.key}
+            title={translate(metric.titleKey)}
+            metric={kpiData?.[metric.key]}
+            format={metric.format}
+            additive={metric.additive}
+            hasComparison={hasComparison}
+            isLoading={isKpiLoading}
+            periodLabel={kpiPeriodLabel}
+            periodDays={kpiPeriodDays}
+            compareDays={kpiCompareDays}
+          />
+        ))}
+      </Box>
+
+      <Box sx={{ mb: 2 }}>
+        <Typography variant="h6">{translate('dashboardModule.summary.title')}</Typography>
+        <Typography variant="caption" color="text.secondary">
+          {`${translate('dashboardModule.kpiMetrics.periodA')}: ${periodALabel}`}
+        </Typography>
+      </Box>
 
       <Box
         sx={{

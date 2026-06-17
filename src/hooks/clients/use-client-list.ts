@@ -16,6 +16,8 @@ export function useClientList() {
     { id: 'email', label: `${translate('clientsModule.table.columns.email')}`, width: 150 },
     { id: 'address', label: `${translate('clientsModule.table.columns.address')}`, width: 150 },
     { id: 'clientSince', label: `${translate('clientsModule.table.columns.clientSince')}`, width: 150 },
+    { id: 'ordersCount', label: `${translate('clientsModule.table.columns.ordersCount')}`, width: 120 },
+    { id: 'classification', label: `${translate('clientsModule.table.columns.classification')}`, width: 140 },
   ];
 
 

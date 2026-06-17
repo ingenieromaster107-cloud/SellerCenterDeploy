@@ -6,14 +6,12 @@ import type {
 
 import { useState, useCallback } from 'react';
 
-import { today, startOfMonth } from 'src/utils/format-time';
-
-const ISO_DATE = 'YYYY-MM-DD';
+import { today, startOfMonth, FORMAT_PATTERNS } from 'src/utils/format-time';
 
 export function useMovementsFilters() {
   const [filters, setFilters] = useState<MovementsFilters>({
-    dateFrom: startOfMonth(ISO_DATE),
-    dateTo: today(ISO_DATE),
+    dateFrom: startOfMonth(FORMAT_PATTERNS.iso.date),
+    dateTo: today(FORMAT_PATTERNS.iso.date),
     categories: [],
   });
 

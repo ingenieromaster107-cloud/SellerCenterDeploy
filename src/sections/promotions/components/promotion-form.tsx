@@ -29,6 +29,8 @@ import InputAdornment from '@mui/material/InputAdornment';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import FormControlLabel from '@mui/material/FormControlLabel';
 
+import { FORMAT_PATTERNS } from 'src/utils/format-time';
+
 import { useTranslate } from 'src/locales';
 
 // ----------------------------------------------------------------------
@@ -74,7 +76,7 @@ const buildSchema = (translate: (k: string) => string) =>
           message: translate('promotionsModule.form.validation.discountAmountMax'),
         });
       }
-      const today = dayjs().startOf('day').format('YYYY-MM-DD');
+      const today = dayjs().startOf('day').format(FORMAT_PATTERNS.iso.date);
 
       if (data.from_date && data.from_date < today) {
         ctx.addIssue({
@@ -430,7 +432,7 @@ export function PromotionForm({ onSubmit, onCancel, isLoading = false, mode = 'c
                         label={t('promotionsModule.form.fields.fromDate')}
                         value={field.value ? dayjs(field.value) : null}
                         onChange={(val: Dayjs | null) =>
-                          field.onChange(val ? val.format('YYYY-MM-DD') : '')
+                          field.onChange(val ? val.format(FORMAT_PATTERNS.iso.date) : '')
                         }
                         format="DD/MM/YYYY"
                         minDate={dayjs()}
@@ -453,7 +455,7 @@ export function PromotionForm({ onSubmit, onCancel, isLoading = false, mode = 'c
                         label={t('promotionsModule.form.fields.toDate')}
                         value={field.value ? dayjs(field.value) : null}
                         onChange={(val: Dayjs | null) =>
-                          field.onChange(val ? val.format('YYYY-MM-DD') : '')
+                          field.onChange(val ? val.format(FORMAT_PATTERNS.iso.date) : '')
                         }
                         format="DD/MM/YYYY"
                         minDate={dayjs()}

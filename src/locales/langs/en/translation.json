@@ -491,9 +491,23 @@
         "name": "Name",
         "email": "Email",
         "address": "Address",
-        "clientSince": "Client Since"
+        "clientSince": "Client Since",
+        "ordersCount": "Orders",
+        "classification": "Classification"
       },
       "searchFilter": "Search by name or email..."
+    },
+    "loyalty": {
+      "cards": {
+        "total": "Total customers",
+        "new": "New customers",
+        "frequent": "Frequent customers",
+        "loyaltyRate": "Loyalty rate"
+      },
+      "classification": {
+        "new": "New",
+        "frequent": "Frequent"
+      }
     }
   },
   "customerProfileView": {
@@ -563,6 +577,7 @@
   },
   "dashboardModule": {
     "summary": {
+      "title": "General summary",
       "subtitle": "General status of your operation",
       "upcoming": "Coming soon",
       "detail": "Click to view details",
@@ -640,6 +655,39 @@
       },
       "body": {
         "last": "Last"
+      }
+    },
+    "productRanking": {
+      "title": "Listings ranking",
+      "columns": {
+        "product": "Product",
+        "sales": "Sales",
+        "units": "Units",
+        "visits": "Visits",
+        "participation": "Share"
+      }
+    },
+    "kpiMetrics": {
+      "title": "Key metrics",
+      "compare": "Compare with another period",
+      "period": "Period",
+      "periodA": "Period A",
+      "periodB": "Period B",
+      "vs": "VS",
+      "above": "above",
+      "below": "below",
+      "noChange": "No change between Period A and Period B",
+      "differentDuration": "Periods of different length",
+      "days": "days",
+      "dailyAverage": "Daily average",
+      "new": "New",
+      "metrics": {
+        "grossSales": "Gross sales",
+        "unitsSold": "Units sold",
+        "averagePrice": "Average price",
+        "visits": "Visits",
+        "conversion": "Conversion",
+        "cancellationRate": "Cancellation rate"
       }
     },
     "body": {

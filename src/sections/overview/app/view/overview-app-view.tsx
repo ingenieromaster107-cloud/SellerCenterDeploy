@@ -4,6 +4,7 @@ import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
 
 import { useDashboardData } from 'src/hooks/dashboard/use-dashboard-data';
+import { useSellerProductRanking } from 'src/hooks/dashboard/use-seller-product-ranking';
 import { useSellerReputationIndicators } from 'src/hooks/dashboard/use-seller-reputation-indicators';
 
 import { _appInvoices } from 'src/_mock';
@@ -16,6 +17,7 @@ import { AppKpiCard } from './app-kpi-card';
 import { AppTopProducts } from '../app-top-products';
 import { AppNewInvoices } from '../app-new-invoices';
 import { AppTopCustomers } from '../app-top-customers';
+import { AppProductRanking } from '../app-product-ranking';
 import { ReputationPanelSkeleton } from '../../reputation-panel/components';
 import { AppReputationPanel } from '../../reputation-panel/app-reputation-panel';
 
@@ -26,6 +28,7 @@ export function OverviewAppView() {
   const { topProducts, topCustomers, averageOrderValue, totalSales, ordersOverTime, isLoading } =
     useDashboardData();
   const { reputation, isLoading: isReputationLoading } = useSellerReputationIndicators();
+  const { items: rankingItems, isLoading: isRankingLoading } = useSellerProductRanking();
 
   return (
     <HomeContent maxWidth="xl">
@@ -92,6 +95,15 @@ export function OverviewAppView() {
             />
           </Grid>
         </Grid>
+
+        <Box sx={{ mb: 2 }}>
+          <AppProductRanking
+            className="product-ranking"
+            title={translate('dashboardModule.productRanking.title')}
+            items={rankingItems}
+            isLoading={isRankingLoading}
+          />
+        </Box>
 
         <Box
           className="products-section"
