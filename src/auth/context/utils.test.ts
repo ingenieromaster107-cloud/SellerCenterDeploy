@@ -1,4 +1,4 @@
-import { getSession, setSession, validateSession } from './utils';
+import { getSession, setSession, validateSession, clearAuthCookies, purgeAuthSession } from './utils';
 
 const FAKE_UID = 'user-42';
 const FAKE_EXP_VALID = Math.floor(Date.now() / 1000) + 3600; // 1h in the future
@@ -111,6 +111,63 @@ describe('auth/context/utils', () => {
       expect(result).toBe(false);
       expect(localStorage.getItem('access_token')).toBeNull();
       expect(localStorage.getItem('expiration_time')).toBeNull();
+    });
+  });
+
+  describe('purgeAuthSession', () => {
+    it('removes auth/cache keys but preserves UI preferences', () => {
+      localStorage.setItem('access_token', 'token');
+      localStorage.setItem('expiration_time', '123');
+      localStorage.setItem('customer_id', 'u-1');
+      localStorage.setItem('customer', '{"id":"u-1"}');
+      localStorage.setItem('tour-step-index', '3');
+      // UI preferences that must survive a forced logout
+      localStorage.setItem('theme-mode', 'dark');
+      localStorage.setItem('app-settings', '{"mode":"dark"}');
+      localStorage.setItem('i18n_lang', 'en');
+      sessionStorage.setItem('something', 'value');
+
+      purgeAuthSession();
+
+      expect(localStorage.getItem('access_token')).toBeNull();
+      expect(localStorage.getItem('expiration_time')).toBeNull();
+      expect(localStorage.getItem('customer_id')).toBeNull();
+      expect(localStorage.getItem('customer')).toBeNull();
+      expect(localStorage.getItem('tour-step-index')).toBeNull();
+
+      expect(localStorage.getItem('theme-mode')).toBe('dark');
+      expect(localStorage.getItem('app-settings')).toBe('{"mode":"dark"}');
+      expect(localStorage.getItem('i18n_lang')).toBe('en');
+
+      expect(sessionStorage.getItem('something')).toBeNull();
+    });
+
+    it('does not throw when storage access fails', () => {
+      const removeItemSpy = jest
+        .spyOn(Storage.prototype, 'removeItem')
+        .mockImplementation(() => {
+          throw new Error('boom');
+        });
+      const consoleSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
+
+      expect(() => purgeAuthSession()).not.toThrow();
+      expect(consoleSpy).toHaveBeenCalled();
+
+      removeItemSpy.mockRestore();
+      consoleSpy.mockRestore();
+    });
+  });
+
+  describe('clearAuthCookies', () => {
+    it('expires existing cookies', () => {
+      document.cookie = 'access_token=abc';
+      document.cookie = 'other=def';
+
+      clearAuthCookies();
+
+      // jsdom removes cookies once expired in the past
+      expect(document.cookie).not.toContain('access_token=abc');
+      expect(document.cookie).not.toContain('other=def');
     });
   });
 });

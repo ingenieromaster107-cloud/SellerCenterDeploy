@@ -37,19 +37,19 @@ export function AppProductRanking({ title, items, isLoading, sx, ...other }: Pro
   const columns: GridColDef<SellerProductRankingItem>[] = useMemo(
     () => [
       {
+        field: 'sku',
+        headerName: translate('dashboardModule.productRanking.columns.sku'),
+        width: 150,
+      },
+      {
         field: 'product_name',
         headerName: translate('dashboardModule.productRanking.columns.product'),
         flex: 1,
         minWidth: 240,
         renderCell: (params) => (
-          <Box sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', height: 1 }}>
-            <Typography variant="subtitle2" noWrap>
-              {params.row.product_name || params.row.sku}
-            </Typography>
-            <Typography variant="caption" color="text.secondary" noWrap>
-              {params.row.sku}
-            </Typography>
-          </Box>
+          <Typography variant="subtitle2" noWrap sx={{ display: 'flex', alignItems: 'center', height: 1 }}>
+            {params.row.product_name || params.row.sku}
+          </Typography>
         ),
       },
       {

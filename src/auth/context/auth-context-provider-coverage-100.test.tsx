@@ -33,8 +33,32 @@ jest.mock('src/actions/auth/use-update-token', () => ({
   useUpdateToken: () => ({ mutateAsync: mockedUpdateTokenMutateAsync }),
 }));
 
+const mockedReplace = jest.fn();
+jest.mock('src/routes/hooks', () => ({
+  useRouter: () => ({ replace: mockedReplace, push: jest.fn() }),
+}));
+
+jest.mock('src/lib/graphql-client', () => ({
+  GraphQLService: {
+    getInstance: () => ({
+      setHeader: jest.fn(),
+      setUnauthorizedHandler: jest.fn(),
+    }),
+  },
+}));
+
+jest.mock('src/actions/auth/use-token-lifetime', () => ({
+  useTokenLifetime: () => ({ data: null }),
+}));
+
+jest.mock('../components/idle-timer', () => ({
+  IdleTimer: () => null,
+}));
+
 jest.mock('./utils', () => ({
   setSession: (...args: any[]) => mockedSetSession(...args),
+  getSession: jest.fn(() => null),
+  purgeAuthSession: jest.fn(),
 }));
 
 const Consumer = () => (

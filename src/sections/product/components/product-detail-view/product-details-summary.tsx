@@ -20,6 +20,7 @@ import { fCurrency } from 'src/utils/format-number';
 import { Form } from 'src/components/hook-form';
 import { Iconify } from 'src/components/iconify';
 
+import { ProductPromotions } from './product-promotions';
 import { ProductConfigurableOptions } from './product-configurable-options';
 
 // ----------------------------------------------------------------------
@@ -41,6 +42,7 @@ export function ProductDetailsSummary({ product, ...other }: Readonly<Props>) {
     discountPercent,
     configurableOptions = [],
     variants = [],
+    promotions = [],
   } = product;
 
   const isConfigurable = configurableOptions.length > 0 && variants.length > 0;
@@ -163,6 +165,13 @@ export function ProductDetailsSummary({ product, ...other }: Readonly<Props>) {
           {renderHeader()}
           {renderPrices()}
         </Stack>
+
+        {promotions.length > 0 && (
+          <>
+            <Divider sx={{ borderStyle: 'dashed' }} />
+            <ProductPromotions promotions={promotions} />
+          </>
+        )}
 
         <Divider sx={{ borderStyle: 'dashed' }} />
 

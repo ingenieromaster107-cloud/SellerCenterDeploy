@@ -20,7 +20,7 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 
 import { paths } from 'src/routes/paths';
 import { RouterLink } from 'src/routes/components';
-import { useRouter, useSearchParams} from 'src/routes/hooks';
+import { useRouter, useSearchParams } from 'src/routes/hooks';
 
 import { useTourContext } from 'src/contexts/tour';
 import { ErrorCode, ERROR_MESSAGES } from 'src/lib';
@@ -48,11 +48,10 @@ export const SignInSchema = z.object({
 // ----------------------------------------------------------------------
 
 export function SignInView() {
-
   const { translate } = useTranslate();
 
-    const { setRunTour } = useTourContext();
-  
+  const { setRunTour } = useTourContext();
+
   const searchParams = useSearchParams();
   useEffect(() => {
     if (searchParams.get('newSeller') === 'true') {
@@ -93,8 +92,7 @@ export function SignInView() {
 
       if (error instanceof ClientError) {
         const message =
-          error.response.errors?.[0]?.message ||
-          ERROR_MESSAGES[ErrorCode.UNEXPECTED_ERROR];
+          error.response.errors?.[0]?.message || ERROR_MESSAGES[ErrorCode.UNEXPECTED_ERROR];
 
         msgErr = message;
       }
@@ -112,13 +110,18 @@ export function SignInView() {
 
   const renderForm = () => (
     <Box sx={{ gap: 3, display: 'flex', flexDirection: 'column' }}>
-      <Field.Text name="email" label={translate("loginPage.emailForm")} slotProps={{ inputLabel: { shrink: true } }} />
+      <Field.Text
+        name="email"
+        label={translate('loginPage.emailForm')}
+        placeholder={translate('loginPage.emailPh')}
+        slotProps={{ inputLabel: { shrink: true } }}
+      />
 
       <Box sx={{ gap: 1.5, display: 'flex', flexDirection: 'column' }}>
         <Field.Text
           name="password"
-          label={translate("loginPage.passwordForm")}
-          placeholder={translate("loginPage.passwordPh")}
+          label={translate('loginPage.passwordForm')}
+          placeholder={translate('loginPage.passwordPh')}
           type={showPassword.value ? 'text' : 'password'}
           slotProps={{
             inputLabel: { shrink: true },
@@ -150,9 +153,9 @@ export function SignInView() {
         type="submit"
         variant="contained"
         loading={isSubmitting}
-        loadingIndicator={translate("loginPage.signIn")}
+        loadingIndicator={translate('loginPage.signIn')}
       >
-        {translate("loginPage.signIn")}
+        {translate('loginPage.signIn')}
       </Button>
 
       <Link
@@ -162,26 +165,29 @@ export function SignInView() {
         color="inherit"
         sx={{ alignSelf: 'flex-start' }}
       >
-        {translate("loginPage.forgotPassword")}
+        {translate('loginPage.forgotPassword')}
       </Link>
 
       <Box sx={{ display: 'flex', justifyContent: 'center' }}>
-        <FormControlLabel control={<Checkbox defaultChecked />} label={translate("loginPage.keepMe")} />
+        <FormControlLabel
+          control={<Checkbox defaultChecked />}
+          label={translate('loginPage.keepMe')}
+        />
       </Box>
 
       <Box>
-        <Divider><Typography variant="caption" sx={{ color: 'text.secondary' }}>o</Typography></Divider>
+        <Divider>
+          <Typography variant="caption" sx={{ color: 'text.secondary' }}>
+            o
+          </Typography>
+        </Divider>
       </Box>
 
       <Box sx={{ display: 'flex', justifyContent: 'center', gap: 1 }}>
         <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-          {translate("loginPage.noAccount")}
-          <Link
-            component={RouterLink}
-            to={paths.createSellers}
-            variant="subtitle2"
-          >
-            {translate("loginPage.getStarted")}
+          {translate('loginPage.noAccount')}
+          <Link component={RouterLink} to={paths.createSellers} variant="subtitle2">
+            {translate('loginPage.getStarted')}
           </Link>
         </Typography>
       </Box>
@@ -191,7 +197,7 @@ export function SignInView() {
   return (
     <>
       <FormHead
-        title={translate("loginPage.title")}
+        title={translate('loginPage.title')}
         sx={{ textAlign: { xs: 'center', md: 'left' } }}
       />
 

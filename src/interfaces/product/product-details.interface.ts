@@ -1,3 +1,5 @@
+import type { ProductPromotionInterface } from './seller-product.interface';
+
 export interface ProductDetailsResponseInterface {
   sellerProducts: {
     total_count: number;
@@ -14,6 +16,8 @@ export interface ProductDetailsItemInterface {
   stock_status: string;
   stock_saleable: number;
   updated_at: string;
+  has_active_promotion?: boolean;
+  promotions?: ProductPromotionInterface[];
   categories: ProductDetailsCategoryInterface[];
   price_range: ProductDetailsPriceRangeInterface;
   custom_attributes_info: ProductDetailsCustomAttributesInfoInterface;
@@ -104,4 +108,7 @@ export interface ProductDetailsUIInterface {
 
   configurableOptions: ProductDetailsConfigurableOptionInterface[];
   variants: ProductDetailsVariantInterface[];
+
+  hasActivePromotion: boolean;
+  promotions: ProductPromotionInterface[];
 }

@@ -35,7 +35,15 @@ import { useTranslate } from 'src/locales';
 
 // ----------------------------------------------------------------------
 
-const buildSchema = (translate: (k: string) => string) =>
+type SchemaOptions = {
+  isEdit?: boolean;
+  originalFromDate?: string;
+  originalToDate?: string;
+};
+
+const isSameDay = (a?: string, b?: string) => !!a && !!b && dayjs(a).isSame(dayjs(b), 'day');
+
+const buildSchema = (translate: (k: string) => string, options: SchemaOptions = {}) =>
   z
     .object({
       name: z.string().min(1, translate('promotionsModule.form.validation.nameRequired')),
@@ -77,15 +85,18 @@ const buildSchema = (translate: (k: string) => string) =>
         });
       }
       const today = dayjs().startOf('day').format(FORMAT_PATTERNS.iso.date);
+      const { isEdit, originalFromDate, originalToDate } = options;
+      const fromUnchanged = isEdit && isSameDay(data.from_date, originalFromDate);
+      const toUnchanged = isEdit && isSameDay(data.to_date, originalToDate);
 
-      if (data.from_date && data.from_date < today) {
+      if (data.from_date && data.from_date < today && !fromUnchanged) {
         ctx.addIssue({
           code: z.ZodIssueCode.custom,
           path: ['from_date'],
           message: translate('promotionsModule.form.validation.fromDatePast'),
         });
       }
-      if (data.to_date && data.to_date < today) {
+      if (data.to_date && data.to_date < today && !toUnchanged) {
         ctx.addIssue({
           code: z.ZodIssueCode.custom,
           path: ['to_date'],
@@ -136,10 +147,20 @@ function parseIds(raw?: string): number[] | undefined {
   return ids.length > 0 ? ids : undefined;
 }
 
-export function PromotionForm({ onSubmit, onCancel, isLoading = false, mode = 'create', initialValues }: Props) {
+export function PromotionForm({
+  onSubmit,
+  onCancel,
+  isLoading = false,
+  mode = 'create',
+  initialValues,
+}: Props) {
   const { translate } = useTranslate();
-  const schema = buildSchema(translate);
   const isEdit = mode === 'edit';
+  const schema = buildSchema(translate, {
+    isEdit,
+    originalFromDate: initialValues?.from_date,
+    originalToDate: initialValues?.to_date,
+  });
 
   const {
     control,
@@ -162,6 +183,16 @@ export function PromotionForm({ onSubmit, onCancel, isLoading = false, mode = 'c
       category_ids_raw: initialValues?.category_ids?.join(', ') ?? '',
     },
   });
+
+  const today = dayjs().startOf('day');
+  const fromMinDate =
+    isEdit && initialValues?.from_date && dayjs(initialValues.from_date).isBefore(today, 'day')
+      ? dayjs(initialValues.from_date)
+      : today;
+  const toMinDate =
+    isEdit && initialValues?.to_date && dayjs(initialValues.to_date).isBefore(today, 'day')
+      ? dayjs(initialValues.to_date)
+      : today;
 
   const applyType = watch('apply_type');
   const discountType = watch('discount_type');
@@ -256,7 +287,11 @@ export function PromotionForm({ onSubmit, onCancel, isLoading = false, mode = 'c
                           disabled={isEdit}
                           label={t('promotionsModule.form.fields.discountType')}
                           error={!!errors.discount_type}
-                          helperText={isEdit ? t('promotionsModule.edit.readonlyHint') : errors.discount_type?.message}
+                          helperText={
+                            isEdit
+                              ? t('promotionsModule.edit.readonlyHint')
+                              : errors.discount_type?.message
+                          }
                         >
                           <MenuItem value="BY_PERCENT">
                             {t('promotionsModule.discountType.BY_PERCENT')}
@@ -281,7 +316,11 @@ export function PromotionForm({ onSubmit, onCancel, isLoading = false, mode = 'c
                           disabled={isEdit}
                           label={t('promotionsModule.form.fields.applyType')}
                           error={!!errors.apply_type}
-                          helperText={isEdit ? t('promotionsModule.edit.readonlyHint') : errors.apply_type?.message}
+                          helperText={
+                            isEdit
+                              ? t('promotionsModule.edit.readonlyHint')
+                              : errors.apply_type?.message
+                          }
                         >
                           <MenuItem value="AUTOMATIC">
                             {t('promotionsModule.applyType.AUTOMATIC')}
@@ -333,7 +372,8 @@ export function PromotionForm({ onSubmit, onCancel, isLoading = false, mode = 'c
                     />
                   </Grid>
 
-                  {(applyType === 'COUPON' || (isEdit && initialValues?.apply_type === 'COUPON')) && (
+                  {(applyType === 'COUPON' ||
+                    (isEdit && initialValues?.apply_type === 'COUPON')) && (
                     <Grid size={{ xs: 12, sm: 6 }}>
                       <Controller
                         name="coupon_code"
@@ -349,7 +389,8 @@ export function PromotionForm({ onSubmit, onCancel, isLoading = false, mode = 'c
                             helperText={
                               isEdit
                                 ? t('promotionsModule.edit.readonlyHint')
-                                : errors.coupon_code?.message || t('promotionsModule.form.hints.couponRequired')
+                                : errors.coupon_code?.message ||
+                                  t('promotionsModule.form.hints.couponRequired')
                             }
                           />
                         )}
@@ -435,7 +476,7 @@ export function PromotionForm({ onSubmit, onCancel, isLoading = false, mode = 'c
                           field.onChange(val ? val.format(FORMAT_PATTERNS.iso.date) : '')
                         }
                         format="DD/MM/YYYY"
-                        minDate={dayjs()}
+                        minDate={fromMinDate}
                         slotProps={{
                           textField: {
                             fullWidth: true,
@@ -458,7 +499,7 @@ export function PromotionForm({ onSubmit, onCancel, isLoading = false, mode = 'c
                           field.onChange(val ? val.format(FORMAT_PATTERNS.iso.date) : '')
                         }
                         format="DD/MM/YYYY"
-                        minDate={dayjs()}
+                        minDate={toMinDate}
                         slotProps={{
                           textField: {
                             fullWidth: true,

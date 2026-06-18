@@ -11,7 +11,7 @@ import {
 
 jest.mock('src/locales/langs/i18n', () => ({
   useTranslate: () => ({
-    translate: (key: string) => key,
+    translate: (namespaceOrKey: string, key?: string) => key ?? namespaceOrKey,
     currentLang: 'es',
   }),
 }));
@@ -51,6 +51,8 @@ const baseRow: ProductListInterface = {
   isLowStock: false,
   lowStockThreshold: 5,
   lowStockThresholdType: 'DEFAULT',
+  hasActivePromotion: false,
+  promotions: [],
 };
 
 const makeParams = (row: Partial<ProductListInterface> = {}) =>
@@ -82,6 +84,38 @@ describe('product-table-row cells', () => {
       const link = screen.getByRole('link', { name: 'Cool Item' });
       expect(link).toHaveAttribute('href', '/product/1');
       expect(screen.getByText('Books')).toBeInTheDocument();
+    });
+
+    it('does not render the promotion badge when there is no active promotion', () => {
+      render(
+        <RenderCellProduct
+          params={makeParams({ hasActivePromotion: false, promotions: [] })}
+          href="/product/1"
+        />
+      );
+      expect(screen.queryByTestId('label')).not.toBeInTheDocument();
+    });
+
+    it('renders the promotion badge when the product has an active promotion', () => {
+      render(
+        <RenderCellProduct
+          params={makeParams({
+            hasActivePromotion: true,
+            promotions: [
+              {
+                promotion_id: 10,
+                name: 'Black Friday',
+                discount_type: 'BY_PERCENT',
+                apply_type: 'AUTOMATIC',
+                discount_amount: 15,
+                coupon_code: null,
+              },
+            ],
+          })}
+          href="/product/1"
+        />
+      );
+      expect(screen.getByTestId('label')).toHaveTextContent('promotions.badge');
     });
   });
 

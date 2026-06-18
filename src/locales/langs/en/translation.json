@@ -7,12 +7,20 @@
     "title": "Sign in to your account",
     "emailForm": "Email address",
     "passwordForm": "Password",
+    "emailPh": "Enter your email",
     "passwordPh": "6+ Characters",
     "signIn": "Sign In",
     "forgotPassword": "Forgot password?",
     "keepMe": "Keep the session open",
     "noAccount": "Don’t have an account?",
     "getStarted": "Get started"
+  },
+  "session": {
+    "expiredByInactivityTitle": "Session closed due to inactivity",
+    "expiredByInactivityMessage": "For your security we closed the session after a period of inactivity. Please sign in again to continue.",
+    "expiredTitle": "Your session has expired",
+    "expiredMessage": "For security reasons, you need to sign in again to continue.",
+    "goToLogin": "Go to sign in"
   },
   "productDetails": {
     "heading": "Product details",
@@ -28,6 +36,13 @@
         "title": "Product not found",
         "description": "No product was found with id:"
       }
+    },
+    "promotions": {
+      "title": "Active promotions",
+      "badge": "Promotion",
+      "tooltip": "Product with an active promotion",
+      "coupon": "Coupon",
+      "discount": "Discount"
     }
   },
   "productConfigurable": {
@@ -660,6 +675,7 @@
     "productRanking": {
       "title": "Listings ranking",
       "columns": {
+        "sku": "SKU",
         "product": "Product",
         "sales": "Sales",
         "units": "Units",

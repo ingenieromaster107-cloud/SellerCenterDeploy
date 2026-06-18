@@ -17,6 +17,15 @@ export const GET_PRODUCT_DETAILS_BY_ID_QUERY = gql`
         stock_status
         stock_saleable
         updated_at
+        has_active_promotion
+        promotions {
+          promotion_id
+          name
+          discount_type
+          apply_type
+          discount_amount
+          coupon_code
+        }
         categories {
           name
           uid

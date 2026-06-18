@@ -35,5 +35,7 @@ export function productListAdapter(
       isLowStock: product.is_low_stock ?? false,
       lowStockThreshold: product.low_stock_threshold ?? 0,
       lowStockThresholdType: product.low_stock_threshold_type ?? 'DEFAULT',
+      hasActivePromotion: product.has_active_promotion ?? false,
+      promotions: product.promotions ?? [],
   }));
 }

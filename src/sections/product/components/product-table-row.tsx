@@ -97,7 +97,9 @@ export function RenderCellStock({ params }: Readonly<ParamsProps>) {
 }
 
 export function RenderCellProduct({ params, href }: Readonly<ParamsProps & { href: string }>) {
+  const { translate } = useTranslate();
   const productName = params.row.productName;
+  const { hasActivePromotion } = params.row;
 
   return (
     <Box sx={{ py: 2, gap: 2, width: 1, display: 'flex', alignItems: 'center' }}>
@@ -110,13 +112,25 @@ export function RenderCellProduct({ params, href }: Readonly<ParamsProps & { hre
 
       <ListItemText
         primary={
-          <Link component={RouterLink} to={href} color="inherit">
-            {productName}
-          </Link>
+          <Stack direction="row" alignItems="center" spacing={0.75} sx={{ minWidth: 0 }}>
+            <Link component={RouterLink} to={href} color="inherit" noWrap>
+              {productName}
+            </Link>
+            {hasActivePromotion && (
+              <span style={{ display: 'inline-flex' }}>
+                <Label
+                  color="info"
+                  variant="soft"
+                  startIcon={<Iconify icon="solar:tag-price-bold" width={14} />}
+                >
+                  {translate('productDetails', 'promotions.badge')}
+                </Label>
+              </span>
+            )}
+          </Stack>
         }
         secondary={params.row.category}
         slotProps={{
-          primary: { noWrap: true },
           secondary: { sx: { color: 'text.disabled' } },
         }}
       />

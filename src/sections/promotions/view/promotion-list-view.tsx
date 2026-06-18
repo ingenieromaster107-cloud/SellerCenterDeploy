@@ -26,15 +26,9 @@ import { useRouter } from 'src/routes/hooks';
 import { useTranslate } from 'src/locales';
 import { HomeContent } from 'src/layouts/home';
 import { useGetSellerPromotions } from 'src/actions/promotions/use-get-seller-promotions';
-import {
-  usePauseSellerPromotion,
-} from 'src/actions/promotions/use-pause-seller-promotion';
-import {
-  useDeleteSellerPromotion,
-} from 'src/actions/promotions/use-delete-seller-promotion';
-import {
-  useActivateSellerPromotion,
-} from 'src/actions/promotions/use-activate-seller-promotion';
+import { usePauseSellerPromotion } from 'src/actions/promotions/use-pause-seller-promotion';
+import { useDeleteSellerPromotion } from 'src/actions/promotions/use-delete-seller-promotion';
+import { useActivateSellerPromotion } from 'src/actions/promotions/use-activate-seller-promotion';
 
 import { Label } from 'src/components/label';
 import { toast } from 'src/components/snackbar';
@@ -60,7 +54,14 @@ import { PromotionTableToolbar } from '../components/promotion-table-toolbar';
 
 type StatusTab = SellerPromotionStatus | 'all';
 
-const STATUS_TABS: StatusTab[] = ['all', 'ACTIVE', 'PAUSED', 'PENDING_APPROVAL', 'EXPIRED', 'EXHAUSTED'];
+const STATUS_TABS: StatusTab[] = [
+  'all',
+  'ACTIVE',
+  'PAUSED',
+  'PENDING_APPROVAL',
+  'EXPIRED',
+  'EXHAUSTED',
+];
 
 // ----------------------------------------------------------------------
 
@@ -125,8 +126,7 @@ export function PromotionListView() {
       if (!searchValue) return true;
       const q = searchValue.toLowerCase();
       return (
-        row.name.toLowerCase().includes(q) ||
-        (row.coupon_code?.toLowerCase() ?? '').includes(q)
+        row.name.toLowerCase().includes(q) || (row.coupon_code?.toLowerCase() ?? '').includes(q)
       );
     })
     .sort(getComparator(table.order, table.orderBy) as (a: any, b: any) => number);
@@ -161,9 +161,17 @@ export function PromotionListView() {
     { id: 'discount_amount', label: translate('promotionsModule.table.columns.discountAmount') },
     { id: 'from_date', label: translate('promotionsModule.table.columns.fromDate') },
     { id: 'to_date', label: translate('promotionsModule.table.columns.toDate') },
-    { id: 'times_used', label: translate('promotionsModule.table.columns.timesUsed'), align: 'center' as const },
+    {
+      id: 'times_used',
+      label: translate('promotionsModule.table.columns.timesUsed'),
+      align: 'center' as const,
+    },
     { id: 'status', label: translate('promotionsModule.table.columns.status') },
-    { id: 'actions', label: translate('promotionsModule.table.columns.actions'), align: 'right' as const },
+    {
+      id: 'actions',
+      label: translate('promotionsModule.table.columns.actions'),
+      align: 'right' as const,
+    },
   ];
 
   const isConfirmPending = isDeleting || isPausing || isActivating;
@@ -276,21 +284,25 @@ export function PromotionListView() {
               />
 
               <TableBody>
-                {isTableLoading
-                  ? [...Array(paginationModel.pageSize)].map((_, i) => (
-                      <TableSkeleton key={i} sx={{ height: 68 }} />
-                    ))
-                  : filteredItems.map((row) => (
-                      <PromotionTableRow
-                        key={row.entity_id}
-                        row={row}
-                        onView={(id) => router.push(paths.promotions.details(id))}
-                        onEdit={(id) => router.push(paths.promotions.edit(id))}
-                        onPause={handleOpenPauseDialog}
-                        onActivate={handleOpenActivateDialog}
-                        onDelete={handleOpenDeleteDialog}
-                      />
-                    ))}
+                {isTableLoading ? (
+                  <TableSkeleton
+                    rowCount={paginationModel.pageSize}
+                    cellCount={TABLE_HEAD.length}
+                    sx={{ height: 68 }}
+                  />
+                ) : (
+                  filteredItems.map((row) => (
+                    <PromotionTableRow
+                      key={row.entity_id}
+                      row={row}
+                      onView={(id) => router.push(paths.promotions.details(id))}
+                      onEdit={(id) => router.push(paths.promotions.edit(id))}
+                      onPause={handleOpenPauseDialog}
+                      onActivate={handleOpenActivateDialog}
+                      onDelete={handleOpenDeleteDialog}
+                    />
+                  ))
+                )}
 
                 {!isTableLoading && (
                   <TableEmptyRows
@@ -313,8 +325,6 @@ export function PromotionListView() {
           onRowsPerPageChange={(e) =>
             setPaginationModel({ page: 0, pageSize: parseInt(e.target.value, 10) })
           }
-          dense={false}
-          onChangeDense={table.onChangeDense}
         />
       </Card>
 

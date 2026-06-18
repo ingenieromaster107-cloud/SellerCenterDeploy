@@ -18,6 +18,7 @@ export type ConfigValue = {
     skip: boolean;
     redirectPath: string;
     tokenExpirationTime: number;
+    inactivityTimeout: number;
   };
   firebase: {
     appId: string;
@@ -49,6 +50,7 @@ export const CONFIG: ConfigValue = {
     skip: false,
     redirectPath: paths.home.root,
     tokenExpirationTime: parseInt(process.env.VITE_TOKEN_EXPIRATION_TIME ?? '30'), // en minutos
+    inactivityTimeout: parseInt(process.env.VITE_INACTIVITY_TIMEOUT ?? '1'), // en minutos
   },
   /**
    * Firebase

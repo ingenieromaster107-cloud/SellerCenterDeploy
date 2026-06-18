@@ -1,5 +1,15 @@
 import type { PageListInfo } from "../graphql/graphql-shared.interfaces";
+import type { SellerPromotionApplyType, SellerPromotionDiscountType } from "../promotions";
 
+
+export interface ProductPromotionInterface {
+  promotion_id: number;
+  name: string;
+  discount_type: SellerPromotionDiscountType;
+  apply_type: SellerPromotionApplyType;
+  discount_amount: number;
+  coupon_code: string | null;
+}
 
 export interface SellerProductsResponseInterface {
   sellerProducts: {
@@ -25,6 +35,8 @@ export interface ItemsProducsInterface {
   is_low_stock: boolean;
   low_stock_threshold: number;
   low_stock_threshold_type: LowStockThresholdType;
+  has_active_promotion?: boolean;
+  promotions?: ProductPromotionInterface[];
 }
 
 export interface PriceRangeInterface {
@@ -73,4 +85,6 @@ export interface ProductListInterface {
   isLowStock: boolean;
   lowStockThreshold: number;
   lowStockThresholdType: LowStockThresholdType;
+  hasActivePromotion: boolean;
+  promotions: ProductPromotionInterface[];
 }

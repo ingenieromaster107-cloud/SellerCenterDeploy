@@ -54,5 +54,8 @@ export function productDetailsAdapter(
     configurableOptions:
       product.configurable_product_options_selection?.configurable_options ?? [],
     variants: product.variants ?? [],
+
+    hasActivePromotion: product.has_active_promotion ?? false,
+    promotions: product.promotions ?? [],
   };
 }

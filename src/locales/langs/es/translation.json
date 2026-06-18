@@ -7,12 +7,20 @@
     "title": "Inicia sesión en tu cuenta",
     "emailForm": "Correo electrónico",
     "passwordForm": "Contraseña",
+    "emailPh": "Ingresa tu correo electrónico",
     "passwordPh": "6+ Caracteres",
     "signIn": "Iniciar sesión",
     "forgotPassword": "¿Olvidaste tu contraseña?",
     "keepMe": "Mantener la sesión abierta",
     "noAccount": "¿No tienes una cuenta?",
     "getStarted": "Comenzar"
+  },
+  "session": {
+    "expiredByInactivityTitle": "Sesión cerrada por inactividad",
+    "expiredByInactivityMessage": "Por tu seguridad cerramos la sesión tras un periodo de inactividad. Vuelve a iniciar sesión para continuar.",
+    "expiredTitle": "Tu sesión ha expirado",
+    "expiredMessage": "Por seguridad, debes iniciar sesión nuevamente para continuar.",
+    "goToLogin": "Ir a iniciar sesión"
   },
   "productDetails": {
     "heading": "Detalle del producto",
@@ -28,6 +36,13 @@
         "title": "Producto no encontrado",
         "description": "No se encontró ningún producto con id:"
       }
+    },
+    "promotions": {
+      "title": "Promociones activas",
+      "badge": "Promoción",
+      "tooltip": "Producto con promoción activa",
+      "coupon": "Cupón",
+      "discount": "Descuento"
     }
   },
   "productConfigurable": {
@@ -661,6 +676,7 @@
     "productRanking": {
       "title": "Ranking de publicaciones",
       "columns": {
+        "sku": "SKU",
         "product": "Producto",
         "sales": "Ventas",
         "units": "Unidades",

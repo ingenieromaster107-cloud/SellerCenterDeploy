@@ -25,6 +25,11 @@ jest.mock('minimal-shared/hooks', () => ({
 
 jest.mock('src/routes/hooks', () => ({
   useRouter: () => ({ refresh: mockRefresh }),
+  useSearchParams: () => new URLSearchParams(),
+}));
+
+jest.mock('src/contexts/tour', () => ({
+  useTourContext: () => ({ setRunTour: jest.fn() }),
 }));
 
 jest.mock('src/routes/components', () => ({

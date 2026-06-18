@@ -34,6 +34,15 @@ export const SELLER_PRODUCTS_QUERY = gql`
         is_low_stock
         low_stock_threshold
         low_stock_threshold_type
+        has_active_promotion
+        promotions {
+          promotion_id
+          name
+          discount_type
+          apply_type
+          discount_amount
+          coupon_code
+        }
         id
         thumbnail {
           label
