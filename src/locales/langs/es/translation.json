@@ -1331,5 +1331,50 @@
       "list": "Aquí ves todos los colaboradores activos en tu cuenta. Gestiona sus permisos para mantener la seguridad y el orden en tu operación."
     },
     "signOut": "Cuando termines tu jornada, usa este botón para cerrar sesión de forma segura y proteger tu cuenta."
+  },
+  "responseTemplates": {
+    "title": "Plantillas de respuesta",
+    "addButton": "Agregar",
+    "searchFilter": "Buscar por título o contenido...",
+    "statusLabel": "Estado",
+    "status": {
+      "all": "Todos",
+      "active": "Activo",
+      "inactive": "Inactivo"
+    },
+    "statusCell": {
+      "active": "Activo",
+      "inactive": "Inactivo"
+    },
+    "actions": {
+      "edit": "Editar plantilla",
+      "activate": "Activar plantilla",
+      "deactivate": "Desactivar plantilla",
+      "delete": "Eliminar plantilla"
+    },
+    "deleteConfirm": {
+      "title": "Eliminar plantilla",
+      "content": "¿Estás seguro de que deseas eliminar la plantilla",
+      "confirmButton": "Eliminar"
+    },
+    "createModal": {
+      "title": "Registra una nueva plantilla de respuesta rápida",
+      "saveButton": "Guardar"
+    },
+    "editModal": {
+      "title": "Editar plantilla de respuesta",
+      "saveButton": "Guardar"
+    },
+    "form": {
+      "titleField": "Título",
+      "contentField": "Contenido"
+    },
+    "tableHeaders":{
+      "title": "Título",
+      "content": "Contenido",
+      "createdAt": "Creada el",
+      "status": "Estado",
+      "actions": "Acciones"
+    }
   }
 }

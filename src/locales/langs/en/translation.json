@@ -1330,5 +1330,50 @@
       "list": "Here you see all active collaborators in your account. Manage their permissions to maintain security and order in your operation."
     },
     "signOut": "When you finish your session, use this button to log out securely and protect your account."
+  },
+  "responseTemplates": {
+    "title": "Response Templates",
+    "addButton": "Add",
+    "searchFilter": "Search by title or content...",
+    "statusLabel": "Status",
+    "status": {
+      "all": "All",
+      "active": "Active",
+      "inactive": "Inactive"
+    },
+    "statusCell": {
+      "active": "Active",
+      "inactive": "Inactive"
+    },
+    "actions": {
+      "edit": "Edit template",
+      "activate": "Activate template",
+      "deactivate": "Deactivate template",
+      "delete": "Delete template"
+    },
+    "deleteConfirm": {
+      "title": "Delete template",
+      "content": "Are you sure you want to delete the template",
+      "confirmButton": "Delete"
+    },
+    "createModal": {
+      "title": "Create a new quick response template",
+      "saveButton": "Save"
+    },
+    "editModal": {
+      "title": "Edit response template",
+      "saveButton": "Save"
+    },
+    "form": {
+      "titleField": "Title",
+      "contentField": "Content"
+    },
+        "tableHeaders":{
+      "title": "Title",
+      "content": "Content",
+      "createdAt": "Created at",
+      "status": "Status",
+      "actions": "Actions"
+    }
   }
 }

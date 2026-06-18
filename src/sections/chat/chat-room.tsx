@@ -1,10 +1,11 @@
 import type { BoxProps } from '@mui/material/Box';
-import type { TemplatesResponse } from 'src/interfaces';
 import type { UseNavCollapseReturn } from './hooks/use-collapse-nav';
 import type { ChatParticipant, ChatConversation } from 'src/interfaces/chat/chat';
 
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
+
+import { useGetTemplates } from 'src/actions/chat-templates/use-get-templates';
 
 import { Scrollbar } from 'src/components/scrollbar';
 
@@ -38,29 +39,9 @@ export function ChatRoom({
   sx,
   ...other
 }: Props) {
-  const templates: TemplatesResponse[] = 
-    [
-      {
-        content: 'Hola bienvenido, estamos en black days',
-        created_at: '2026-05-27 20:28:28',
-        entity_id: 2,
-        is_active: true,
-        seller_id: 1,
-        sort_order: 0,
-        title: 'Saludo black days',
-        updated_at: '2026-05-27 20:28:28',
-      },
-      {
-        content: 'Hola espero estés muy bien',
-        created_at: '2026-05-27 20:08:07',
-        entity_id: 1,
-        is_active: true,    
-        seller_id: 1,
-        sort_order: 0,
-        title: 'saludo inicial',
-        updated_at: '2026-05-27 20:27:27',
-      },
-    ];
+
+  const { data } = useGetTemplates();
+
   const { collapseDesktop, openMobile, onCloseMobile } = collapseNav;
 
   const participantFilter = participants.find((participant) => participant.id === currentConversationId);
@@ -76,7 +57,7 @@ export function ChatRoom({
         <div>
           <ChatRoomSingle participant={participantFilter!} />
           <ChatRoomAttachments attachments={attachments} />
-          <ChatRoomTemplates templates={templates} onSelectTemplate={onSelectTemplate} />
+          <ChatRoomTemplates templates={data!.interSellersMyResponseTemplates.items} onSelectTemplate={onSelectTemplate} />
         </div>
       </Scrollbar>
     );

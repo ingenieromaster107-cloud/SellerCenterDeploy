@@ -1,4 +1,5 @@
-import type { TemplatesResponse } from 'src/interfaces';
+
+import type { ChatTemplate } from 'src/interfaces/chat-templates/chat-templates.list';
 
 import { useBoolean } from 'minimal-shared/hooks';
 
@@ -14,7 +15,7 @@ import { CollapseButton } from './styles';
 // ----------------------------------------------------------------------
 
 type Props = {
-  templates: TemplatesResponse[];
+  templates: ChatTemplate[];
   onSelectTemplate?: (content: string) => void;
 };
 
