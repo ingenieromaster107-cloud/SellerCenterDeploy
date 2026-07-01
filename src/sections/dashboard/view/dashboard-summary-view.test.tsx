@@ -32,6 +32,14 @@ jest.mock('src/hooks/dashboard/use-seller-summary-dashboard', () => ({
   useSellerSummaryDashboard: () => mockUseSellerSummaryDashboard(),
 }));
 
+jest.mock('src/hooks/dashboard/use-seller-kpi-metrics', () => ({
+  useSellerKpiMetrics: () => ({
+    data: null,
+    isLoading: false,
+    isError: false,
+  }),
+}));
+
 jest.mock('src/locales', () => ({
   useTranslate: () => ({
     translate: (key: string) => key,

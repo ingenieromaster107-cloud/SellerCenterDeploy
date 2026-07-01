@@ -1,6 +1,12 @@
 import { render, screen } from '@testing-library/react';
 
+import { createTheme, ThemeProvider } from '@mui/material/styles';
+
 import { OverviewAppView } from './overview-app-view';
+
+const theme = createTheme({ cssVariables: true } as any);
+const renderWithTheme = (ui: React.ReactElement) =>
+  render(<ThemeProvider theme={theme}>{ui}</ThemeProvider>);
 
 jest.mock('src/layouts/home', () => ({
   HomeContent: ({ children }: any) => <div data-testid="home-content">{children}</div>,
@@ -17,6 +23,14 @@ const mockUseReputation = jest.fn();
 
 jest.mock('src/hooks/dashboard/use-seller-reputation-indicators', () => ({
   useSellerReputationIndicators: () => mockUseReputation(),
+}));
+
+jest.mock('src/hooks/dashboard/use-seller-product-ranking', () => ({
+  useSellerProductRanking: () => ({
+    items: [],
+    isLoading: false,
+    isError: false,
+  }),
 }));
 
 jest.mock('../../reputation-panel/components', () => ({
@@ -75,6 +89,10 @@ jest.mock('../app-top-customers', () => ({
   AppTopCustomers: ({ title }: any) => <div data-testid="top-customers">{title}</div>,
 }));
 
+jest.mock('../app-product-ranking', () => ({
+  AppProductRanking: ({ title }: any) => <div data-testid="product-ranking">{title}</div>,
+}));
+
 describe('OverviewAppView', () => {
   beforeEach(() => {
     mockUseReputation.mockReturnValue({
@@ -84,25 +102,25 @@ describe('OverviewAppView', () => {
   });
 
   it('renders home content wrapper', () => {
-    render(<OverviewAppView />);
+    renderWithTheme(<OverviewAppView />);
     expect(screen.getByTestId('home-content')).toBeInTheDocument();
   });
 
   it('renders three KPI cards', () => {
-    render(<OverviewAppView />);
+    renderWithTheme(<OverviewAppView />);
     const kpiCards = screen.getAllByTestId('kpi-card');
     expect(kpiCards).toHaveLength(3);
   });
 
   it('renders latest invoices, products and customers sections', () => {
-    render(<OverviewAppView />);
+    renderWithTheme(<OverviewAppView />);
     expect(screen.getByTestId('new-invoices')).toBeInTheDocument();
     expect(screen.getByTestId('top-products')).toBeInTheDocument();
     expect(screen.getByTestId('top-customers')).toBeInTheDocument();
   });
 
   it('does not render loading screen when data is loaded', () => {
-    render(<OverviewAppView />);
+    renderWithTheme(<OverviewAppView />);
     expect(screen.queryByTestId('loading-screen')).not.toBeInTheDocument();
   });
 
@@ -112,14 +130,14 @@ describe('OverviewAppView', () => {
       isLoading: true,
     });
 
-    render(<OverviewAppView />);
+    renderWithTheme(<OverviewAppView />);
 
     expect(screen.getByTestId('reputation-skeleton')).toBeInTheDocument();
     expect(screen.queryByTestId('reputation-panel')).not.toBeInTheDocument();
   });
 
   it('shows the reputation panel with data when not loading', () => {
-    render(<OverviewAppView />);
+    renderWithTheme(<OverviewAppView />);
 
     const panel = screen.getByTestId('reputation-panel');
     expect(panel).toBeInTheDocument();

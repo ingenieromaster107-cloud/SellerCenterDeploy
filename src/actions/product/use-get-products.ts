@@ -1,7 +1,7 @@
 'use client';
 
-import type { PageListInfo } from 'src/interfaces/graphql/graphql-shared.interfaces';
 import type { ProductListInterface, SellerProductsResponseInterface } from 'src/interfaces';
+import type { PageListInfo, PageInfoResponse } from 'src/interfaces/graphql/graphql-shared.interfaces';
 
 import { useMemo } from 'react';
 import { useQuery } from '@tanstack/react-query';
@@ -32,6 +32,6 @@ export function useGetProducts(productsPerPage: PageListInfo) {
     [data, currentLang]
   );
   const totalCount: number = data?.sellerProducts?.total_count || 0;
-  const pageInfo: PageListInfo | undefined = data?.sellerProducts?.page_info;
+  const pageInfo: PageInfoResponse | undefined = data?.sellerProducts?.page_info;
   return { products, isLoading, isError, isFetching, totalCount, pageInfo };
 }

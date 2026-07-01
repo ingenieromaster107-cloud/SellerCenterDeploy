@@ -1,5 +1,5 @@
 import type { DataList } from 'src/interfaces/order';
-import type { PageListInfo } from 'src/interfaces/graphql/graphql-shared.interfaces';
+import type { PageListInfo, PageInfoResponse } from 'src/interfaces/graphql/graphql-shared.interfaces';
 
 import { useQuery } from '@tanstack/react-query';
 
@@ -16,7 +16,7 @@ export function useGetOrders(productsPerPage: PageListInfo) {
   });
 
   const totalCount: number = data?.sellerOrders?.total_count || 0;
-  const pageInfo: PageListInfo | undefined = data?.sellerOrders?.page_info;
+  const pageInfo: PageInfoResponse | undefined = data?.sellerOrders?.page_info;
 
   return { data, isLoading, isError, pageInfo, totalCount };
 }

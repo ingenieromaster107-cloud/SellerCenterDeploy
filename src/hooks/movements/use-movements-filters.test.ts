@@ -2,49 +2,93 @@ import { act, renderHook } from '@testing-library/react';
 
 import { useMovementsFilters } from './use-movements-filters';
 
+jest.mock('src/utils/format-time', () => ({
+  today: () => '2026-06-22',
+  startOfMonth: () => '2026-06-01',
+  FORMAT_PATTERNS: { iso: { date: 'YYYY-MM-DD' } },
+}));
+
 describe('useMovementsFilters', () => {
-  it('initializes with the current month range and no category filter', () => {
+  it('initializes filters with dateFrom and dateTo', () => {
     const { result } = renderHook(() => useMovementsFilters());
 
-    expect(result.current.filters.dateFrom).toMatch(/^\d{4}-\d{2}-01$/);
-    expect(result.current.filters.dateTo).toMatch(/^\d{4}-\d{2}-\d{2}$/);
+    expect(result.current.filters.dateFrom).toBe('2026-06-01');
+    expect(result.current.filters.dateTo).toBe('2026-06-22');
     expect(result.current.filters.categories).toEqual([]);
-    expect(result.current.pagination).toEqual({ page: 0, pageSize: 25 });
   });
 
-  it('updates the date range and resets the page', () => {
+  it('initializes pagination with page=0, pageSize=25', () => {
     const { result } = renderHook(() => useMovementsFilters());
 
-    act(() => result.current.setPagination({ page: 3, pageSize: 25 }));
-    act(() => result.current.setDateRange('2024-01-01', '2024-01-31'));
+    expect(result.current.pagination.page).toBe(0);
+    expect(result.current.pagination.pageSize).toBe(25);
+  });
 
-    expect(result.current.filters.dateFrom).toBe('2024-01-01');
-    expect(result.current.filters.dateTo).toBe('2024-01-31');
+  it('setDateRange updates dateFrom and dateTo', () => {
+    const { result } = renderHook(() => useMovementsFilters());
+
+    act(() => {
+      result.current.setDateRange('2026-05-01', '2026-05-31');
+    });
+
+    expect(result.current.filters.dateFrom).toBe('2026-05-01');
+    expect(result.current.filters.dateTo).toBe('2026-05-31');
+  });
+
+  it('setDateRange resets page to 0', () => {
+    const { result } = renderHook(() => useMovementsFilters());
+
+    act(() => {
+      result.current.setPagination(prev => ({ ...prev, page: 3 }));
+    });
+
+    expect(result.current.pagination.page).toBe(3);
+
+    act(() => {
+      result.current.setDateRange('2026-05-01', '2026-05-31');
+    });
+
     expect(result.current.pagination.page).toBe(0);
   });
 
-  it('adds a category when toggled on', () => {
+  it('toggleCategory adds category to array', () => {
     const { result } = renderHook(() => useMovementsFilters());
 
-    act(() => result.current.toggleCategory('VENTA'));
+    act(() => {
+      result.current.toggleCategory('VENTA');
+    });
 
-    expect(result.current.filters.categories).toEqual(['VENTA']);
+    expect(result.current.filters.categories).toContain('VENTA');
   });
 
-  it('removes a category when toggled off', () => {
+  it('toggleCategory removes category if already present', () => {
     const { result } = renderHook(() => useMovementsFilters());
 
-    act(() => result.current.toggleCategory('VENTA'));
-    act(() => result.current.toggleCategory('VENTA'));
+    act(() => {
+      result.current.toggleCategory('VENTA');
+    });
 
-    expect(result.current.filters.categories).toEqual([]);
+    expect(result.current.filters.categories).toContain('VENTA');
+
+    act(() => {
+      result.current.toggleCategory('VENTA');
+    });
+
+    expect(result.current.filters.categories).not.toContain('VENTA');
   });
 
-  it('resets the page when a category is toggled', () => {
+  it('toggleCategory resets page to 0', () => {
     const { result } = renderHook(() => useMovementsFilters());
 
-    act(() => result.current.setPagination({ page: 5, pageSize: 25 }));
-    act(() => result.current.toggleCategory('COMISION'));
+    act(() => {
+      result.current.setPagination(prev => ({ ...prev, page: 2 }));
+    });
+
+    expect(result.current.pagination.page).toBe(2);
+
+    act(() => {
+      result.current.toggleCategory('DEVOLUCION');
+    });
 
     expect(result.current.pagination.page).toBe(0);
   });

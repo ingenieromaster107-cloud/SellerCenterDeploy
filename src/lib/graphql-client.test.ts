@@ -1,7 +1,3 @@
-jest.mock('src/environments', () => ({
-  ENV: { urlBackend: 'http://test-graphql.com', environment: 'test' },
-}));
-
 jest.mock('src/auth/context', () => ({
   getSession: jest.fn(() => null),
 }));
@@ -19,6 +15,8 @@ jest.mock('graphql-request', () => {
 describe('GraphQLService', () => {
   beforeEach(() => {
     jest.resetModules();
+    process.env.VITE_ENV = 'test';
+    process.env.VITE_BACKEND_GRAPHQL_URL = 'http://test-graphql.com';
   });
 
   it('getInstance returns a GraphQLService instance', async () => {
@@ -50,5 +48,56 @@ describe('GraphQLService', () => {
     const instance = GraphQLService.getInstance();
     const result = await instance.request('query { test }');
     expect(result).toBeDefined();
+  });
+
+  it('invokes the unauthorized handler and rethrows on HTTP 401', async () => {
+    const { GraphQLService } = await import('./graphql-client');
+    (GraphQLService as any).instance = undefined;
+    const { GraphQLClient } = await import('graphql-request');
+
+    const instance = GraphQLService.getInstance();
+    const client = (GraphQLClient as unknown as jest.Mock).mock.results.at(-1)!.value;
+    const error = { response: { status: 401 } };
+    client.request.mockRejectedValueOnce(error);
+
+    const handler = jest.fn();
+    instance.setUnauthorizedHandler(handler);
+
+    await expect(instance.request('query { test }')).rejects.toBe(error);
+    expect(handler).toHaveBeenCalledTimes(1);
+  });
+
+  it('invokes the unauthorized handler on a graphql-authorization error', async () => {
+    const { GraphQLService } = await import('./graphql-client');
+    (GraphQLService as any).instance = undefined;
+    const { GraphQLClient } = await import('graphql-request');
+
+    const instance = GraphQLService.getInstance();
+    const client = (GraphQLClient as unknown as jest.Mock).mock.results.at(-1)!.value;
+    client.request.mockRejectedValueOnce({
+      response: { errors: [{ extensions: { category: 'graphql-authorization' } }] },
+    });
+
+    const handler = jest.fn();
+    instance.setUnauthorizedHandler(handler);
+
+    await expect(instance.request('query { test }')).rejects.toBeDefined();
+    expect(handler).toHaveBeenCalledTimes(1);
+  });
+
+  it('does not invoke the unauthorized handler on other errors', async () => {
+    const { GraphQLService } = await import('./graphql-client');
+    (GraphQLService as any).instance = undefined;
+    const { GraphQLClient } = await import('graphql-request');
+
+    const instance = GraphQLService.getInstance();
+    const client = (GraphQLClient as unknown as jest.Mock).mock.results.at(-1)!.value;
+    client.request.mockRejectedValueOnce({ response: { status: 500 } });
+
+    const handler = jest.fn();
+    instance.setUnauthorizedHandler(handler);
+
+    await expect(instance.request('query { test }')).rejects.toBeDefined();
+    expect(handler).not.toHaveBeenCalled();
   });
 });

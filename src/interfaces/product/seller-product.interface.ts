@@ -1,4 +1,4 @@
-import type { PageListInfo } from "../graphql/graphql-shared.interfaces";
+import type { PageInfoResponse } from "../graphql/graphql-shared.interfaces";
 import type { SellerPromotionApplyType, SellerPromotionDiscountType } from "../promotions";
 
 
@@ -15,7 +15,7 @@ export interface SellerProductsResponseInterface {
   sellerProducts: {
     items: ItemsProducsInterface[];
     total_count: number;
-    page_info: PageListInfo;
+    page_info: PageInfoResponse;
   };
 }
 

@@ -2,8 +2,6 @@
 
 import { GraphQLClient } from 'graphql-request';
 
-import { ENV } from 'src/environments';
-
 import { getSession } from 'src/auth/context';
 
 type UnauthorizedHandler = () => void;
@@ -20,10 +18,11 @@ export class GraphQLService {
   private unauthorizedHandler: UnauthorizedHandler | null = null;
 
   private constructor() {
-    const urlBackend = ENV.urlBackend;
+    const environment = process.env.VITE_ENV;
+    const urlBackend = process.env.VITE_BACKEND_GRAPHQL_URL;
 
     if (!urlBackend) {
-      throw new Error('NEXT_PUBLIC_BACKEND_GRAPHQL_URL is not defined');
+      throw new Error('VITE_BACKEND_GRAPHQL_URL is not defined');
     }
 
     const isBrowser = typeof window !== 'undefined';
@@ -32,9 +31,7 @@ export class GraphQLService {
       ? `${window.location.origin}/api/magento/graphql`
       : '/api/magento/graphql';
 
-    // Temporalmente se usa la URL local para evitar problemas de CORS.
-    //const endpoint = ENV.environment === 'local' ? localUrl : urlBackend;
-    const endpoint = localUrl;
+    const endpoint = environment === 'local' ? localUrl : urlBackend;
 
     this.client = new GraphQLClient(endpoint, {
       headers: {

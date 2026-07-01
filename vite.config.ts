@@ -54,17 +54,20 @@ export default defineConfig(({ mode }) => {
     server: {
       port: PORT,
       host: true,
-      proxy: {
-        '/api/magento': {
-          target: env.VITE_BACKEND_GRAPHQL_URL,
-          changeOrigin: true,
-          rewrite: (p) => p.replace(/^\/api\/magento/, ''),
-        },
-        '/rest': {
-          target: new URL(env.VITE_BACKEND_GRAPHQL_URL).origin,
-          changeOrigin: true,
-        },
-      },
+      proxy:
+        env.VITE_BACKEND_GRAPHQL_URL && env.VITE_ENV === 'local'
+          ? {
+              '/api/magento': {
+                target: env.VITE_BACKEND_GRAPHQL_URL,
+                changeOrigin: true,
+                rewrite: (p) => p.replace(/^\/api\/magento/, ''),
+              },
+              '/rest': {
+                target: new URL(env.VITE_BACKEND_GRAPHQL_URL).origin,
+                changeOrigin: true,
+              },
+            }
+          : undefined,
     },
     preview: { port: PORT, host: true },
     optimizeDeps: {

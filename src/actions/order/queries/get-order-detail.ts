@@ -93,7 +93,6 @@ export const GET_ORDER_DETAIL = gql`
           suffix
           telephone
         }
-        order_track_number
         shipping_method
         shippingDate
         billing_address {

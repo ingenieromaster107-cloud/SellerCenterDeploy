@@ -57,7 +57,7 @@ export function ChatRoom({
         <div>
           <ChatRoomSingle participant={participantFilter!} />
           <ChatRoomAttachments attachments={attachments} />
-          <ChatRoomTemplates templates={data!.interSellersMyResponseTemplates.items} onSelectTemplate={onSelectTemplate} />
+          <ChatRoomTemplates templates={data?.interSellersMyResponseTemplates.items || []} onSelectTemplate={onSelectTemplate} />
         </div>
       </Scrollbar>
     );

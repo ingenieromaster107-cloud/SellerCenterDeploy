@@ -55,6 +55,10 @@ jest.mock('src/components/custom-breadcrumbs', () => ({
   CustomBreadcrumbs: ({ heading }: any) => <h1 data-testid="breadcrumbs">{heading}</h1>,
 }));
 
+jest.mock('src/contexts/tour/use-tour-context', () => ({
+  useTourContext: () => ({ startTour: jest.fn(), isTourActive: false }),
+}));
+
 const theme = createTheme({ cssVariables: true });
 const renderWithTheme = (ui: React.ReactElement) =>
   render(<ThemeProvider theme={theme}>{ui}</ThemeProvider>);
